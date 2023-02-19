@@ -1,0 +1,284 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>JoystickSetupDialog</class>
+ <widget class="QDialog" name="JoystickSetupDialog">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>550</width>
+    <height>575</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Dialog</string>
+  </property>
+  <widget class="QDialogButtonBox" name="buttonBox">
+   <property name="geometry">
+    <rect>
+     <x>230</x>
+     <y>525</y>
+     <width>300</width>
+     <height>32</height>
+    </rect>
+   </property>
+   <property name="orientation">
+    <enum>Qt::Horizontal</enum>
+   </property>
+   <property name="standardButtons">
+    <set>QDialogButtonBox::Cancel|QDialogButtonBox::Ok</set>
+   </property>
+  </widget>
+  <widget class="QWidget" name="verticalLayoutWidget_2">
+   <property name="geometry">
+    <rect>
+     <x>10</x>
+     <y>10</y>
+     <width>531</width>
+     <height>511</height>
+    </rect>
+   </property>
+   <layout class="QVBoxLayout" name="verticalLayout">
+    <item>
+     <layout class="QHBoxLayout" name="xAxisLayout">
+      <item>
+       <widget class="QLabel" name="xAxisLabel">
+        <property name="text">
+         <string>X Axis</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <layout class="QVBoxLayout" name="xAxisSubLayout">
+        <item>
+         <widget class="QComboBox" name="xAxisComboBox"/>
+        </item>
+        <item>
+         <widget class="QProgressBar" name="xAxisProgressBar">
+          <property name="minimum">
+           <number>-100</number>
+          </property>
+          <property name="value">
+           <number>24</number>
+          </property>
+          <property name="invertedAppearance">
+           <bool>false</bool>
+          </property>
+          <property name="format">
+           <string>%v</string>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </item>
+     </layout>
+    </item>
+    <item>
+     <layout class="QHBoxLayout" name="yAxisLayout">
+      <item>
+       <widget class="QLabel" name="yAxisLabel">
+        <property name="text">
+         <string>Y Axis</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <layout class="QVBoxLayout" name="yAxisSubLayout">
+        <item>
+         <widget class="QComboBox" name="yAxisComboBox"/>
+        </item>
+        <item>
+         <widget class="QProgressBar" name="yAxisProgressBar">
+          <property name="minimum">
+           <number>-100</number>
+          </property>
+          <property name="value">
+           <number>24</number>
+          </property>
+          <property name="invertedAppearance">
+           <bool>false</bool>
+          </property>
+          <property name="format">
+           <string>%v</string>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </item>
+     </layout>
+    </item>
+    <item>
+     <layout class="QHBoxLayout" name="zAxisLayout">
+      <item>
+       <widget class="QLabel" name="zAxisLabel">
+        <property name="text">
+         <string>Z Axis</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <layout class="QVBoxLayout" name="zAxisSubLayout">
+        <item>
+         <widget class="QComboBox" name="zAxisComboBox"/>
+        </item>
+        <item>
+         <widget class="QProgressBar" name="zAxisProgressBar">
+          <property name="minimum">
+           <number>-100</number>
+          </property>
+          <property name="value">
+           <number>24</number>
+          </property>
+          <property name="invertedAppearance">
+           <bool>false</bool>
+          </property>
+          <property name="format">
+           <string>%v</string>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </item>
+     </layout>
+    </item>
+    <item>
+     <layout class="QHBoxLayout" name="wAxisLayout">
+      <item>
+       <widget class="QLabel" name="wAxisLabel">
+        <property name="text">
+         <string>W Axis</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <layout class="QVBoxLayout" name="wAxisSubLayout">
+        <item>
+         <widget class="QComboBox" name="wAxisComboBox"/>
+        </item>
+        <item>
+         <widget class="QProgressBar" name="wAxisProgressBar">
+          <property name="minimum">
+           <number>-100</number>
+          </property>
+          <property name="value">
+           <number>24</number>
+          </property>
+          <property name="invertedAppearance">
+           <bool>false</bool>
+          </property>
+          <property name="format">
+           <string>%v</string>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </item>
+     </layout>
+    </item>
+    <item>
+     <layout class="QHBoxLayout" name="dAxisLayout">
+      <item>
+       <widget class="QLabel" name="dAxisLabel">
+        <property name="text">
+         <string>D Axis</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <layout class="QVBoxLayout" name="dAxisSubLayout">
+        <item>
+         <widget class="QComboBox" name="dAxisComboBox"/>
+        </item>
+        <item>
+         <widget class="QProgressBar" name="dAxisProgressBar">
+          <property name="minimum">
+           <number>-100</number>
+          </property>
+          <property name="value">
+           <number>24</number>
+          </property>
+          <property name="invertedAppearance">
+           <bool>false</bool>
+          </property>
+          <property name="format">
+           <string>%v</string>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </item>
+     </layout>
+    </item>
+    <item>
+     <layout class="QHBoxLayout" name="rAxisLayout">
+      <item>
+       <widget class="QLabel" name="rAxisLabel">
+        <property name="text">
+         <string>R Axis</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <layout class="QVBoxLayout" name="rAxisSubLayout">
+        <item>
+         <widget class="QComboBox" name="rAxisComboBox"/>
+        </item>
+        <item>
+         <widget class="QProgressBar" name="rAxisProgressBar">
+          <property name="minimum">
+           <number>-100</number>
+          </property>
+          <property name="value">
+           <number>24</number>
+          </property>
+          <property name="invertedAppearance">
+           <bool>false</bool>
+          </property>
+          <property name="format">
+           <string>%v</string>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </item>
+     </layout>
+    </item>
+   </layout>
+  </widget>
+ </widget>
+ <resources/>
+ <connections>
+  <connection>
+   <sender>buttonBox</sender>
+   <signal>accepted()</signal>
+   <receiver>JoystickSetupDialog</receiver>
+   <slot>accept()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>248</x>
+     <y>254</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>157</x>
+     <y>274</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>buttonBox</sender>
+   <signal>rejected()</signal>
+   <receiver>JoystickSetupDialog</receiver>
+   <slot>reject()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>316</x>
+     <y>260</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>286</x>
+     <y>274</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
+</ui>
