@@ -16,10 +16,13 @@ struct RovControl
 
 struct RovDatagram
 {
+    short version = 2;
+    short header = 0xAC;
     qint8 thrusterPower[10] = {0,0,0,0,0,0,0,0,0,0};
     qint8 cameraRotation[2] = {0,0}; // front, rear
     qint8 manipulator[2] = {0,0}; // open/close, rotate
     quint8 auxFlags = 0b00000000;
+    short camsel;
     RovDatagram(){}
 };
 

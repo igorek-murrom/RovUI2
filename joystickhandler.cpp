@@ -35,6 +35,12 @@ void JoystickHandler::doUpdateJoystick(){
     emit joystickChanged(Joystick(m_joystick.data()));
 }
 
+void JoystickHandler::doUpdateASFs(int asf[6]){
+    for (int i = 0; i < 8; ++i) {
+        m_joystick->asf[i] = asf[i];
+    }
+}
+
 void JoystickHandler::timerEvent(QTimerEvent *){
     m_settings.data()->sync();
     SDL_JoystickUpdate();

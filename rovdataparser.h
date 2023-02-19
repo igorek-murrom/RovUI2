@@ -4,6 +4,7 @@
 #include <QObject>
 #include <QDebug>
 #include <QDataStream>
+#include "joystick.h"
 #include "rovdatatypes.h"
 
 class RovDataParser : public QObject
@@ -13,13 +14,14 @@ public:
     explicit RovDataParser(QObject *parent = nullptr);
 
 signals:
-    void telemetryUpdated();
-    void datagramReady(RovDatagram);
+    void telemetryReady(RovTelemetry);
+    void controlReady(QByteArray);
 public slots:
-    void doUpdateTelemetry(QByteArray);
-    void doPrepareDatagram(RovControl);
+    void doProcessTelemetry(QByteArray);
+    void doPrepareDatagram(Joystick);
 
 private:
+    constexpr static short thrusterDirections[10] = {1,1,1,1,1,1,1,1,1,1};
     static const qint16 poly_val = 0x1021;
     static const qint16 seed_val = 0xFFFF;
 

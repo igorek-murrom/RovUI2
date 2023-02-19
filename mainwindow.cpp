@@ -60,20 +60,30 @@ void MainWindow::createConnections()
 {
     connect(m_cameraBeginCapture.data(), &QAction::triggered, [this]{m_camera.data()->doStartCapture();});
     connect(m_cameraEndCapture.data(), &QAction::triggered, [this]{m_camera.data()->doStopCapture();});
-    connect(m_camera.data(), SIGNAL(imgProcessed(QImage)), this, SLOT(doUpdateCameraLabel(QImage)));
+
     connect(m_thrustersOpenDialog.data(), &QAction::triggered, [this]{m_tdd->show();});
     connect(m_joystickOpenDialog.data(), &QAction::triggered, [this]{m_jsd->show();});
+
+    connect(m_camera.data(), SIGNAL(imgProcessed(QImage)), this, SLOT(doUpdateCameraLabel(QImage)));
+
     connect(m_joystick.data(), SIGNAL(joystickUpdated(Joystick)), m_jsd.data(), SLOT(updateUi(Joystick)));
     connect(m_joystick.data(), SIGNAL(joystickChanged(Joystick)), m_jsd.data(), SLOT(populateUi(Joystick)));
     connect(m_jsd.data(), SIGNAL(settingsUpdated()), m_joystick.data(), SLOT(doUpdateSettings()));
+    connect(m_joystick.data(), SIGNAL(joystickUpdated(Joystick)), m_dataparser.data(), SLOT(doPrepareDatagram(Joystick)));
+
+    connect(m_dataparser.data(), SIGNAL(controlReady(QByteArray)), m_communication.data(), SLOT(doSendControl(QByteArray)));
+    connect(m_communication.data(), SIGNAL(telemetryReady(QByteArray)), m_dataparser.data(), SLOT(doProcessTelemetry(QByteArray)));
+    connect(m_dataparser.data(), SIGNAL(telemetryReady(RovTelemetry)), this, SLOT(doUpdateTelemetry(RovTelemetry)));
 }
 
 void MainWindow::createMenuBar(){
     QMenu *camera = ui->menubar->addMenu("Camera");
     camera->addAction(m_cameraBeginCapture.data());
     camera->addAction(m_cameraEndCapture.data());
+
     QMenu *thrusters = ui->menubar->addMenu("Thrusters");
     thrusters->addAction(m_thrustersOpenDialog.data());
+
     QMenu *joystick = ui->menubar->addMenu("Joystick");
     joystick->addAction(m_joystickOpenDialog.data());
 

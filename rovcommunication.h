@@ -3,6 +3,7 @@
 
 #include <QObject>
 #include <QtNetwork>
+#include "rovdatatypes.h"
 
 class RovCommunication : public QObject
 {
@@ -11,9 +12,9 @@ public:
     explicit RovCommunication(QObject *parent = nullptr);
 
 signals:
-    void datagramRead(QByteArray);
+    void telemetryReady(QByteArray);
 public slots:
-
+    void doSendControl(QByteArray);
 private slots:
     void doReadTelemetry();
 

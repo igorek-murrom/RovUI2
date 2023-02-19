@@ -20,7 +20,7 @@ signals:
 public slots:
     void doUpdateSettings();
     void doUpdateJoystick();
-
+    void doUpdateASFs(int[6]);
 private slots:
     void timerEvent(QTimerEvent *event);
 
