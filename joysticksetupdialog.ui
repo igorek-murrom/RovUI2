@@ -7,59 +7,742 @@
     <x>0</x>
     <y>0</y>
     <width>550</width>
-    <height>575</height>
+    <height>610</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>Dialog</string>
   </property>
-  <widget class="QDialogButtonBox" name="buttonBox">
+  <widget class="QPushButton" name="exitButton">
    <property name="geometry">
     <rect>
-     <x>230</x>
-     <y>525</y>
-     <width>300</width>
-     <height>32</height>
+     <x>390</x>
+     <y>570</y>
+     <width>138</width>
+     <height>35</height>
     </rect>
    </property>
-   <property name="orientation">
-    <enum>Qt::Horizontal</enum>
-   </property>
-   <property name="standardButtons">
-    <set>QDialogButtonBox::Cancel|QDialogButtonBox::Ok</set>
+   <property name="text">
+    <string>Exit</string>
    </property>
   </widget>
-  <widget class="QWidget" name="verticalLayoutWidget_2">
+  <widget class="QTabWidget" name="tabWidget">
    <property name="geometry">
     <rect>
-     <x>10</x>
-     <y>10</y>
-     <width>531</width>
-     <height>511</height>
+     <x>0</x>
+     <y>0</y>
+     <width>550</width>
+     <height>560</height>
     </rect>
    </property>
-   <layout class="QVBoxLayout" name="verticalLayout">
-    <item>
-     <layout class="QHBoxLayout" name="xAxisLayout">
+   <property name="currentIndex">
+    <number>2</number>
+   </property>
+   <widget class="QWidget" name="axesTab">
+    <attribute name="title">
+     <string>Axes</string>
+    </attribute>
+    <widget class="QWidget" name="verticalLayoutWidget_2">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>1</y>
+       <width>531</width>
+       <height>512</height>
+      </rect>
+     </property>
+     <layout class="QVBoxLayout" name="axesLayout">
       <item>
-       <widget class="QLabel" name="xAxisLabel">
-        <property name="text">
-         <string>X Axis</string>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <layout class="QVBoxLayout" name="xAxisSubLayout">
+       <layout class="QHBoxLayout" name="xAxisLayout">
         <item>
-         <widget class="QComboBox" name="xAxisComboBox"/>
+         <widget class="QLabel" name="xAxisLabel">
+          <property name="text">
+           <string>X Axis</string>
+          </property>
+         </widget>
         </item>
         <item>
-         <widget class="QProgressBar" name="xAxisProgressBar">
+         <layout class="QVBoxLayout" name="xAxisSubLayout">
+          <item>
+           <widget class="QComboBox" name="xAxisComboBox"/>
+          </item>
+          <item>
+           <widget class="QProgressBar" name="xAxisProgressBar">
+            <property name="minimum">
+             <number>-100</number>
+            </property>
+            <property name="value">
+             <number>24</number>
+            </property>
+            <property name="invertedAppearance">
+             <bool>false</bool>
+            </property>
+            <property name="format">
+             <string>%v</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </item>
+       </layout>
+      </item>
+      <item>
+       <layout class="QHBoxLayout" name="yAxisLayout">
+        <item>
+         <widget class="QLabel" name="yAxisLabel">
+          <property name="text">
+           <string>Y Axis</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <layout class="QVBoxLayout" name="yAxisSubLayout">
+          <item>
+           <widget class="QComboBox" name="yAxisComboBox"/>
+          </item>
+          <item>
+           <widget class="QProgressBar" name="yAxisProgressBar">
+            <property name="minimum">
+             <number>-100</number>
+            </property>
+            <property name="value">
+             <number>24</number>
+            </property>
+            <property name="invertedAppearance">
+             <bool>false</bool>
+            </property>
+            <property name="format">
+             <string>%v</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </item>
+       </layout>
+      </item>
+      <item>
+       <layout class="QHBoxLayout" name="zAxisLayout">
+        <item>
+         <widget class="QLabel" name="zAxisLabel">
+          <property name="text">
+           <string>Z Axis</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <layout class="QVBoxLayout" name="zAxisSubLayout">
+          <item>
+           <widget class="QComboBox" name="zAxisComboBox"/>
+          </item>
+          <item>
+           <widget class="QProgressBar" name="zAxisProgressBar">
+            <property name="minimum">
+             <number>-100</number>
+            </property>
+            <property name="value">
+             <number>24</number>
+            </property>
+            <property name="invertedAppearance">
+             <bool>false</bool>
+            </property>
+            <property name="format">
+             <string>%v</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </item>
+       </layout>
+      </item>
+      <item>
+       <layout class="QHBoxLayout" name="wAxisLayout">
+        <item>
+         <widget class="QLabel" name="wAxisLabel">
+          <property name="text">
+           <string>W Axis</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <layout class="QVBoxLayout" name="wAxisSubLayout">
+          <item>
+           <widget class="QComboBox" name="wAxisComboBox"/>
+          </item>
+          <item>
+           <widget class="QProgressBar" name="wAxisProgressBar">
+            <property name="minimum">
+             <number>-100</number>
+            </property>
+            <property name="value">
+             <number>24</number>
+            </property>
+            <property name="invertedAppearance">
+             <bool>false</bool>
+            </property>
+            <property name="format">
+             <string>%v</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </item>
+       </layout>
+      </item>
+      <item>
+       <layout class="QHBoxLayout" name="dAxisLayout">
+        <item>
+         <widget class="QLabel" name="dAxisLabel">
+          <property name="text">
+           <string>D Axis</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <layout class="QVBoxLayout" name="dAxisSubLayout">
+          <item>
+           <widget class="QComboBox" name="dAxisComboBox"/>
+          </item>
+          <item>
+           <widget class="QProgressBar" name="dAxisProgressBar">
+            <property name="minimum">
+             <number>-100</number>
+            </property>
+            <property name="value">
+             <number>24</number>
+            </property>
+            <property name="invertedAppearance">
+             <bool>false</bool>
+            </property>
+            <property name="format">
+             <string>%v</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </item>
+       </layout>
+      </item>
+      <item>
+       <layout class="QHBoxLayout" name="rAxisLayout">
+        <item>
+         <widget class="QLabel" name="rAxisLabel">
+          <property name="text">
+           <string>R Axis</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <layout class="QVBoxLayout" name="rAxisSubLayout">
+          <item>
+           <widget class="QComboBox" name="rAxisComboBox"/>
+          </item>
+          <item>
+           <widget class="QProgressBar" name="rAxisProgressBar">
+            <property name="minimum">
+             <number>-100</number>
+            </property>
+            <property name="value">
+             <number>24</number>
+            </property>
+            <property name="invertedAppearance">
+             <bool>false</bool>
+            </property>
+            <property name="format">
+             <string>%v</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </item>
+       </layout>
+      </item>
+     </layout>
+    </widget>
+   </widget>
+   <widget class="QWidget" name="buttonTab">
+    <attribute name="title">
+     <string>Buttons</string>
+    </attribute>
+    <widget class="QScrollArea" name="scrollArea">
+     <property name="geometry">
+      <rect>
+       <x>0</x>
+       <y>0</y>
+       <width>550</width>
+       <height>525</height>
+      </rect>
+     </property>
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="verticalScrollBarPolicy">
+      <enum>Qt::ScrollBarAlwaysOn</enum>
+     </property>
+     <property name="horizontalScrollBarPolicy">
+      <enum>Qt::ScrollBarAlwaysOff</enum>
+     </property>
+     <property name="sizeAdjustPolicy">
+      <enum>QAbstractScrollArea::AdjustToContents</enum>
+     </property>
+     <property name="widgetResizable">
+      <bool>true</bool>
+     </property>
+     <widget class="QWidget" name="scrollAreaWidgetContents">
+      <property name="geometry">
+       <rect>
+        <x>0</x>
+        <y>0</y>
+        <width>534</width>
+        <height>690</height>
+       </rect>
+      </property>
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
+      <property name="minimumSize">
+       <size>
+        <width>525</width>
+        <height>690</height>
+       </size>
+      </property>
+      <widget class="QWidget" name="verticalLayoutWidget">
+       <property name="geometry">
+        <rect>
+         <x>0</x>
+         <y>0</y>
+         <width>521</width>
+         <height>684</height>
+        </rect>
+       </property>
+       <layout class="QVBoxLayout" name="buttonLayout">
+        <item>
+         <layout class="QHBoxLayout" name="openManipHL" stretch="1,0,0">
+          <item>
+           <widget class="QLabel" name="openManipL">
+            <property name="text">
+             <string>Open Manipulator</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QCheckBox" name="openManipID">
+            <property name="text">
+             <string>Pressed</string>
+            </property>
+            <property name="checkable">
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QComboBox" name="openManipCB"/>
+          </item>
+         </layout>
+        </item>
+        <item>
+         <layout class="QHBoxLayout" name="closeManipHL" stretch="1,0,0">
+          <item>
+           <widget class="QLabel" name="closeManipL">
+            <property name="text">
+             <string>Close Manipulator</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QCheckBox" name="closeManipID">
+            <property name="text">
+             <string>Pressed</string>
+            </property>
+            <property name="checkable">
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QComboBox" name="closeManipCB"/>
+          </item>
+         </layout>
+        </item>
+        <item>
+         <layout class="QHBoxLayout" name="camSelHL" stretch="1,0,0">
+          <item>
+           <widget class="QLabel" name="camSelL">
+            <property name="text">
+             <string>Camera Select</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QCheckBox" name="camSelID">
+            <property name="text">
+             <string>Pressed</string>
+            </property>
+            <property name="checkable">
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QComboBox" name="camSelCB"/>
+          </item>
+         </layout>
+        </item>
+        <item>
+         <layout class="QHBoxLayout" name="asfFHL" stretch="1,0,0">
+          <item>
+           <widget class="QLabel" name="asfFL">
+            <property name="text">
+             <string>ASF: set 1.0</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QCheckBox" name="asfFID">
+            <property name="text">
+             <string>Pressed</string>
+            </property>
+            <property name="checkable">
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QComboBox" name="asfFCB"/>
+          </item>
+         </layout>
+        </item>
+        <item>
+         <layout class="QHBoxLayout" name="asfMHL" stretch="1,0,0">
+          <item>
+           <widget class="QLabel" name="asfMSL">
+            <property name="text">
+             <string>ASF: set 0.75</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QCheckBox" name="asfMID">
+            <property name="text">
+             <string>Pressed</string>
+            </property>
+            <property name="checkable">
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QComboBox" name="asfMCB"/>
+          </item>
+         </layout>
+        </item>
+        <item>
+         <layout class="QHBoxLayout" name="asfSHL" stretch="1,0,0">
+          <item>
+           <widget class="QLabel" name="asfSL">
+            <property name="text">
+             <string>ASF: set 0.5</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QCheckBox" name="asfSID">
+            <property name="text">
+             <string>Pressed</string>
+            </property>
+            <property name="checkable">
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QComboBox" name="asfSCB"/>
+          </item>
+         </layout>
+        </item>
+        <item>
+         <layout class="QHBoxLayout" name="asfUSHL" stretch="1,0,0">
+          <item>
+           <widget class="QLabel" name="asfUSL">
+            <property name="text">
+             <string>ASF: set 0.25</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QCheckBox" name="asfUSID">
+            <property name="text">
+             <string>Pressed</string>
+            </property>
+            <property name="checkable">
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QComboBox" name="asfUSCB"/>
+          </item>
+         </layout>
+        </item>
+        <item>
+         <layout class="QHBoxLayout" name="button8HL" stretch="1,0,0">
+          <item>
+           <widget class="QLabel" name="button8L">
+            <property name="text">
+             <string>Button 8</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QCheckBox" name="button8ID">
+            <property name="text">
+             <string>Pressed</string>
+            </property>
+            <property name="checkable">
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QComboBox" name="button8CB"/>
+          </item>
+         </layout>
+        </item>
+        <item>
+         <layout class="QHBoxLayout" name="button9HL" stretch="1,0,0">
+          <item>
+           <widget class="QLabel" name="button9L">
+            <property name="text">
+             <string>Button 9</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QCheckBox" name="button9ID">
+            <property name="text">
+             <string>Pressed</string>
+            </property>
+            <property name="checkable">
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QComboBox" name="button9CB"/>
+          </item>
+         </layout>
+        </item>
+        <item>
+         <layout class="QHBoxLayout" name="button10HL" stretch="1,0,0">
+          <item>
+           <widget class="QLabel" name="button10L">
+            <property name="text">
+             <string>Button 10</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QCheckBox" name="button10ID">
+            <property name="text">
+             <string>Pressed</string>
+            </property>
+            <property name="checkable">
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QComboBox" name="button10CB"/>
+          </item>
+         </layout>
+        </item>
+        <item>
+         <layout class="QHBoxLayout" name="button11HL" stretch="1,0,0">
+          <item>
+           <widget class="QLabel" name="button11L">
+            <property name="text">
+             <string>Button 11</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QCheckBox" name="button11ID">
+            <property name="text">
+             <string>Pressed</string>
+            </property>
+            <property name="checkable">
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QComboBox" name="button11CB"/>
+          </item>
+         </layout>
+        </item>
+        <item>
+         <layout class="QHBoxLayout" name="button12HL" stretch="1,0,0">
+          <item>
+           <widget class="QLabel" name="button12L">
+            <property name="text">
+             <string>Button 12</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QCheckBox" name="button12ID">
+            <property name="text">
+             <string>Pressed</string>
+            </property>
+            <property name="checkable">
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QComboBox" name="button12CB"/>
+          </item>
+         </layout>
+        </item>
+        <item>
+         <layout class="QHBoxLayout" name="button13HL" stretch="1,0,0">
+          <item>
+           <widget class="QLabel" name="button13L">
+            <property name="text">
+             <string>Button 13</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QCheckBox" name="button13ID">
+            <property name="text">
+             <string>Pressed</string>
+            </property>
+            <property name="checkable">
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QComboBox" name="button13CB"/>
+          </item>
+         </layout>
+        </item>
+        <item>
+         <layout class="QHBoxLayout" name="button14HL" stretch="1,0,0">
+          <item>
+           <widget class="QLabel" name="button14L">
+            <property name="text">
+             <string>Button 14</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QCheckBox" name="button14ID">
+            <property name="text">
+             <string>Pressed</string>
+            </property>
+            <property name="checkable">
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QComboBox" name="button14CB"/>
+          </item>
+         </layout>
+        </item>
+        <item>
+         <layout class="QHBoxLayout" name="button15HL" stretch="1,0,0">
+          <item>
+           <widget class="QLabel" name="button15L">
+            <property name="text">
+             <string>Button 15</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QCheckBox" name="button15ID">
+            <property name="text">
+             <string>Pressed</string>
+            </property>
+            <property name="checkable">
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QComboBox" name="button15CB"/>
+          </item>
+         </layout>
+        </item>
+        <item>
+         <layout class="QHBoxLayout" name="button16HL" stretch="1,0,0">
+          <item>
+           <widget class="QLabel" name="button16L">
+            <property name="text">
+             <string>Button 16</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QCheckBox" name="button16ID">
+            <property name="text">
+             <string>Pressed</string>
+            </property>
+            <property name="checkable">
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QComboBox" name="button16CB"/>
+          </item>
+         </layout>
+        </item>
+       </layout>
+      </widget>
+     </widget>
+    </widget>
+   </widget>
+   <widget class="QWidget" name="hatsTab">
+    <attribute name="title">
+     <string>Hats</string>
+    </attribute>
+    <widget class="QWidget" name="verticalLayoutWidget_3">
+     <property name="geometry">
+      <rect>
+       <x>0</x>
+       <y>0</y>
+       <width>541</width>
+       <height>371</height>
+      </rect>
+     </property>
+     <layout class="QVBoxLayout" name="hatsLayout">
+      <item>
+       <layout class="QHBoxLayout" name="hatCamServoLayout" stretch="1,0,0">
+        <item>
+         <widget class="QLabel" name="hatCamServoL">
+          <property name="text">
+           <string>Camera Servo</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QProgressBar" name="hatCamServoPB">
           <property name="minimum">
-           <number>-100</number>
+           <number>-1</number>
+          </property>
+          <property name="maximum">
+           <number>1</number>
           </property>
           <property name="value">
-           <number>24</number>
+           <number>0</number>
           </property>
           <property name="invertedAppearance">
            <bool>false</bool>
@@ -69,31 +752,30 @@
           </property>
          </widget>
         </item>
+        <item>
+         <widget class="QComboBox" name="hatCamServoCB"/>
+        </item>
        </layout>
       </item>
-     </layout>
-    </item>
-    <item>
-     <layout class="QHBoxLayout" name="yAxisLayout">
       <item>
-       <widget class="QLabel" name="yAxisLabel">
-        <property name="text">
-         <string>Y Axis</string>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <layout class="QVBoxLayout" name="yAxisSubLayout">
+       <layout class="QHBoxLayout" name="hat2Layout" stretch="1,0,0">
         <item>
-         <widget class="QComboBox" name="yAxisComboBox"/>
+         <widget class="QLabel" name="hat2L">
+          <property name="text">
+           <string>Hat 2</string>
+          </property>
+         </widget>
         </item>
         <item>
-         <widget class="QProgressBar" name="yAxisProgressBar">
+         <widget class="QProgressBar" name="hat2PB">
           <property name="minimum">
-           <number>-100</number>
+           <number>-1</number>
+          </property>
+          <property name="maximum">
+           <number>1</number>
           </property>
           <property name="value">
-           <number>24</number>
+           <number>0</number>
           </property>
           <property name="invertedAppearance">
            <bool>false</bool>
@@ -103,31 +785,30 @@
           </property>
          </widget>
         </item>
+        <item>
+         <widget class="QComboBox" name="hat2CB"/>
+        </item>
        </layout>
       </item>
-     </layout>
-    </item>
-    <item>
-     <layout class="QHBoxLayout" name="zAxisLayout">
       <item>
-       <widget class="QLabel" name="zAxisLabel">
-        <property name="text">
-         <string>Z Axis</string>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <layout class="QVBoxLayout" name="zAxisSubLayout">
+       <layout class="QHBoxLayout" name="hat3Layout" stretch="1,0,0">
         <item>
-         <widget class="QComboBox" name="zAxisComboBox"/>
+         <widget class="QLabel" name="hat3L">
+          <property name="text">
+           <string>Hat 3</string>
+          </property>
+         </widget>
         </item>
         <item>
-         <widget class="QProgressBar" name="zAxisProgressBar">
+         <widget class="QProgressBar" name="hat3PB">
           <property name="minimum">
-           <number>-100</number>
+           <number>-1</number>
+          </property>
+          <property name="maximum">
+           <number>1</number>
           </property>
           <property name="value">
-           <number>24</number>
+           <number>0</number>
           </property>
           <property name="invertedAppearance">
            <bool>false</bool>
@@ -137,31 +818,30 @@
           </property>
          </widget>
         </item>
+        <item>
+         <widget class="QComboBox" name="hat3CB"/>
+        </item>
        </layout>
       </item>
-     </layout>
-    </item>
-    <item>
-     <layout class="QHBoxLayout" name="wAxisLayout">
       <item>
-       <widget class="QLabel" name="wAxisLabel">
-        <property name="text">
-         <string>W Axis</string>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <layout class="QVBoxLayout" name="wAxisSubLayout">
+       <layout class="QHBoxLayout" name="hat4Layout" stretch="1,0,0">
         <item>
-         <widget class="QComboBox" name="wAxisComboBox"/>
+         <widget class="QLabel" name="hat4L">
+          <property name="text">
+           <string>Hat 4</string>
+          </property>
+         </widget>
         </item>
         <item>
-         <widget class="QProgressBar" name="wAxisProgressBar">
+         <widget class="QProgressBar" name="hat4PB">
           <property name="minimum">
-           <number>-100</number>
+           <number>-1</number>
+          </property>
+          <property name="maximum">
+           <number>1</number>
           </property>
           <property name="value">
-           <number>24</number>
+           <number>0</number>
           </property>
           <property name="invertedAppearance">
            <bool>false</bool>
@@ -171,112 +851,31 @@
           </property>
          </widget>
         </item>
-       </layout>
-      </item>
-     </layout>
-    </item>
-    <item>
-     <layout class="QHBoxLayout" name="dAxisLayout">
-      <item>
-       <widget class="QLabel" name="dAxisLabel">
-        <property name="text">
-         <string>D Axis</string>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <layout class="QVBoxLayout" name="dAxisSubLayout">
         <item>
-         <widget class="QComboBox" name="dAxisComboBox"/>
-        </item>
-        <item>
-         <widget class="QProgressBar" name="dAxisProgressBar">
-          <property name="minimum">
-           <number>-100</number>
-          </property>
-          <property name="value">
-           <number>24</number>
-          </property>
-          <property name="invertedAppearance">
-           <bool>false</bool>
-          </property>
-          <property name="format">
-           <string>%v</string>
-          </property>
-         </widget>
+         <widget class="QComboBox" name="hat4CB"/>
         </item>
        </layout>
       </item>
      </layout>
-    </item>
-    <item>
-     <layout class="QHBoxLayout" name="rAxisLayout">
-      <item>
-       <widget class="QLabel" name="rAxisLabel">
-        <property name="text">
-         <string>R Axis</string>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <layout class="QVBoxLayout" name="rAxisSubLayout">
-        <item>
-         <widget class="QComboBox" name="rAxisComboBox"/>
-        </item>
-        <item>
-         <widget class="QProgressBar" name="rAxisProgressBar">
-          <property name="minimum">
-           <number>-100</number>
-          </property>
-          <property name="value">
-           <number>24</number>
-          </property>
-          <property name="invertedAppearance">
-           <bool>false</bool>
-          </property>
-          <property name="format">
-           <string>%v</string>
-          </property>
-         </widget>
-        </item>
-       </layout>
-      </item>
-     </layout>
-    </item>
-   </layout>
+    </widget>
+   </widget>
   </widget>
  </widget>
  <resources/>
  <connections>
   <connection>
-   <sender>buttonBox</sender>
-   <signal>accepted()</signal>
+   <sender>exitButton</sender>
+   <signal>clicked()</signal>
    <receiver>JoystickSetupDialog</receiver>
    <slot>accept()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>248</x>
-     <y>254</y>
+     <x>468</x>
+     <y>547</y>
     </hint>
     <hint type="destinationlabel">
-     <x>157</x>
-     <y>274</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>buttonBox</sender>
-   <signal>rejected()</signal>
-   <receiver>JoystickSetupDialog</receiver>
-   <slot>reject()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>316</x>
-     <y>260</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>286</x>
-     <y>274</y>
+     <x>274</x>
+     <y>287</y>
     </hint>
    </hints>
   </connection>

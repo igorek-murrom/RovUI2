@@ -8,7 +8,67 @@ JoystickSetupDialog::JoystickSetupDialog(QWidget *parent)
 
 {
     ui->setupUi(this);
+    m_axesComboBoxes[0] = ui->xAxisComboBox;
+    m_axesComboBoxes[1] = ui->yAxisComboBox;
+    m_axesComboBoxes[2] = ui->zAxisComboBox;
+    m_axesComboBoxes[3] = ui->dAxisComboBox;
+    m_axesComboBoxes[4] = ui->wAxisComboBox;
+    m_axesComboBoxes[5] = ui->rAxisComboBox;
+
+    m_axesProgressBars[0] = ui->xAxisProgressBar;
+    m_axesProgressBars[1] = ui->yAxisProgressBar;
+    m_axesProgressBars[2] = ui->zAxisProgressBar;
+    m_axesProgressBars[3] = ui->wAxisProgressBar;
+    m_axesProgressBars[4] = ui->dAxisProgressBar;
+    m_axesProgressBars[5] = ui->rAxisProgressBar;
+
+    //welp
+    m_buttonsComboBoxes[0] = ui->openManipCB;
+    m_buttonsComboBoxes[1] = ui->closeManipCB;
+    m_buttonsComboBoxes[2] = ui->camSelCB;
+    m_buttonsComboBoxes[3] = ui->asfFCB;
+    m_buttonsComboBoxes[4] = ui->asfMCB;
+    m_buttonsComboBoxes[5] = ui->asfSCB;
+    m_buttonsComboBoxes[6] = ui->asfUSCB;
+    m_buttonsComboBoxes[7] = ui->button8CB;
+    m_buttonsComboBoxes[8] = ui->button9CB;
+    m_buttonsComboBoxes[9] = ui->button10CB;
+    m_buttonsComboBoxes[10] = ui->button11CB;
+    m_buttonsComboBoxes[11] = ui->button12CB;
+    m_buttonsComboBoxes[12] = ui->button13CB;
+    m_buttonsComboBoxes[13] = ui->button14CB;
+    m_buttonsComboBoxes[14] = ui->button15CB;
+    m_buttonsComboBoxes[15] = ui->button16CB;
+
+    m_buttonsCheckBoxes[0] = ui->openManipID;
+    m_buttonsCheckBoxes[1] = ui->closeManipID;
+    m_buttonsCheckBoxes[2] = ui->camSelID;
+    m_buttonsCheckBoxes[3] = ui->asfFID;
+    m_buttonsCheckBoxes[4] = ui->asfMID;
+    m_buttonsCheckBoxes[5] = ui->asfSID;
+    m_buttonsCheckBoxes[6] = ui->asfUSID;
+    m_buttonsCheckBoxes[7] = ui->button8ID;
+    m_buttonsCheckBoxes[8] = ui->button9ID;
+    m_buttonsCheckBoxes[9] = ui->button10ID;
+    m_buttonsCheckBoxes[10] = ui->button11ID;
+    m_buttonsCheckBoxes[11] = ui->button12ID;
+    m_buttonsCheckBoxes[12] = ui->button13ID;
+    m_buttonsCheckBoxes[13] = ui->button14ID;
+    m_buttonsCheckBoxes[14] = ui->button15ID;
+    m_buttonsCheckBoxes[15] = ui->button16ID;
+
+    m_hatsComboBoxes[0] = ui->hatCamServoCB;
+    m_hatsComboBoxes[1] = ui->hat2CB;
+    m_hatsComboBoxes[2] = ui->hat3CB;
+    m_hatsComboBoxes[3] = ui->hat4CB;
+
+    m_hatsSliders[0] = ui->hatCamServoPB;
+    m_hatsSliders[1] = ui->hat2PB;
+    m_hatsSliders[2] = ui->hat3PB;
+    m_hatsSliders[3] = ui->hat4PB;
+
     createConnections();
+
 }
 
 JoystickSetupDialog::~JoystickSetupDialog()
@@ -17,68 +77,105 @@ JoystickSetupDialog::~JoystickSetupDialog()
 }
 
 void JoystickSetupDialog::createConnections(){
-    connect(ui->xAxisComboBox, SIGNAL(currentIndexChanged(int)), this, SLOT(updateAxesSettings(int)));
-    connect(ui->yAxisComboBox, SIGNAL(currentIndexChanged(int)), this, SLOT(updateAxesSettings(int)));
-    connect(ui->zAxisComboBox, SIGNAL(currentIndexChanged(int)), this, SLOT(updateAxesSettings(int)));
-    connect(ui->wAxisComboBox, SIGNAL(currentIndexChanged(int)), this, SLOT(updateAxesSettings(int)));
-    connect(ui->dAxisComboBox, SIGNAL(currentIndexChanged(int)), this, SLOT(updateAxesSettings(int)));
-    connect(ui->rAxisComboBox, SIGNAL(currentIndexChanged(int)), this, SLOT(updateAxesSettings(int)));
+    for (QComboBox *cb : m_axesComboBoxes) {
+        connect(cb, SIGNAL(currentIndexChanged(int)), this, SLOT(updateAxesSettings(int)));
+    }
+    for (QComboBox *cb : m_buttonsComboBoxes) {
+        connect(cb, SIGNAL(currentIndexChanged(int)), this, SLOT(updateButtonsSettings(int)));
+    }
+    for (QComboBox *cb : m_hatsComboBoxes) {
+        connect(cb, SIGNAL(currentIndexChanged(int)), this, SLOT(updateHatsSettings(int)));
+    }
 }
 
 void JoystickSetupDialog::updateAxesSettings(int){
-    m_settings->setValue(m_joystick_name + QString("/joystickAxes/") + m_axesNames[0], ui->xAxisComboBox->currentIndex());
-    m_settings->setValue(m_joystick_name + QString("/joystickAxes/") + m_axesNames[1], ui->yAxisComboBox->currentIndex());
-    m_settings->setValue(m_joystick_name + QString("/joystickAxes/") + m_axesNames[2], ui->zAxisComboBox->currentIndex());
-    m_settings->setValue(m_joystick_name + QString("/joystickAxes/") + m_axesNames[3], ui->wAxisComboBox->currentIndex());
-    m_settings->setValue(m_joystick_name + QString("/joystickAxes/") + m_axesNames[4], ui->dAxisComboBox->currentIndex());
-    m_settings->setValue(m_joystick_name + QString("/joystickAxes/") + m_axesNames[5], ui->rAxisComboBox->currentIndex());
+    if(m_ignoreUpdateRequest) return;
+
+    for (uint i = 0; QComboBox *cb : m_axesComboBoxes) {
+        m_settings->setValue(m_joystick_name + QString("/joystickAxes/") + JoystickNames::axesNames[i], cb->currentIndex());
+        i++;
+    }
     m_settings->sync();
-    qInfo() << "settings updated" << Qt::endl;
+    qInfo() << "Axes settings updated" << Qt::endl;
+    emit settingsUpdated();
+}
+
+void JoystickSetupDialog::updateButtonsSettings(int){
+    if(m_ignoreUpdateRequest) return;
+
+    for (uint i = 0; QComboBox *cb : m_buttonsComboBoxes) {
+        m_settings->setValue(m_joystick_name + QString("/joystickButtons/") + JoystickNames::buttonsNames[i], cb->currentIndex());
+        i++;
+    }
+
+    m_settings->sync();
+    qInfo() << "Buttons settings updated" << Qt::endl;
+    emit settingsUpdated();
+}
+
+void JoystickSetupDialog::updateHatsSettings(int){
+    if(m_ignoreUpdateRequest) return;
+
+    for (uint i = 0; QComboBox *cb : m_buttonsComboBoxes) {
+        m_settings->setValue(m_joystick_name + QString("/joystickHats/") + JoystickNames::buttonsNames[i], cb->currentIndex());
+        i++;
+    }
+
+    m_settings->sync();
+    qInfo() << "Hats settings updated" << Qt::endl;
     emit settingsUpdated();
 }
 
 
 void JoystickSetupDialog::populateUi(Joystick joy){
-    m_joystick_name = *joy.joystickName;
-    setWindowTitle(QString("Joystick settings - ") + *joy.joystickName);
-    disconnect(ui->xAxisComboBox, SIGNAL(currentIndexChanged(int)), this, SLOT(updateAxesSettings(int)));
-    disconnect(ui->yAxisComboBox, SIGNAL(currentIndexChanged(int)), this, SLOT(updateAxesSettings(int)));
-    disconnect(ui->zAxisComboBox, SIGNAL(currentIndexChanged(int)), this, SLOT(updateAxesSettings(int)));
-    disconnect(ui->wAxisComboBox, SIGNAL(currentIndexChanged(int)), this, SLOT(updateAxesSettings(int)));
-    disconnect(ui->dAxisComboBox, SIGNAL(currentIndexChanged(int)), this, SLOT(updateAxesSettings(int)));
-    disconnect(ui->rAxisComboBox, SIGNAL(currentIndexChanged(int)), this, SLOT(updateAxesSettings(int)));    ui->xAxisComboBox->clear();
-    ui->yAxisComboBox->clear();
-    ui->zAxisComboBox->clear();
-    ui->wAxisComboBox->clear();
-    ui->dAxisComboBox->clear();
-    ui->rAxisComboBox->clear();
-    for(int i = 1; i <= joy.numAxes; i++){
-        ui->xAxisComboBox->addItem(QString("Axis ") + QString::number(i));
-        ui->yAxisComboBox->addItem(QString("Axis ") + QString::number(i));
-        ui->zAxisComboBox->addItem(QString("Axis ") + QString::number(i));
-        ui->wAxisComboBox->addItem(QString("Axis ") + QString::number(i));
-        ui->dAxisComboBox->addItem(QString("Axis ") + QString::number(i));
-        ui->rAxisComboBox->addItem(QString("Axis ") + QString::number(i));
+    m_joystick_name = joy.joystickName;
+    setWindowTitle(QString("Joystick settings - ") + joy.joystickName);
+    m_ignoreUpdateRequest = true;
+    for (uint i = 0; QComboBox *cb : m_axesComboBoxes) {
+        cb->clear();
+        for(int j = 1; j <= joy.numAxes; j++){
+            cb->addItem(QString("Axis ") + QString::number(j));
+        }
+        cb->setCurrentIndex(m_settings->value(m_joystick_name + QString("/joystickAxes/") + JoystickNames::axesNames[i]).toInt());
+        i++;
     }
-    ui->xAxisComboBox->setCurrentIndex(m_settings->value(m_joystick_name + QString("/joystickAxes/") + m_axesNames[0]).toInt());
-    ui->yAxisComboBox->setCurrentIndex(m_settings->value(m_joystick_name + QString("/joystickAxes/") + m_axesNames[1]).toInt());
-    ui->zAxisComboBox->setCurrentIndex(m_settings->value(m_joystick_name + QString("/joystickAxes/") + m_axesNames[2]).toInt());
-    ui->wAxisComboBox->setCurrentIndex(m_settings->value(m_joystick_name + QString("/joystickAxes/") + m_axesNames[3]).toInt());
-    ui->dAxisComboBox->setCurrentIndex(m_settings->value(m_joystick_name + QString("/joystickAxes/") + m_axesNames[4]).toInt());
-    ui->rAxisComboBox->setCurrentIndex(m_settings->value(m_joystick_name + QString("/joystickAxes/") + m_axesNames[5]).toInt());
-    connect(ui->xAxisComboBox, SIGNAL(currentIndexChanged(int)), this, SLOT(updateAxesSettings(int)));
-    connect(ui->yAxisComboBox, SIGNAL(currentIndexChanged(int)), this, SLOT(updateAxesSettings(int)));
-    connect(ui->zAxisComboBox, SIGNAL(currentIndexChanged(int)), this, SLOT(updateAxesSettings(int)));
-    connect(ui->wAxisComboBox, SIGNAL(currentIndexChanged(int)), this, SLOT(updateAxesSettings(int)));
-    connect(ui->dAxisComboBox, SIGNAL(currentIndexChanged(int)), this, SLOT(updateAxesSettings(int)));
-    connect(ui->rAxisComboBox, SIGNAL(currentIndexChanged(int)), this, SLOT(updateAxesSettings(int)));
+
+    for (uint i = 0; QComboBox *cb : m_buttonsComboBoxes) {
+        cb->clear();
+        for(int j = 1; j <= joy.numButtons; j++){
+            cb->addItem(QString("Button ") + QString::number(j));
+        }
+        cb->setCurrentIndex(m_settings->value(m_joystick_name + QString("/joystickButtons/") + JoystickNames::buttonsNames[i]).toInt());
+        i++;
+    }
+    for (uint i = 0; QComboBox *cb : m_hatsComboBoxes) {
+        cb->clear();
+        for(int j = 1; j <= joy.numButtons; j++){
+            cb->addItem(QString("Hat ") + QString::number(j));
+        }
+        cb->setCurrentIndex(m_settings->value(m_joystick_name + QString("/joystickHats/") + JoystickNames::hatsNames[i]).toInt());
+        i++;
+    }
+
+    m_ignoreUpdateRequest = false;
 }
 
 void JoystickSetupDialog::updateUi(Joystick joystick){
-    ui->xAxisProgressBar->setValue(joystick.axes[0]);
-    ui->yAxisProgressBar->setValue(joystick.axes[1]);
-    ui->zAxisProgressBar->setValue(joystick.axes[2]);
-    ui->wAxisProgressBar->setValue(joystick.axes[3]);
-    ui->dAxisProgressBar->setValue(joystick.axes[4]);
-    ui->rAxisProgressBar->setValue(joystick.axes[5]);
+    switch (ui->tabWidget->currentIndex()) {
+    case 0:
+        for (uint i = 0; QProgressBar *pb : m_axesProgressBars) {
+            pb->setValue(joystick.axes[i]);
+            i++;
+        }
+        break;
+    case 1:
+        for (uint i = 0; QCheckBox *chb : m_buttonsCheckBoxes) {
+            chb->setCheckState(joystick.buttons ? Qt::CheckState::PartiallyChecked : Qt::CheckState::Unchecked);
+        }
+    default:
+        break;
+    }
+    for (int i = 0; i < 6; i++) {
+        m_axesProgressBars[i]->setValue(joystick.axes[i]);
+    }
 }

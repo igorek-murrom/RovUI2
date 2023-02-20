@@ -8,30 +8,29 @@ JoystickHandler::JoystickHandler(QObject *parent)
     SDL_Init(SDL_INIT_JOYSTICK);
     SDL_JoystickUpdate();
     if(SDL_NumJoysticks()>0){
-        m_joystick.data()->joystick = SDL_JoystickOpen(0);
+        m_joystick.data()->sdlJoystick = SDL_JoystickOpen(0);
         joystickConnected = true;
         doUpdateJoystick();
         doUpdateSettings();
     }
-    startTimer(16);
+    startTimer(40);
 }
 
 void JoystickHandler::doUpdateSettings(){
     m_settings.data()->sync();
     for(int i = 0; i < 6; i++) //init axes from settings
-        m_joystick.data()->axes_id[i] = m_settings->value(QString(SDL_JoystickName(m_joystick->joystick)) + QString("/joystickAxes/") + m_axesNames[i]).toInt();
+        m_joystick.data()->axes_id[i] = m_settings->value(QString(SDL_JoystickName(m_joystick->sdlJoystick)) + QString("/joystickAxes/") + JoystickNames::axesNames[i]).toInt();
     for(int i = 0; i < 16; i++) //same for buttons
-        m_joystick.data()->buttons_id[i] = m_settings->value(QString(SDL_JoystickName(m_joystick->joystick)) + QString("/joystickButtons/") + m_buttonsNames[i]).toInt();
+        m_joystick.data()->buttons_id[i] = m_settings->value(QString(SDL_JoystickName(m_joystick->sdlJoystick)) + QString("/joystickButtons/") + JoystickNames::buttonsNames[i]).toInt();
     for(int i = 0; i < 4; i++) //same for hats
-        m_joystick.data()->hats_id[i] = m_settings->value(QString(SDL_JoystickName(m_joystick->joystick)) + QString("/joystickHats/") + m_hatsNames[i]).toInt();
+        m_joystick.data()->hats_id[i] = m_settings->value(QString(SDL_JoystickName(m_joystick->sdlJoystick)) + QString("/joystickHats/") + JoystickNames::hatsNames[i]).toInt();
 }
 
 void JoystickHandler::doUpdateJoystick(){
-    m_joystick->numAxes = SDL_JoystickNumAxes(m_joystick->joystick);
-    m_joystick->numHats = SDL_JoystickNumHats(m_joystick->joystick);
-    m_joystick->numButtons = SDL_JoystickNumButtons(m_joystick->joystick);
-    delete m_joystick->joystickName;
-    m_joystick->joystickName = new QString(SDL_JoystickName(m_joystick->joystick));
+    m_joystick->numAxes = SDL_JoystickNumAxes(m_joystick->sdlJoystick);
+    m_joystick->numHats = SDL_JoystickNumHats(m_joystick->sdlJoystick);
+    m_joystick->numButtons = SDL_JoystickNumButtons(m_joystick->sdlJoystick);
+    m_joystick->joystickName = QString(SDL_JoystickName(m_joystick->sdlJoystick));
     emit joystickChanged(Joystick(m_joystick.data()));
 }
 
@@ -45,44 +44,40 @@ void JoystickHandler::timerEvent(QTimerEvent *){
     m_settings.data()->sync();
     SDL_JoystickUpdate();
     if(SDL_NumJoysticks()>0){
-        if(m_joystick.data()->joystick != nullptr && joystickConnected == true){
-            if(SDL_JoystickGetAttached(m_joystick.data()->joystick)){ //joystick should exist and be opened
+        if(m_joystick.data()->sdlJoystick != nullptr && joystickConnected == true){
+            if(SDL_JoystickGetAttached(m_joystick.data()->sdlJoystick)){ //joystick should exist and be opened
 
                 for(int i = 0; i < 6; i++){
-                    float temp_axis = SDL_JoystickGetAxis(m_joystick.data()->joystick, m_joystick.data()->axes_id[i]);
-                    float temp_axis_2 = m_joystick.data()->axes[i];
+                    float joystickAxisVal = SDL_JoystickGetAxis(m_joystick.data()->sdlJoystick, m_joystick.data()->axes_id[i]);
+                    float lastAxisVal = m_joystick.data()->axes[i];
+                    float secLastAxisVal = m_joystick.data()->axes_last[i];
                     m_joystick.data()->axes[i] =
-                            (
-                             map(temp_axis, -32768, 32767, -100, 100) +
-                             m_joystick.data()->axes[i] +
-                             m_joystick.data()->axes_last[i]
-                            ) / 3;
-                    m_joystick.data()->axes_last[i] = temp_axis_2;
+                            (map(joystickAxisVal, -32768, 32767, -100, 100) + lastAxisVal + secLastAxisVal) / 3;
+                    m_joystick.data()->axes_last[i] = lastAxisVal;
                 }
                 for(int i = 0; i < 16; i++){
-                    if(SDL_JoystickGetButton(m_joystick.data()->joystick, m_joystick.data()->buttons_id[i]) == 1) //bit magic to set
-                        m_joystick.data()->buttons |= 1UL << i;
-                    if(SDL_JoystickGetButton(m_joystick.data()->joystick, m_joystick.data()->buttons_id[i]) == 0) //bit magic to clear
-                        m_joystick.data()->buttons &= ~(1UL << i);
+                    ulong bit = !!SDL_JoystickGetButton(m_joystick.data()->sdlJoystick, m_joystick.data()->buttons_id[i]);
+                    BIT_SET(m_joystick.data()->buttons, bit);
                 }
                 for(int i = 0; i < 4; i++){
-                    m_joystick.data()->hats[i] = SDL_JoystickGetHat(m_joystick.data()->joystick, m_joystick.data()->hats_id[i]);
+                    m_joystick.data()->hats[i] = SDL_JoystickGetHat(m_joystick.data()->sdlJoystick, m_joystick.data()->hats_id[i]);
                 }
                 emit joystickUpdated(Joystick(m_joystick.data()));
+                qInfo() << "rc conts" << Joystick(m_joystick.data()).axes[0]; //<< y << z << w << d << r;
             }else{ // joystick exists but isn't opened
-                m_joystick.data()->joystick = SDL_JoystickOpen(0);
-                qInfo() << "Connected joystick 0 (" << SDL_JoystickName(m_joystick.data()->joystick) <<
-                           "), " << SDL_JoystickNumAxes(m_joystick.data()->joystick) <<
-                           " axes, " << SDL_JoystickNumButtons(m_joystick.data()->joystick) << " buttons" << Qt::endl;
+                m_joystick.data()->sdlJoystick = SDL_JoystickOpen(0);
+                qInfo() << "Connected joystick 0 (" << SDL_JoystickName(m_joystick.data()->sdlJoystick) <<
+                           "), " << SDL_JoystickNumAxes(m_joystick.data()->sdlJoystick) <<
+                           " axes, " << SDL_JoystickNumButtons(m_joystick.data()->sdlJoystick) << " buttons" << Qt::endl;
                 joystickConnected = true;
                 doUpdateJoystick();
                 doUpdateSettings();
             }
         }else{ // joystick exists but isn't opened
-            m_joystick.data()->joystick = SDL_JoystickOpen(0);
-            qInfo() << "Connected joystick 0 (" << SDL_JoystickName(m_joystick.data()->joystick) <<
-                       ")," << SDL_JoystickNumAxes(m_joystick.data()->joystick) <<
-                       " axes," << SDL_JoystickNumButtons(m_joystick.data()->joystick) << "buttons" << Qt::endl;
+            m_joystick.data()->sdlJoystick = SDL_JoystickOpen(0);
+            qInfo() << "Connected joystick 0 (" << SDL_JoystickName(m_joystick.data()->sdlJoystick) <<
+                       ")," << SDL_JoystickNumAxes(m_joystick.data()->sdlJoystick) <<
+                       " axes," << SDL_JoystickNumButtons(m_joystick.data()->sdlJoystick) << "buttons" << Qt::endl;
             joystickConnected = true;
             doUpdateJoystick();
             doUpdateSettings();

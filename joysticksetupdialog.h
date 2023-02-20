@@ -4,6 +4,9 @@
 #include <QDialog>
 #include <QDebug>
 #include <QSettings>
+#include <QComboBox>
+#include <QCheckBox>
+#include <QProgressBar>
 #include "joystick.h"
 
 namespace Ui {
@@ -25,6 +28,8 @@ public slots:
 
 private slots:
     void updateAxesSettings(int);
+    void updateButtonsSettings(int);
+    void updateHatsSettings(int);
 
 private:
     void createConnections();
@@ -33,15 +38,18 @@ private:
 
     QScopedPointer<QSettings> m_settings;
 
-    QString m_axesNames[6] = { "AxisX", "AxisY", "AxisZ",
-                               "AxisW", "AxisD", "AxisR" };
-    QString m_buttonsNames[16] = {
-                                 "ManipOpen", "ManipClose", "CamSel", "TSF-F",
-                                 "TSF-M", "TSF-S", "Button7", "Button8",
-                                 "Button9", "Button10", "Button11", "Button12",
-                                 "Button13", "Button14", "Button15", "Button16"};
-    QString m_hatsNames[4] = { "CamServo", "Hat2", "Hat3", "Hat4"};
+    QComboBox *m_axesComboBoxes[6];
+    QProgressBar *m_axesProgressBars[6];
+
+    QComboBox *m_buttonsComboBoxes[16];
+    QCheckBox *m_buttonsCheckBoxes[16];
+
+    QComboBox *m_hatsComboBoxes[4];
+    QProgressBar *m_hatsSliders[4];
+
     QString m_joystick_name;
+
+    bool m_ignoreUpdateRequest = false;
 };
 
 #endif // JOYSTICKSETUPDIALOG_H

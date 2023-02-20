@@ -9,7 +9,7 @@ RovDataParser::RovDataParser(QObject *parent)
 
 
 void RovDataParser::doPrepareDatagram(Joystick rc){
-    RovDatagram out = RovDatagram();
+    RovDatagram *out = new RovDatagram();
     qint8 x = rc.axes[0] * rc.asf[0] * rc.baseASF[0] * rc.directions[0];// left-right
     qint8 y = rc.axes[1] * rc.asf[1] * rc.baseASF[1] * rc.directions[1];// forward-backward
     qint8 z = rc.axes[2] * rc.asf[2] * rc.baseASF[2] * rc.directions[2];// up-down
@@ -19,15 +19,16 @@ void RovDataParser::doPrepareDatagram(Joystick rc){
 
     //TODO: directions and axes setup
     //Horizontal thrusters
-    out.thrusterPower[0] = thrusterDirections[0] * (y+x+w);
-    out.thrusterPower[1] = thrusterDirections[1] * (y-x-w);
-    out.thrusterPower[2] = thrusterDirections[2] * (y-x+w);
-    out.thrusterPower[3] = thrusterDirections[3] * (y+x-w);
+    out->thrusterPower[0] = thrusterDirections[0] * (y+x+w);
+    out->thrusterPower[1] = thrusterDirections[1] * (y-x-w);
+    out->thrusterPower[2] = thrusterDirections[2] * (y-x+w);
+    out->thrusterPower[3] = thrusterDirections[3] * (y+x-w);
     //Vertical thrusters
-    out.thrusterPower[4] = thrusterDirections[4] * (z+d+r);
-    out.thrusterPower[5] = thrusterDirections[5] * (z+d-r);
-    out.thrusterPower[6] = thrusterDirections[6] * (z-d+r);
-    out.thrusterPower[7] = thrusterDirections[7] * (z-d-r);
+    out->thrusterPower[4] = thrusterDirections[4] * (z+d+r);
+    out->thrusterPower[5] = thrusterDirections[5] * (z+d-r);
+    out->thrusterPower[6] = thrusterDirections[6] * (z-d+r);
+    out->thrusterPower[7] = thrusterDirections[7] * (z-d-r);
+
     QByteArray ba;
 
     QDataStream in(&ba, QIODevice::WriteOnly);
@@ -35,22 +36,21 @@ void RovDataParser::doPrepareDatagram(Joystick rc){
 
 
     // begin v1
-    in << out.header;
-    in << out.version;
-    in << out.auxFlags;
+    in << out->header;
+    in << out->version;
+    in << out->auxFlags;
     for (int i = 0; i < 10; i++) {
-        qint8 t = out.thrusterPower[i];
+        qint8 t = out->thrusterPower[i];
         in << t;
     }
-    in << out.manipulator[0];
-    in << out.manipulator[1];
-    for (qint8 c : out.cameraRotation) {
+    in << out->manipulator[0];
+    in << out->manipulator[1];
+    for (qint8 c : out->cameraRotation) {
         in << c;
     }
 
-    in << out.camsel;
+    in << out->camsel;
 
-    in << calculateCRC(ba.data(), ba.size());
     emit controlReady(QByteArray(ba));
 }
 
@@ -71,20 +71,20 @@ void RovDataParser::doProcessTelemetry(QByteArray datagram){
             out >> telemetry.voltmeter;
             out >> telemetry.cameraIndex;
             out >> telemetry.temperature;
-            qint16 crc = 0;
-            out >> crc;
+//            qint16 crc = 0;
+//            out >> crc;
 
-            qint16 currentCrc = calculateCRC(datagram.data(), datagram.size() - 2);
+//            qint16 currentCrc = calculateCRC(datagram.data(), datagram.size() - 2);
 
-            if (currentCrc != crc) {
-                telemetry.depth = 0.0f;
-                telemetry.pitch = 0.0f;
-                telemetry.yaw = 0.0f;
-                telemetry.roll = 0.0f;
-                telemetry.voltmeter = 0.0f;
-                telemetry.ammeter = 0.0f;
-                telemetry.cameraIndex = 0;
-            }
+//            if (currentCrc != crc) {
+//                telemetry.depth = 0.0f;
+//                telemetry.pitch = 0.0f;
+//                telemetry.yaw = 0.0f;
+//                telemetry.roll = 0.0f;
+//                telemetry.voltmeter = 0.0f;
+//                telemetry.ammeter = 0.0f;
+//                telemetry.cameraIndex = 0;
+//            }
 
         }
 
