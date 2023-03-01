@@ -2,6 +2,9 @@
 <ui version="4.0">
  <class>JoystickSetupDialog</class>
  <widget class="QDialog" name="JoystickSetupDialog">
+  <property name="windowModality">
+   <enum>Qt::NonModal</enum>
+  </property>
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -9,6 +12,24 @@
     <width>550</width>
     <height>610</height>
    </rect>
+  </property>
+  <property name="sizePolicy">
+   <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+    <horstretch>0</horstretch>
+    <verstretch>0</verstretch>
+   </sizepolicy>
+  </property>
+  <property name="minimumSize">
+   <size>
+    <width>550</width>
+    <height>610</height>
+   </size>
+  </property>
+  <property name="maximumSize">
+   <size>
+    <width>550</width>
+    <height>610</height>
+   </size>
   </property>
   <property name="windowTitle">
    <string>Dialog</string>
@@ -35,10 +56,22 @@
      <height>560</height>
     </rect>
    </property>
+   <property name="sizePolicy">
+    <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+     <horstretch>1</horstretch>
+     <verstretch>1</verstretch>
+    </sizepolicy>
+   </property>
    <property name="currentIndex">
-    <number>2</number>
+    <number>1</number>
    </property>
    <widget class="QWidget" name="axesTab">
+    <property name="sizePolicy">
+     <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+      <horstretch>1</horstretch>
+      <verstretch>1</verstretch>
+     </sizepolicy>
+    </property>
     <attribute name="title">
      <string>Axes</string>
     </attribute>
@@ -260,6 +293,12 @@
     </widget>
    </widget>
    <widget class="QWidget" name="buttonTab">
+    <property name="sizePolicy">
+     <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+      <horstretch>0</horstretch>
+      <verstretch>0</verstretch>
+     </sizepolicy>
+    </property>
     <attribute name="title">
      <string>Buttons</string>
     </attribute>
@@ -322,16 +361,16 @@
        </property>
        <layout class="QVBoxLayout" name="buttonLayout">
         <item>
-         <layout class="QHBoxLayout" name="openManipHL" stretch="1,0,0">
+         <layout class="QHBoxLayout" name="button1HL" stretch="1,0,1">
           <item>
-           <widget class="QLabel" name="openManipL">
+           <widget class="QLabel" name="button1L">
             <property name="text">
              <string>Open Manipulator</string>
             </property>
            </widget>
           </item>
           <item>
-           <widget class="QCheckBox" name="openManipID">
+           <widget class="QCheckBox" name="button1ID">
             <property name="text">
              <string>Pressed</string>
             </property>
@@ -341,21 +380,21 @@
            </widget>
           </item>
           <item>
-           <widget class="QComboBox" name="openManipCB"/>
+           <widget class="QComboBox" name="button1CB"/>
           </item>
          </layout>
         </item>
         <item>
-         <layout class="QHBoxLayout" name="closeManipHL" stretch="1,0,0">
+         <layout class="QHBoxLayout" name="button2HL" stretch="1,0,1">
           <item>
-           <widget class="QLabel" name="closeManipL">
+           <widget class="QLabel" name="button2L">
             <property name="text">
              <string>Close Manipulator</string>
             </property>
            </widget>
           </item>
           <item>
-           <widget class="QCheckBox" name="closeManipID">
+           <widget class="QCheckBox" name="button2ID">
             <property name="text">
              <string>Pressed</string>
             </property>
@@ -365,21 +404,21 @@
            </widget>
           </item>
           <item>
-           <widget class="QComboBox" name="closeManipCB"/>
+           <widget class="QComboBox" name="button2CB"/>
           </item>
          </layout>
         </item>
         <item>
-         <layout class="QHBoxLayout" name="camSelHL" stretch="1,0,0">
+         <layout class="QHBoxLayout" name="button3HL" stretch="1,0,1">
           <item>
-           <widget class="QLabel" name="camSelL">
+           <widget class="QLabel" name="button3L">
             <property name="text">
-             <string>Camera Select</string>
+             <string>Manipulator CW</string>
             </property>
            </widget>
           </item>
           <item>
-           <widget class="QCheckBox" name="camSelID">
+           <widget class="QCheckBox" name="button3ID">
             <property name="text">
              <string>Pressed</string>
             </property>
@@ -389,21 +428,21 @@
            </widget>
           </item>
           <item>
-           <widget class="QComboBox" name="camSelCB"/>
+           <widget class="QComboBox" name="button3CB"/>
           </item>
          </layout>
         </item>
         <item>
-         <layout class="QHBoxLayout" name="asfFHL" stretch="1,0,0">
+         <layout class="QHBoxLayout" name="button4HL" stretch="1,0,1">
           <item>
-           <widget class="QLabel" name="asfFL">
+           <widget class="QLabel" name="button4L">
             <property name="text">
-             <string>ASF: set 1.0</string>
+             <string>Manipulator CCW</string>
             </property>
            </widget>
           </item>
           <item>
-           <widget class="QCheckBox" name="asfFID">
+           <widget class="QCheckBox" name="button4ID">
             <property name="text">
              <string>Pressed</string>
             </property>
@@ -413,21 +452,45 @@
            </widget>
           </item>
           <item>
-           <widget class="QComboBox" name="asfFCB"/>
+           <widget class="QComboBox" name="button4CB"/>
           </item>
          </layout>
         </item>
         <item>
-         <layout class="QHBoxLayout" name="asfMHL" stretch="1,0,0">
+         <layout class="QHBoxLayout" name="button5HL" stretch="1,0,1">
           <item>
-           <widget class="QLabel" name="asfMSL">
+           <widget class="QLabel" name="button5L">
+            <property name="text">
+             <string>ASF: set 1</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QCheckBox" name="button5ID">
+            <property name="text">
+             <string>Pressed</string>
+            </property>
+            <property name="checkable">
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QComboBox" name="button5CB"/>
+          </item>
+         </layout>
+        </item>
+        <item>
+         <layout class="QHBoxLayout" name="button6HL" stretch="1,0,1">
+          <item>
+           <widget class="QLabel" name="button6L">
             <property name="text">
              <string>ASF: set 0.75</string>
             </property>
            </widget>
           </item>
           <item>
-           <widget class="QCheckBox" name="asfMID">
+           <widget class="QCheckBox" name="button6ID">
             <property name="text">
              <string>Pressed</string>
             </property>
@@ -437,21 +500,21 @@
            </widget>
           </item>
           <item>
-           <widget class="QComboBox" name="asfMCB"/>
+           <widget class="QComboBox" name="button6CB"/>
           </item>
          </layout>
         </item>
         <item>
-         <layout class="QHBoxLayout" name="asfSHL" stretch="1,0,0">
+         <layout class="QHBoxLayout" name="button7HL" stretch="1,0,1">
           <item>
-           <widget class="QLabel" name="asfSL">
+           <widget class="QLabel" name="button7L">
             <property name="text">
              <string>ASF: set 0.5</string>
             </property>
            </widget>
           </item>
           <item>
-           <widget class="QCheckBox" name="asfSID">
+           <widget class="QCheckBox" name="button7ID">
             <property name="text">
              <string>Pressed</string>
             </property>
@@ -461,40 +524,16 @@
            </widget>
           </item>
           <item>
-           <widget class="QComboBox" name="asfSCB"/>
+           <widget class="QComboBox" name="button7CB"/>
           </item>
          </layout>
         </item>
         <item>
-         <layout class="QHBoxLayout" name="asfUSHL" stretch="1,0,0">
-          <item>
-           <widget class="QLabel" name="asfUSL">
-            <property name="text">
-             <string>ASF: set 0.25</string>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QCheckBox" name="asfUSID">
-            <property name="text">
-             <string>Pressed</string>
-            </property>
-            <property name="checkable">
-             <bool>true</bool>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QComboBox" name="asfUSCB"/>
-          </item>
-         </layout>
-        </item>
-        <item>
-         <layout class="QHBoxLayout" name="button8HL" stretch="1,0,0">
+         <layout class="QHBoxLayout" name="button8HL" stretch="1,0,1">
           <item>
            <widget class="QLabel" name="button8L">
             <property name="text">
-             <string>Button 8</string>
+             <string>ASF: set 0.25</string>
             </property>
            </widget>
           </item>
@@ -514,11 +553,11 @@
          </layout>
         </item>
         <item>
-         <layout class="QHBoxLayout" name="button9HL" stretch="1,0,0">
+         <layout class="QHBoxLayout" name="button9HL" stretch="1,0,1">
           <item>
            <widget class="QLabel" name="button9L">
             <property name="text">
-             <string>Button 9</string>
+             <string>Camera Select</string>
             </property>
            </widget>
           </item>
@@ -538,7 +577,7 @@
          </layout>
         </item>
         <item>
-         <layout class="QHBoxLayout" name="button10HL" stretch="1,0,0">
+         <layout class="QHBoxLayout" name="button10HL" stretch="1,0,1">
           <item>
            <widget class="QLabel" name="button10L">
             <property name="text">
@@ -562,7 +601,7 @@
          </layout>
         </item>
         <item>
-         <layout class="QHBoxLayout" name="button11HL" stretch="1,0,0">
+         <layout class="QHBoxLayout" name="button11HL" stretch="1,0,1">
           <item>
            <widget class="QLabel" name="button11L">
             <property name="text">
@@ -586,7 +625,7 @@
          </layout>
         </item>
         <item>
-         <layout class="QHBoxLayout" name="button12HL" stretch="1,0,0">
+         <layout class="QHBoxLayout" name="button12HL" stretch="1,0,1">
           <item>
            <widget class="QLabel" name="button12L">
             <property name="text">
@@ -610,7 +649,7 @@
          </layout>
         </item>
         <item>
-         <layout class="QHBoxLayout" name="button13HL" stretch="1,0,0">
+         <layout class="QHBoxLayout" name="button13HL" stretch="1,0,1">
           <item>
            <widget class="QLabel" name="button13L">
             <property name="text">
@@ -634,7 +673,7 @@
          </layout>
         </item>
         <item>
-         <layout class="QHBoxLayout" name="button14HL" stretch="1,0,0">
+         <layout class="QHBoxLayout" name="button14HL" stretch="1,0,1">
           <item>
            <widget class="QLabel" name="button14L">
             <property name="text">
@@ -658,7 +697,7 @@
          </layout>
         </item>
         <item>
-         <layout class="QHBoxLayout" name="button15HL" stretch="1,0,0">
+         <layout class="QHBoxLayout" name="button15HL" stretch="1,0,1">
           <item>
            <widget class="QLabel" name="button15L">
             <property name="text">
@@ -682,7 +721,7 @@
          </layout>
         </item>
         <item>
-         <layout class="QHBoxLayout" name="button16HL" stretch="1,0,0">
+         <layout class="QHBoxLayout" name="button16HL" stretch="1,0,1">
           <item>
            <widget class="QLabel" name="button16L">
             <property name="text">
@@ -711,6 +750,12 @@
     </widget>
    </widget>
    <widget class="QWidget" name="hatsTab">
+    <property name="sizePolicy">
+     <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+      <horstretch>0</horstretch>
+      <verstretch>0</verstretch>
+     </sizepolicy>
+    </property>
     <attribute name="title">
      <string>Hats</string>
     </attribute>
@@ -725,16 +770,16 @@
      </property>
      <layout class="QVBoxLayout" name="hatsLayout">
       <item>
-       <layout class="QHBoxLayout" name="hatCamServoLayout" stretch="1,0,0">
+       <layout class="QHBoxLayout" name="hat1Layout" stretch="1,0,0">
         <item>
-         <widget class="QLabel" name="hatCamServoL">
+         <widget class="QLabel" name="hat1L">
           <property name="text">
            <string>Camera Servo</string>
           </property>
          </widget>
         </item>
         <item>
-         <widget class="QProgressBar" name="hatCamServoPB">
+         <widget class="QProgressBar" name="hat1PB">
           <property name="minimum">
            <number>-1</number>
           </property>
@@ -753,7 +798,18 @@
          </widget>
         </item>
         <item>
-         <widget class="QComboBox" name="hatCamServoCB"/>
+         <layout class="QVBoxLayout" name="hat1subL">
+          <item>
+           <widget class="QComboBox" name="hat1ComboBox"/>
+          </item>
+          <item>
+           <widget class="QCheckBox" name="hat1CheckBox">
+            <property name="text">
+             <string>Horizontal</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
         </item>
        </layout>
       </item>
@@ -786,7 +842,18 @@
          </widget>
         </item>
         <item>
-         <widget class="QComboBox" name="hat2CB"/>
+         <layout class="QVBoxLayout" name="hat2subL">
+          <item>
+           <widget class="QComboBox" name="hat2ComboBox"/>
+          </item>
+          <item>
+           <widget class="QCheckBox" name="hat2CheckBox">
+            <property name="text">
+             <string>Horizontal</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
         </item>
        </layout>
       </item>
@@ -819,7 +886,18 @@
          </widget>
         </item>
         <item>
-         <widget class="QComboBox" name="hat3CB"/>
+         <layout class="QVBoxLayout" name="hat3subL">
+          <item>
+           <widget class="QComboBox" name="hat3ComboBox"/>
+          </item>
+          <item>
+           <widget class="QCheckBox" name="hat3CheckBox">
+            <property name="text">
+             <string>Horizontal</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
         </item>
        </layout>
       </item>
@@ -852,7 +930,18 @@
          </widget>
         </item>
         <item>
-         <widget class="QComboBox" name="hat4CB"/>
+         <layout class="QVBoxLayout" name="hat4subL">
+          <item>
+           <widget class="QComboBox" name="hat4ComboBox"/>
+          </item>
+          <item>
+           <widget class="QCheckBox" name="hat4CheckBox">
+            <property name="text">
+             <string>Horizontal</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
         </item>
        </layout>
       </item>

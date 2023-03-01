@@ -13,6 +13,7 @@ MainWindow::MainWindow(QWidget *parent)
     , m_dataparser(new RovDataParser(this))
 {
     ui->setupUi(this);
+    setWindowTitle("RovUI2 v0.95");
     setCentralWidget(ui->camLabel);
     createActions();
     createConnections();
@@ -29,7 +30,7 @@ void MainWindow::doUpdateCameraLabel(QImage img){
     ui->camLabel->setPixmap(QPixmap::fromImage(img));
     ui->camLabel->setScaledContents(true);
     ui->camLabel->setMaximumSize(QSize(this->size().width()-250, (this->size().width()-250)*9/16));
-    ui->camLabel->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
+    ui->camLabel->setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::MinimumExpanding);
 }
 
 void MainWindow::doUpdateTelemetry(RovTelemetry telemetry){

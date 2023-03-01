@@ -40,28 +40,28 @@
    </property>
    <layout class="QGridLayout" name="gridLayout">
     <item row="3" column="2">
-     <widget class="QCheckBox" name="thrusterInvert_4">
+     <widget class="QCheckBox" name="thrusterInvert4">
       <property name="text">
        <string>Invert</string>
       </property>
      </widget>
     </item>
     <item row="6" column="0">
-     <widget class="QLabel" name="labelT_7">
+     <widget class="QLabel" name="labelT7">
       <property name="text">
        <string>Thruster 7</string>
       </property>
      </widget>
     </item>
     <item row="7" column="2">
-     <widget class="QCheckBox" name="thrusterInvert_8">
+     <widget class="QCheckBox" name="thrusterInvert8">
       <property name="text">
        <string>Invert</string>
       </property>
      </widget>
     </item>
     <item row="7" column="1">
-     <widget class="QSlider" name="thrusterSlider_8">
+     <widget class="QSlider" name="thrusterSlider8">
       <property name="minimum">
        <number>-100</number>
       </property>
@@ -74,7 +74,7 @@
      </widget>
     </item>
     <item row="3" column="1">
-     <widget class="QSlider" name="thrusterSlider_4">
+     <widget class="QSlider" name="thrusterSlider4">
       <property name="minimum">
        <number>-100</number>
       </property>
@@ -87,21 +87,21 @@
      </widget>
     </item>
     <item row="0" column="2">
-     <widget class="QCheckBox" name="thrusterInvert">
+     <widget class="QCheckBox" name="thrusterInvert1">
       <property name="text">
        <string>Invert</string>
       </property>
      </widget>
     </item>
     <item row="6" column="2">
-     <widget class="QCheckBox" name="thrusterInvert_7">
+     <widget class="QCheckBox" name="thrusterInvert7">
       <property name="text">
        <string>Invert</string>
       </property>
      </widget>
     </item>
     <item row="2" column="1">
-     <widget class="QSlider" name="thrusterSlider_3">
+     <widget class="QSlider" name="thrusterSlider3">
       <property name="minimum">
        <number>-100</number>
       </property>
@@ -114,28 +114,28 @@
      </widget>
     </item>
     <item row="7" column="0">
-     <widget class="QLabel" name="labelT_8">
+     <widget class="QLabel" name="labelT8">
       <property name="text">
        <string>Thruster 8</string>
       </property>
      </widget>
     </item>
     <item row="4" column="0">
-     <widget class="QLabel" name="labelT_5">
+     <widget class="QLabel" name="labelT5">
       <property name="text">
        <string>Thruster 5</string>
       </property>
      </widget>
     </item>
     <item row="2" column="2">
-     <widget class="QCheckBox" name="thrusterInvert_3">
+     <widget class="QCheckBox" name="thrusterInvert3">
       <property name="text">
        <string>Invert</string>
       </property>
      </widget>
     </item>
     <item row="4" column="1">
-     <widget class="QSlider" name="thrusterSlider_5">
+     <widget class="QSlider" name="thrusterSlider5">
       <property name="minimum">
        <number>-100</number>
       </property>
@@ -148,35 +148,35 @@
      </widget>
     </item>
     <item row="2" column="0">
-     <widget class="QLabel" name="labelT_3">
+     <widget class="QLabel" name="labelT3">
       <property name="text">
        <string>Thruster 3</string>
       </property>
      </widget>
     </item>
     <item row="5" column="0">
-     <widget class="QLabel" name="labelT_6">
+     <widget class="QLabel" name="labelT6">
       <property name="text">
        <string>Thruster 6</string>
       </property>
      </widget>
     </item>
     <item row="3" column="0">
-     <widget class="QLabel" name="labelT_4">
+     <widget class="QLabel" name="labelT4">
       <property name="text">
        <string>Thruster 4</string>
       </property>
      </widget>
     </item>
     <item row="1" column="0">
-     <widget class="QLabel" name="labelT_2">
+     <widget class="QLabel" name="labelT2">
       <property name="text">
        <string>Thruster 2</string>
       </property>
      </widget>
     </item>
     <item row="5" column="1">
-     <widget class="QSlider" name="thrusterSlider_6">
+     <widget class="QSlider" name="thrusterSlider6">
       <property name="minimum">
        <number>-100</number>
       </property>
@@ -189,7 +189,7 @@
      </widget>
     </item>
     <item row="6" column="1">
-     <widget class="QSlider" name="thrusterSlider_7">
+     <widget class="QSlider" name="thrusterSlider7">
       <property name="minimum">
        <number>-100</number>
       </property>
@@ -202,28 +202,28 @@
      </widget>
     </item>
     <item row="4" column="2">
-     <widget class="QCheckBox" name="thrusterInvert_5">
+     <widget class="QCheckBox" name="thrusterInvert5">
       <property name="text">
        <string>Invert</string>
       </property>
      </widget>
     </item>
     <item row="1" column="2">
-     <widget class="QCheckBox" name="thrusterInvert_2">
+     <widget class="QCheckBox" name="thrusterInvert2">
       <property name="text">
        <string>Invert</string>
       </property>
      </widget>
     </item>
     <item row="5" column="2">
-     <widget class="QCheckBox" name="thrusterInvert_6">
+     <widget class="QCheckBox" name="thrusterInvert6">
       <property name="text">
        <string>Invert</string>
       </property>
      </widget>
     </item>
     <item row="1" column="1">
-     <widget class="QSlider" name="thrusterSlider_2">
+     <widget class="QSlider" name="thrusterSlider2">
       <property name="minimum">
        <number>-100</number>
       </property>
@@ -236,14 +236,14 @@
      </widget>
     </item>
     <item row="0" column="0">
-     <widget class="QLabel" name="labelT">
+     <widget class="QLabel" name="labelT1">
       <property name="text">
        <string>Thruster 1</string>
       </property>
      </widget>
     </item>
     <item row="0" column="1">
-     <widget class="QSlider" name="thrusterSlider">
+     <widget class="QSlider" name="thrusterSlider1">
       <property name="minimum">
        <number>-100</number>
       </property>
@@ -262,6 +262,19 @@
      </widget>
     </item>
    </layout>
+  </widget>
+  <widget class="QCheckBox" name="overrideEnable">
+   <property name="geometry">
+    <rect>
+     <x>320</x>
+     <y>450</y>
+     <width>221</width>
+     <height>33</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Enable override</string>
+   </property>
   </widget>
  </widget>
  <resources/>

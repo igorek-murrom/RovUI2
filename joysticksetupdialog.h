@@ -8,6 +8,7 @@
 #include <QCheckBox>
 #include <QProgressBar>
 #include "joystick.h"
+#include "bithelpers.h"
 
 namespace Ui {
 class JoystickSetupDialog;
@@ -45,6 +46,7 @@ private:
     QCheckBox *m_buttonsCheckBoxes[16];
 
     QComboBox *m_hatsComboBoxes[4];
+    QCheckBox *m_hatsCheckBoxes[4];
     QProgressBar *m_hatsSliders[4];
 
     QString m_joystick_name;
