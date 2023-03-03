@@ -4,6 +4,7 @@
 #include <QMainWindow>
 #include <QString>
 #include <QDebug>
+#include "math.h"
 #include "joystickhandler.h"
 #include "joysticksetupdialog.h"
 #include "rovcameracapture.h"
@@ -37,21 +38,13 @@ signals:
 
 private:
     void createConnections();
-    void createMenuBar();
-    void createMenus();
-    void createActions();
 
     Ui::MainWindow *ui;
     QScopedPointer<RovCameraCapture> m_camera;
-    QScopedPointer<ThrusterSetupDialog> m_tdd;
+    QScopedPointer<ThrusterSetupDialog> m_tsd;
     QScopedPointer<JoystickHandler> m_joystick;
     QScopedPointer<JoystickSetupDialog> m_jsd;
     QScopedPointer<RovCommunication> m_communication;
     QScopedPointer<RovDataParser> m_dataparser;
-
-    QScopedPointer<QAction> m_cameraBeginCapture;
-    QScopedPointer<QAction> m_cameraEndCapture;
-    QScopedPointer<QAction> m_thrustersOpenDialog;
-    QScopedPointer<QAction> m_joystickOpenDialog;
 };
 #endif // MAINWINDOW_H

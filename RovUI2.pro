@@ -13,6 +13,7 @@ QMAKE_CXXFLAGS += "-Wno-c++20-extensions"
 
 
 SOURCES += \
+    cameralabel.cpp \
     joystickhandler.cpp \
     joysticksetupdialog.cpp \
     main.cpp \
@@ -24,6 +25,7 @@ SOURCES += \
 
 HEADERS += \
     bithelpers.h \
+    cameralabel.h \
     joystick.h \
     joystickhandler.h \
     joysticksetupdialog.h \
@@ -37,6 +39,7 @@ HEADERS += \
 FORMS += \
     joysticksetupdialog.ui \
     mainwindow.ui \
+    mainwindow2.ui \
     thrustersetupdialog.ui
 
 RESOURCES += \
