@@ -22,7 +22,7 @@ JoystickSetupDialog::JoystickSetupDialog(QWidget *parent)
     m_axesProgressBars[4] = ui->dAxisProgressBar;
     m_axesProgressBars[5] = ui->rAxisProgressBar;
 
-    //welp
+    //welp ._.
     m_buttonsComboBoxes[0] = ui->button1CB;
     m_buttonsComboBoxes[1] = ui->button2CB;
     m_buttonsComboBoxes[2] = ui->button3CB;

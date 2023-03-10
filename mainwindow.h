@@ -29,6 +29,7 @@ public:
 
 public slots:
     void doUpdateCameraLabel(QImage);
+    void doResizeCameraLabel();
     void doUpdateTelemetry(RovTelemetry);
 //    void updateRegulators(QBitArray regulators); //TODO: implement
     void doUpdateThrustFactor(float thrustFactor);

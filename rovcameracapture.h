@@ -27,6 +27,7 @@ private slots:
 
 private:
     void createConnections();
+    bool updateNeeded = true;
 
     cv::VideoCapture cap;
 

@@ -24,8 +24,8 @@ SOURCES += \
     thrustersetupdialog.cpp
 
 HEADERS += \
-    bithelpers.h \
     cameralabel.h \
+    helpers.h \
     joystick.h \
     joystickhandler.h \
     joysticksetupdialog.h \

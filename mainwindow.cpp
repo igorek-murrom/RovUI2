@@ -16,6 +16,9 @@ MainWindow::MainWindow(QWidget *parent)
     setWindowTitle("RovUI2 v0.95");
     createConnections();
     doUpdateTelemetry(RovTelemetry());
+    QTimer *timer = new QTimer(this);
+    connect(timer, &QTimer::timeout, this, &MainWindow::doResizeCameraLabel);
+    timer->start();
 }
 
 MainWindow::~MainWindow()
@@ -23,26 +26,26 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
-void MainWindow::doUpdateCameraLabel(QImage img){
-    ui->camLabel->setPixmap(QPixmap::fromImage(img));
+void MainWindow::doResizeCameraLabel(){
     QSize targetQSize = QSize(ui->centralwidget->size().width(), ui->camLabel->heightForWidth(ui->centralwidget->size().width()));
     ui->camLabel->setMaximumSize(QSize(std::min(targetQSize.width(), ui->centralwidget->width()), std::min(targetQSize.height(), ui->centralwidget->height())));
     ui->camLabel->setMinimumSize(targetQSize);
-    qDebug() << "X: " << ui->centralwidget->size().width() << " Y: " << ui->centralwidget->size().height();
-    qDebug() << "lX: " << ui->camLabel->size().width() << " lY: " << ui->camLabel->size().height();
-//    ui->camLabel->setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::MinimumExpanding);
+}
+
+void MainWindow::doUpdateCameraLabel(QImage img){
+    ui->camLabel->setPixmap(QPixmap::fromImage(img));
 }
 
 void MainWindow::doUpdateTelemetry(RovTelemetry telemetry){
     QString text;
     ui->teleVersionLabel->setText(       "Version:   " + QString::number(telemetry.version));
-    ui->teleDepthLabel->setText(         "Depth:     " + QString::number(telemetry.depth));
-    ui->telePitchLabel->setText(         "Pitch:     " + QString::number(telemetry.pitch));
-    ui->teleYawLabel->setText(           "Yaw:       " + QString::number(telemetry.yaw));
-    ui->teleRollLabel->setText(          "Roll:      " + QString::number(telemetry.roll));
-    ui->teleTempLabel->setText(          "Twater:    " + QString::number(telemetry.temperature));
-    ui->teleVoltageLabel->setText(       "Voltage:   " + QString::number(telemetry.voltmeter));
-    ui->teleCurrentLabel->setText(       "Current:   " + QString::number(telemetry.ammeter));
+    ui->teleDepthLabel->setText(         "Depth:     " + QString::number(telemetry.depth) + " m");
+    ui->telePitchLabel->setText(         "Pitch:     " + QString::number(telemetry.pitch) + " deg");
+    ui->teleYawLabel->setText(           "Yaw:       " + QString::number(telemetry.yaw) + " deg");
+    ui->teleRollLabel->setText(          "Roll:      " + QString::number(telemetry.roll) + " deg");
+    ui->teleTempLabel->setText(          "Twater:    " + QString::number(telemetry.temperature) + " C");
+    ui->teleVoltageLabel->setText(       "Voltage:   " + QString::number(std::round(telemetry.voltmeter * 100)/100) + " V");
+    ui->teleCurrentLabel->setText(       "Current:   " + QString::number(std::round(telemetry.ammeter * 100000)/100) + " mA");
     ui->teleCamSelLabel->setText(QString("CamSel:    ") + (telemetry.cameraIndex==0 ? "Front" : "Rear"));
 }
 

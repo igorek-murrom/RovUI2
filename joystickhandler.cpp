@@ -47,23 +47,29 @@ void JoystickHandler::timerEvent(QTimerEvent *){
         if(m_joystick.data()->sdlJoystick != nullptr && joystickConnected == true){
             if(SDL_JoystickGetAttached(m_joystick.data()->sdlJoystick)){ //joystick should exist and be opened
 
-                for(int i = 0; i < 6; i++){ // joystick input smoothing 3x
-                    float joystickAxisVal = SDL_JoystickGetAxis(m_joystick.data()->sdlJoystick, m_joystick.data()->axes_id[i]);
-                    float lastAxisVal = m_joystick.data()->axes[i];
-                    float secLastAxisVal = m_joystick.data()->axes_last[i];
+                for(size_t i = 0; i < helpers::size(m_joystick.data()->axes); i++){ // joystick input smoothing 3x
+                    if(m_joystick.data()->axes_id[i]>=0){
+                        float joystickAxisVal = SDL_JoystickGetAxis(m_joystick.data()->sdlJoystick, m_joystick.data()->axes_id[i]);
+                        float lastAxisVal = m_joystick.data()->axes[i];
+                        float secLastAxisVal = m_joystick.data()->axes_last[i];
 
-                    m_joystick.data()->axes[i] = (map(joystickAxisVal, -32768, 32767, -101, 101) + lastAxisVal + secLastAxisVal) / 3;
-                    m_joystick.data()->axes_last[i] = lastAxisVal;
+                        m_joystick.data()->axes[i] = (map(joystickAxisVal, -32768, 32767, -101, 101) + lastAxisVal + secLastAxisVal) / 3;
+                        m_joystick.data()->axes_last[i] = lastAxisVal;
+                    }
+                    else{
+                        m_joystick.data()->axes[i] = 0;
+                        m_joystick.data()->axes_last[i] = 0;
+                    }
                 }
 
-                for(int i = 0; i < 16; i++){ // write buttons into the variable according to buttonsNames
+                for(size_t i = 0; i < sizeof(m_joystick.data()->buttons); i++){ // write buttons into the variable according to buttonsNames
                     if(SDL_JoystickGetButton(m_joystick.data()->sdlJoystick, m_joystick.data()->buttons_id[i]))
                         BIT_SET(m_joystick.data()->buttons, i);
                     else
                         BIT_CLEAR(m_joystick.data()->buttons, i);
                 }
 
-                for(int i = 0; i < 4; i++){ // write hats
+                for(size_t i = 0; i < helpers::size(m_joystick.data()->hats); i++){ // write hats
 
                     int hat = SDL_JoystickGetHat(m_joystick.data()->sdlJoystick, m_joystick.data()->hats_id[i]);
                     if(m_joystick.data()->hats_hor[i]) // left -> -1, centered -> 0, right -> 1, else -> 0
@@ -72,9 +78,23 @@ void JoystickHandler::timerEvent(QTimerEvent *){
                     else                               // down -> -1, centered -> 0, up -> 1, else -> 0
                         m_joystick.data()->hats[i] = (hat & SDL_HAT_DOWN) ? -1 : (hat & SDL_HAT_CENTERED) ? 0 : (hat & SDL_HAT_UP) ? 1 : 0;
                 }
-
+                if(BIT_CHECK(m_joystick.data()->buttons, 5)){
+                    for(size_t i = 0; i < helpers::size(m_joystick.data()->asf); i++)
+                        m_joystick.data()->asf[i] = 1.0f;
+                }
+                if(BIT_CHECK(m_joystick.data()->buttons, 6)){
+                    for(size_t i = 0; i < helpers::size(m_joystick.data()->asf); i++)
+                        m_joystick.data()->asf[i] = .75f;
+                }
+                if(BIT_CHECK(m_joystick.data()->buttons, 7)){
+                    for(size_t i = 0; i < helpers::size(m_joystick.data()->asf); i++)
+                        m_joystick.data()->asf[i] = .5f;
+                }
+                if(BIT_CHECK(m_joystick.data()->buttons, 8)){
+                    for(size_t i = 0; i < helpers::size(m_joystick.data()->asf); i++)
+                        m_joystick.data()->asf[i] = .25f;
+                }
                 emit joystickUpdated(Joystick(m_joystick.data()));
-
             }else{ // joystick exists but isn't opened
                 m_joystick.data()->sdlJoystick = SDL_JoystickOpen(0);
                 qInfo() << "Connected joystick 0 (" << SDL_JoystickName(m_joystick.data()->sdlJoystick) <<

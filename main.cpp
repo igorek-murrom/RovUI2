@@ -1,4 +1,5 @@
 #include "mainwindow.h"
+#include "qsurfaceformat.h"
 
 #include <QApplication>
 void setMessageOutput(QtMsgType type, const QMessageLogContext& context, const QString& msg)
@@ -35,6 +36,7 @@ int main(int argc, char *argv[])
     qInstallMessageHandler(setMessageOutput);
 
     QApplication a(argc, argv);
+
     MainWindow w;
     w.show();
     return a.exec();

@@ -1,4 +1,5 @@
 #include "rovdataparser.h"
+#include "helpers.h"
 
 inline float constrain(float val, float min, float max){
     return val < min ? min : val > max ? max : val;
@@ -39,7 +40,9 @@ void RovDataParser::doPrepareDatagram(Joystick rc){
 //    qDebug() << QString::number(rc.buttons, 2);
 
     // Buttons processing
-
+    datagram->manipulator[0] = BIT_CHECK(rc.buttons, 0) - BIT_CHECK(rc.buttons, 1);
+    datagram->manipulator[1] = BIT_CHECK(rc.buttons, 2) - BIT_CHECK(rc.buttons, 3);
+    datagram->camsel = BIT_CHECK(rc.buttons, 8);
 
 
     // Thrusters processing
@@ -76,10 +79,7 @@ void RovDataParser::doPrepareDatagram(Joystick rc){
 
 
     int i = 0;
-//    qDebug() << QString(i) << ": " << datagram->thrusterPower[i++] << QString(i) << ": " << datagram->thrusterPower[i++] << QString(i) << ": " << datagram->thrusterPower[i++] << QString(i) << ": " << datagram->thrusterPower[i++] << QString(i) << ": " << datagram->thrusterPower[i++] << QString(i) << ": " << datagram->thrusterPower[i++] << QString(i) << ": " << datagram->thrusterPower[i++] << QString(i) << ": " << datagram->thrusterPower[i++];
-
-    // TODO: buttons hats etc
-
+    qDebug() << QString(i) << ": " << datagram->thrusterPower[i++] << QString(i) << ": " << datagram->thrusterPower[i++] << QString(i) << ": " << datagram->thrusterPower[i++] << QString(i) << ": " << datagram->thrusterPower[i++] << QString(i) << ": " << datagram->thrusterPower[i++] << QString(i) << ": " << datagram->thrusterPower[i++] << QString(i) << ": " << datagram->thrusterPower[i++] << QString(i) << ": " << datagram->thrusterPower[i++];
 
     QByteArray ba;
 

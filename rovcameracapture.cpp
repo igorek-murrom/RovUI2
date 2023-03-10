@@ -23,6 +23,7 @@ void RovCameraCapture::createConnections(){
 
 void RovCameraCapture::doProcessCamera(){
     if(cap.isOpened()){
+        updateNeeded = true;
         cv::Mat img;
         cap.read(img);
         cv::cvtColor(img, img, cv::COLOR_BGR2RGB);
@@ -31,7 +32,10 @@ void RovCameraCapture::doProcessCamera(){
         emit imgProcessed(qImg);
     }
     else{
-        QImage qImg(":/images/placeholder.jpg");
-        emit imgProcessed(qImg);
+        if(updateNeeded){
+            QImage qImg(":/images/placeholder.jpg");
+            emit imgProcessed(qImg);
+            updateNeeded = false;
+        }
     }
 }

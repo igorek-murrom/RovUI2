@@ -7,7 +7,7 @@
 #include <QSettings>
 #include <SDL.h>
 #include "joystick.h"
-#include "bithelpers.h"
+#include "helpers.h"
 
 class JoystickHandler : public QObject
 {

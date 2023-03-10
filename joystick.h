@@ -3,7 +3,16 @@
 
 #include <QString>
 #include <SDL_joystick.h>
+#include <map>
 namespace JoystickNames {
+    static const std::map<int,QString> axesNames_map = {
+        {1, "AxisX"},
+        {2, "AxisY"},
+        {3, "AxisZ"},
+        {4, "AxisW"},
+        {5, "AxisD"},
+        {6, "AxisR"}
+    };
     static QString axesNames[6] = { "AxisX", "AxisY", "AxisZ",
                                     "AxisW", "AxisD", "AxisR" };
     static QString buttonsNames[16] = {

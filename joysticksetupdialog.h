@@ -8,7 +8,7 @@
 #include <QCheckBox>
 #include <QProgressBar>
 #include "joystick.h"
-#include "bithelpers.h"
+#include "helpers.h"
 
 namespace Ui {
 class JoystickSetupDialog;
