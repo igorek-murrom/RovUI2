@@ -33,21 +33,23 @@ private slots:
     void updateHatsSettings(int);
 
 private:
+    virtual void showEvent(QShowEvent *event) override;
     void createConnections();
 
     Ui::JoystickSetupDialog *ui;
 
     QScopedPointer<QSettings> m_settings;
+    QScopedPointer<Joystick> m_joystick;
 
-    QComboBox *m_axesComboBoxes[6];
-    QProgressBar *m_axesProgressBars[6];
+    QList<QComboBox *> m_axesComboBoxes;
+    QList<QProgressBar *> m_axesProgressBars;
 
-    QComboBox *m_buttonsComboBoxes[16];
-    QCheckBox *m_buttonsCheckBoxes[16];
+    QList<QComboBox *> m_buttonsComboBoxes;
+    QList<QCheckBox *> m_buttonsCheckBoxes;
 
-    QComboBox *m_hatsComboBoxes[4];
-    QCheckBox *m_hatsCheckBoxes[4];
-    QProgressBar *m_hatsSliders[4];
+    QList<QComboBox *> m_hatsComboBoxes;
+    QList<QCheckBox *> m_hatsCheckBoxes;
+    QList<QProgressBar *> m_hatsSliders;
 
     QString m_joystick_name;
 

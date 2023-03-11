@@ -12,6 +12,7 @@ JoystickHandler::JoystickHandler(QObject *parent)
         joystickConnected = true;
         doUpdateJoystick();
         doUpdateSettings();
+        QTimer::singleShot(200, this, [this](){emit joystickChanged(Joystick(m_joystick.data()));});
     }
     startTimer(16);
 }
@@ -62,7 +63,7 @@ void JoystickHandler::timerEvent(QTimerEvent *){
                     }
                 }
 
-                for(size_t i = 0; i < sizeof(m_joystick.data()->buttons); i++){ // write buttons into the variable according to buttonsNames
+                for(size_t i = 0; i < sizeof(m_joystick.data()->buttons) * 8; i++){ // write buttons into the variable according to buttonsNames
                     if(SDL_JoystickGetButton(m_joystick.data()->sdlJoystick, m_joystick.data()->buttons_id[i]))
                         BIT_SET(m_joystick.data()->buttons, i);
                     else
@@ -78,6 +79,7 @@ void JoystickHandler::timerEvent(QTimerEvent *){
                     else                               // down -> -1, centered -> 0, up -> 1, else -> 0
                         m_joystick.data()->hats[i] = (hat & SDL_HAT_DOWN) ? -1 : (hat & SDL_HAT_CENTERED) ? 0 : (hat & SDL_HAT_UP) ? 1 : 0;
                 }
+
                 if(BIT_CHECK(m_joystick.data()->buttons, 5)){
                     for(size_t i = 0; i < helpers::size(m_joystick.data()->asf); i++)
                         m_joystick.data()->asf[i] = 1.0f;
@@ -94,6 +96,7 @@ void JoystickHandler::timerEvent(QTimerEvent *){
                     for(size_t i = 0; i < helpers::size(m_joystick.data()->asf); i++)
                         m_joystick.data()->asf[i] = .25f;
                 }
+
                 emit joystickUpdated(Joystick(m_joystick.data()));
             }else{ // joystick exists but isn't opened
                 m_joystick.data()->sdlJoystick = SDL_JoystickOpen(0);

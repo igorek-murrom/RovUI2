@@ -58,17 +58,22 @@ void MainWindow::createConnections()
     connect(ui->actionBegin_camera_capture, &QAction::triggered, [this]{m_camera.data()->doStartCapture();});
     connect(ui->actionEnd_camera_capture, &QAction::triggered, [this]{m_camera.data()->doStopCapture();});
 
+    connect(m_camera.data(), SIGNAL(imgProcessed(QImage)), this, SLOT(doUpdateCameraLabel(QImage)));
+
     connect(ui->actionDisplay_thruster_setup_dialog, &QAction::triggered, [this]{m_tsd->show();});
     connect(ui->actionDisplay_joystick_setup_dialog, &QAction::triggered, [this]{m_jsd->show();});
 
-    connect(m_camera.data(), SIGNAL(imgProcessed(QImage)), this, SLOT(doUpdateCameraLabel(QImage)));
 
     connect(m_joystick.data(), SIGNAL(joystickUpdated(Joystick)), m_jsd.data(), SLOT(updateUi(Joystick)));
     connect(m_joystick.data(), SIGNAL(joystickChanged(Joystick)), m_jsd.data(), SLOT(populateUi(Joystick)));
-    connect(m_jsd.data(), SIGNAL(settingsUpdated()), m_joystick.data(), SLOT(doUpdateSettings()));
     connect(m_joystick.data(), SIGNAL(joystickUpdated(Joystick)), m_dataparser.data(), SLOT(doPrepareDatagram(Joystick)));
+    connect(m_jsd.data(), SIGNAL(settingsUpdated()), m_joystick.data(), SLOT(doUpdateSettings()));
 
     connect(m_dataparser.data(), SIGNAL(controlReady(QByteArray)), m_communication.data(), SLOT(doSendControl(QByteArray)));
     connect(m_communication.data(), SIGNAL(telemetryReady(QByteArray)), m_dataparser.data(), SLOT(doProcessTelemetry(QByteArray)));
-    connect(m_dataparser.data(), SIGNAL(telemetryReady(RovTelemetry)), this, SLOT(doUpdateTelemetry(RovTelemetry)));
+    connect(m_dataparser.data(), SIGNAL(telemetryProcessed(RovTelemetry)), this, SLOT(doUpdateTelemetry(RovTelemetry)));
+
+    connect(m_tsd.data(), SIGNAL(overrideStatusChanged(bool)), m_dataparser.data(), SLOT(doEnableThrustersOverride(bool)));
+    connect(m_tsd.data(), SIGNAL(thrustersOverridden(QList<qint8>)), m_dataparser.data(), SLOT(doSetThrustersOverride(QList<qint8>)));
+    connect(m_tsd.data(), SIGNAL(overrideStatusChanged(bool)), m_dataparser.data(), SLOT(doEnableThrustersOverride(bool)));
 }

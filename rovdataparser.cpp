@@ -7,6 +7,7 @@ inline float constrain(float val, float min, float max){
 
 RovDataParser::RovDataParser(QObject *parent)
     : QObject{parent}
+    , m_datagram(new RovDatagram())
     , m_thrOvrMutex()
     , m_thrOvrInvMutex()
     , m_overrideMutex()
@@ -14,35 +15,38 @@ RovDataParser::RovDataParser(QObject *parent)
 
 }
 
-void RovDataParser::doThrustersOverride(bool state){
+void RovDataParser::doEnableThrustersOverride(bool state){
     m_overrideMutex.lock();
     this->m_override = state;
     m_overrideMutex.unlock();
 }
 
-void RovDataParser::doSetThrustersOverride(int override[8]){
+void RovDataParser::doSetThrustersOverride(QList<qint8> override){
     m_thrOvrMutex.lock();
-    for(int i = 0; i < 8; i++) this->m_thrOvr[i] = override[i];
+    for(int i = 0; i < 8; i++){
+
+        qDebug() << override[i];
+        this->m_thrOvr[i] = override.at(i);
+    }
     m_thrOvrMutex.unlock();
 }
 
-void RovDataParser::doSetThrustersOverrideInvert(int override[8]){
+void RovDataParser::doSetThrustersOverrideInvert(qint8 override){
     m_thrOvrInvMutex.lock();
-    for(int i = 0; i < 8; i++) this->m_thrOvrInv[i] = override[i];
+    this->m_thrOvrInv = override;
     m_thrOvrInvMutex.unlock();
 }
 
 void RovDataParser::doPrepareDatagram(Joystick rc){
-    RovDatagram *datagram = new RovDatagram();
     m_overrideMutex.lock();
     bool state = m_override;
     m_overrideMutex.unlock();
 //    qDebug() << QString::number(rc.buttons, 2);
 
     // Buttons processing
-    datagram->manipulator[0] = BIT_CHECK(rc.buttons, 0) - BIT_CHECK(rc.buttons, 1);
-    datagram->manipulator[1] = BIT_CHECK(rc.buttons, 2) - BIT_CHECK(rc.buttons, 3);
-    datagram->camsel = BIT_CHECK(rc.buttons, 8);
+    m_datagram->manipulator[0] = BIT_CHECK(rc.buttons, 0) - BIT_CHECK(rc.buttons, 1);
+    m_datagram->manipulator[1] = BIT_CHECK(rc.buttons, 2) - BIT_CHECK(rc.buttons, 3);
+    m_datagram->camsel = BIT_CHECK(rc.buttons, 8);
 
 
     // Thrusters processing
@@ -50,7 +54,7 @@ void RovDataParser::doPrepareDatagram(Joystick rc){
         m_thrOvrMutex.lock();
         m_thrOvrInvMutex.lock();
         for(int i = 0; i < 8; i++){
-            datagram->thrusterPower[i] = m_thrOvr[i] * (m_thrOvrInv[i] ? -1:1);
+            m_datagram->thrusterPower[i] = m_thrOvr[i] * (BIT_CHECK(m_thrOvrInv, i) ? -1:1);
         }
         m_thrOvrMutex.unlock();
         m_thrOvrInvMutex.unlock();
@@ -65,21 +69,24 @@ void RovDataParser::doPrepareDatagram(Joystick rc){
 
         //TODO: directions and axes setup
         //Horizontal thrusters
-        datagram->thrusterPower[0] = constrain(thrusterDirections[0] * (x-y-w), -100, 100);
-        datagram->thrusterPower[1] = constrain(thrusterDirections[1] * (x+y+w), -100, 100);
-        datagram->thrusterPower[2] = constrain(thrusterDirections[2] * (x+y-w), -100, 100);
-        datagram->thrusterPower[3] = constrain(thrusterDirections[3] * (x-y+w), -100, 100);
+        m_datagram->thrusterPower[0] = constrain(thrusterDirections[0] * (x-y-w), -100, 100);
+        m_datagram->thrusterPower[1] = constrain(thrusterDirections[1] * (x+y+w), -100, 100);
+        m_datagram->thrusterPower[2] = constrain(thrusterDirections[2] * (x+y-w), -100, 100);
+        m_datagram->thrusterPower[3] = constrain(thrusterDirections[3] * (x-y+w), -100, 100);
         //Vertical thrusters
-        datagram->thrusterPower[4] = constrain(thrusterDirections[4] * (z+d+r), -100, 100);
-        datagram->thrusterPower[5] = constrain(thrusterDirections[5] * (z+d-r), -100, 100);
-        datagram->thrusterPower[6] = constrain(thrusterDirections[6] * (z-d+r), -100, 100);
-        datagram->thrusterPower[7] = constrain(thrusterDirections[7] * (z-d-r), -100, 100);
+        m_datagram->thrusterPower[4] = constrain(thrusterDirections[4] * (z+d+r), -100, 100);
+        m_datagram->thrusterPower[5] = constrain(thrusterDirections[5] * (z+d-r), -100, 100);
+        m_datagram->thrusterPower[6] = constrain(thrusterDirections[6] * (z-d+r), -100, 100);
+        m_datagram->thrusterPower[7] = constrain(thrusterDirections[7] * (z-d-r), -100, 100);
     }
-    // Thrusters processing end
+    // Hats processing
+    m_datagram->cameraRotation[0] = rc.hats[0];
+    m_datagram->cameraRotation[1] = rc.hats[1];
+
 
 
     int i = 0;
-    qDebug() << QString(i) << ": " << datagram->thrusterPower[i++] << QString(i) << ": " << datagram->thrusterPower[i++] << QString(i) << ": " << datagram->thrusterPower[i++] << QString(i) << ": " << datagram->thrusterPower[i++] << QString(i) << ": " << datagram->thrusterPower[i++] << QString(i) << ": " << datagram->thrusterPower[i++] << QString(i) << ": " << datagram->thrusterPower[i++] << QString(i) << ": " << datagram->thrusterPower[i++];
+    qDebug() << QString(i) << ": " << m_datagram->thrusterPower[i++] << QString(i) << ": " << m_datagram->thrusterPower[i++] << QString(i) << ": " << m_datagram->thrusterPower[i++] << QString(i) << ": " << m_datagram->thrusterPower[i++] << QString(i) << ": " << m_datagram->thrusterPower[i++] << QString(i) << ": " << m_datagram->thrusterPower[i++] << QString(i) << ": " << m_datagram->thrusterPower[i++] << QString(i) << ": " << m_datagram->thrusterPower[i++];
 
     QByteArray ba;
 
@@ -88,20 +95,20 @@ void RovDataParser::doPrepareDatagram(Joystick rc){
 
 
     // begin v1
-    in << datagram->header;
-    in << datagram->version;
-    in << datagram->auxFlags;
+    in << m_datagram->header;
+    in << m_datagram->version;
+    in << m_datagram->auxFlags;
     for (int i = 0; i < 10; i++) {
-        qint8 t = datagram->thrusterPower[i];
+        qint8 t = m_datagram->thrusterPower[i];
         in << t;
     }
-    in << datagram->manipulator[0];
-    in << datagram->manipulator[1];
-    for (qint8 c : datagram->cameraRotation) {
+    in << m_datagram->manipulator[0];
+    in << m_datagram->manipulator[1];
+    for (qint8 c : m_datagram->cameraRotation) {
         in << c;
     }
 
-    in << datagram->camsel;
+    in << m_datagram->camsel;
 
     emit controlReady(QByteArray(ba));
 }
@@ -123,8 +130,8 @@ void RovDataParser::doProcessTelemetry(QByteArray datagram){
             out >> telemetry.voltmeter;
             out >> telemetry.cameraIndex;
             out >> telemetry.temperature;
-            qDebug() << telemetry.voltmeter << "V";
-            qDebug() << telemetry.ammeter << "A";
+//            qDebug() << telemetry.voltmeter << "V";
+//            qDebug() << telemetry.ammeter << "A";
 
 //            qint16 crc = 0;
 //            out >> crc;
@@ -146,5 +153,5 @@ void RovDataParser::doProcessTelemetry(QByteArray datagram){
             qDebug() << "Wrong header";
         }
 
-        emit telemetryReady(telemetry);
+        emit telemetryProcessed(telemetry);
 }

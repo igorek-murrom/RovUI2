@@ -39,10 +39,10 @@
     </rect>
    </property>
    <layout class="QGridLayout" name="gridLayout">
-    <item row="3" column="2">
-     <widget class="QCheckBox" name="thrusterInvert4">
+    <item row="4" column="0">
+     <widget class="QLabel" name="thrusterLabel5">
       <property name="text">
-       <string>Invert</string>
+       <string>Thruster 5</string>
       </property>
      </widget>
     </item>
@@ -53,61 +53,71 @@
       </property>
      </widget>
     </item>
-    <item row="7" column="2">
-     <widget class="QCheckBox" name="thrusterInvert8">
-      <property name="text">
-       <string>Invert</string>
-      </property>
-     </widget>
+    <item row="5" column="1">
+     <layout class="QVBoxLayout" name="thrusterVL6">
+      <item>
+       <widget class="QSlider" name="thrusterSlider6">
+        <property name="minimum">
+         <number>-100</number>
+        </property>
+        <property name="maximum">
+         <number>100</number>
+        </property>
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+        <property name="tickPosition">
+         <enum>QSlider::NoTicks</enum>
+        </property>
+        <property name="tickInterval">
+         <number>0</number>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLabel" name="thrusterDLabel6">
+        <property name="text">
+         <string>0</string>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignCenter</set>
+        </property>
+       </widget>
+      </item>
+     </layout>
     </item>
-    <item row="0" column="2">
-     <widget class="QCheckBox" name="thrusterInvert1">
-      <property name="text">
-       <string>Invert</string>
-      </property>
-     </widget>
-    </item>
-    <item row="6" column="2">
-     <widget class="QCheckBox" name="thrusterInvert7">
-      <property name="text">
-       <string>Invert</string>
-      </property>
-     </widget>
-    </item>
-    <item row="7" column="0">
-     <widget class="QLabel" name="thrusterLabel8">
-      <property name="text">
-       <string>Thruster 8</string>
-      </property>
-     </widget>
-    </item>
-    <item row="4" column="0">
-     <widget class="QLabel" name="thrusterLabel5">
-      <property name="text">
-       <string>Thruster 5</string>
-      </property>
-     </widget>
-    </item>
-    <item row="2" column="2">
-     <widget class="QCheckBox" name="thrusterInvert3">
-      <property name="text">
-       <string>Invert</string>
-      </property>
-     </widget>
-    </item>
-    <item row="2" column="0">
-     <widget class="QLabel" name="thrusterLabel3">
-      <property name="text">
-       <string>Thruster 3</string>
-      </property>
-     </widget>
-    </item>
-    <item row="5" column="0">
-     <widget class="QLabel" name="thrusterLabel6">
-      <property name="text">
-       <string>Thruster 6</string>
-      </property>
-     </widget>
+    <item row="1" column="1">
+     <layout class="QVBoxLayout" name="thrusterVL2">
+      <item>
+       <widget class="QSlider" name="thrusterSlider2">
+        <property name="minimum">
+         <number>-100</number>
+        </property>
+        <property name="maximum">
+         <number>100</number>
+        </property>
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+        <property name="tickPosition">
+         <enum>QSlider::NoTicks</enum>
+        </property>
+        <property name="tickInterval">
+         <number>0</number>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLabel" name="thrusterDLabel2">
+        <property name="text">
+         <string>0</string>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignCenter</set>
+        </property>
+       </widget>
+      </item>
+     </layout>
     </item>
     <item row="3" column="0">
      <widget class="QLabel" name="thrusterLabel4">
@@ -116,43 +126,41 @@
       </property>
      </widget>
     </item>
-    <item row="1" column="0">
-     <widget class="QLabel" name="thrusterLabel2">
-      <property name="text">
-       <string>Thruster 2</string>
-      </property>
-     </widget>
-    </item>
-    <item row="4" column="2">
-     <widget class="QCheckBox" name="thrusterInvert5">
-      <property name="text">
-       <string>Invert</string>
-      </property>
-     </widget>
-    </item>
-    <item row="1" column="2">
-     <widget class="QCheckBox" name="thrusterInvert2">
-      <property name="text">
-       <string>Invert</string>
-      </property>
-     </widget>
-    </item>
-    <item row="5" column="2">
-     <widget class="QCheckBox" name="thrusterInvert6">
-      <property name="text">
-       <string>Invert</string>
-      </property>
-     </widget>
-    </item>
-    <item row="0" column="0">
-     <widget class="QLabel" name="thrusterLabel1">
-      <property name="text">
-       <string>Thruster 1</string>
-      </property>
-     </widget>
+    <item row="6" column="1">
+     <layout class="QVBoxLayout" name="thrusterVL7">
+      <item>
+       <widget class="QSlider" name="thrusterSlider7">
+        <property name="minimum">
+         <number>-100</number>
+        </property>
+        <property name="maximum">
+         <number>100</number>
+        </property>
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+        <property name="tickPosition">
+         <enum>QSlider::NoTicks</enum>
+        </property>
+        <property name="tickInterval">
+         <number>0</number>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLabel" name="thrusterDLabel7">
+        <property name="text">
+         <string>0</string>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignCenter</set>
+        </property>
+       </widget>
+      </item>
+     </layout>
     </item>
     <item row="0" column="1">
-     <layout class="QVBoxLayout" name="verticalLayout">
+     <layout class="QVBoxLayout" name="thrusterVL1">
       <item>
        <widget class="QSlider" name="thrusterSlider1">
         <property name="minimum">
@@ -173,40 +181,7 @@
        </widget>
       </item>
       <item>
-       <widget class="QLabel" name="label">
-        <property name="text">
-         <string>0</string>
-        </property>
-        <property name="alignment">
-         <set>Qt::AlignCenter</set>
-        </property>
-       </widget>
-      </item>
-     </layout>
-    </item>
-    <item row="1" column="1">
-     <layout class="QVBoxLayout" name="verticalLayout_2">
-      <item>
-       <widget class="QSlider" name="thrusterSlider1_2">
-        <property name="minimum">
-         <number>-100</number>
-        </property>
-        <property name="maximum">
-         <number>100</number>
-        </property>
-        <property name="orientation">
-         <enum>Qt::Horizontal</enum>
-        </property>
-        <property name="tickPosition">
-         <enum>QSlider::NoTicks</enum>
-        </property>
-        <property name="tickInterval">
-         <number>0</number>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QLabel" name="label_2">
+       <widget class="QLabel" name="thrusterDLabel1">
         <property name="text">
          <string>0</string>
         </property>
@@ -218,9 +193,9 @@
      </layout>
     </item>
     <item row="2" column="1">
-     <layout class="QVBoxLayout" name="verticalLayout_3">
+     <layout class="QVBoxLayout" name="thrusterVL3">
       <item>
-       <widget class="QSlider" name="thrusterSlider1_3">
+       <widget class="QSlider" name="thrusterSlider3">
         <property name="minimum">
          <number>-100</number>
         </property>
@@ -239,7 +214,7 @@
        </widget>
       </item>
       <item>
-       <widget class="QLabel" name="label_3">
+       <widget class="QLabel" name="thrusterDLabel3">
         <property name="text">
          <string>0</string>
         </property>
@@ -249,11 +224,32 @@
        </widget>
       </item>
      </layout>
+    </item>
+    <item row="2" column="0">
+     <widget class="QLabel" name="thrusterLabel3">
+      <property name="text">
+       <string>Thruster 3</string>
+      </property>
+     </widget>
+    </item>
+    <item row="0" column="0">
+     <widget class="QLabel" name="thrusterLabel1">
+      <property name="text">
+       <string>Thruster 1</string>
+      </property>
+     </widget>
+    </item>
+    <item row="7" column="0">
+     <widget class="QLabel" name="thrusterLabel8">
+      <property name="text">
+       <string>Thruster 8</string>
+      </property>
+     </widget>
     </item>
     <item row="3" column="1">
-     <layout class="QVBoxLayout" name="verticalLayout_4">
+     <layout class="QVBoxLayout" name="thrusterVL4">
       <item>
-       <widget class="QSlider" name="thrusterSlider1_4">
+       <widget class="QSlider" name="thrusterSlider4">
         <property name="minimum">
          <number>-100</number>
         </property>
@@ -272,7 +268,7 @@
        </widget>
       </item>
       <item>
-       <widget class="QLabel" name="label_4">
+       <widget class="QLabel" name="thrusterDLabel4">
         <property name="text">
          <string>0</string>
         </property>
@@ -282,11 +278,25 @@
        </widget>
       </item>
      </layout>
+    </item>
+    <item row="5" column="0">
+     <widget class="QLabel" name="thrusterLabel6">
+      <property name="text">
+       <string>Thruster 6</string>
+      </property>
+     </widget>
+    </item>
+    <item row="1" column="0">
+     <widget class="QLabel" name="thrusterLabel2">
+      <property name="text">
+       <string>Thruster 2</string>
+      </property>
+     </widget>
     </item>
     <item row="4" column="1">
-     <layout class="QVBoxLayout" name="verticalLayout_5">
+     <layout class="QVBoxLayout" name="thrusterVL5">
       <item>
-       <widget class="QSlider" name="thrusterSlider1_5">
+       <widget class="QSlider" name="thrusterSlider5">
         <property name="minimum">
          <number>-100</number>
         </property>
@@ -305,73 +315,7 @@
        </widget>
       </item>
       <item>
-       <widget class="QLabel" name="label_5">
-        <property name="text">
-         <string>0</string>
-        </property>
-        <property name="alignment">
-         <set>Qt::AlignCenter</set>
-        </property>
-       </widget>
-      </item>
-     </layout>
-    </item>
-    <item row="5" column="1">
-     <layout class="QVBoxLayout" name="verticalLayout_6">
-      <item>
-       <widget class="QSlider" name="thrusterSlider1_6">
-        <property name="minimum">
-         <number>-100</number>
-        </property>
-        <property name="maximum">
-         <number>100</number>
-        </property>
-        <property name="orientation">
-         <enum>Qt::Horizontal</enum>
-        </property>
-        <property name="tickPosition">
-         <enum>QSlider::NoTicks</enum>
-        </property>
-        <property name="tickInterval">
-         <number>0</number>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QLabel" name="label_6">
-        <property name="text">
-         <string>0</string>
-        </property>
-        <property name="alignment">
-         <set>Qt::AlignCenter</set>
-        </property>
-       </widget>
-      </item>
-     </layout>
-    </item>
-    <item row="6" column="1">
-     <layout class="QVBoxLayout" name="verticalLayout_7">
-      <item>
-       <widget class="QSlider" name="thrusterSlider1_7">
-        <property name="minimum">
-         <number>-100</number>
-        </property>
-        <property name="maximum">
-         <number>100</number>
-        </property>
-        <property name="orientation">
-         <enum>Qt::Horizontal</enum>
-        </property>
-        <property name="tickPosition">
-         <enum>QSlider::NoTicks</enum>
-        </property>
-        <property name="tickInterval">
-         <number>0</number>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QLabel" name="label_7">
+       <widget class="QLabel" name="thrusterDLabel5">
         <property name="text">
          <string>0</string>
         </property>
@@ -383,9 +327,9 @@
      </layout>
     </item>
     <item row="7" column="1">
-     <layout class="QVBoxLayout" name="verticalLayout_8">
+     <layout class="QVBoxLayout" name="thrusterVL8">
       <item>
-       <widget class="QSlider" name="thrusterSlider1_8">
+       <widget class="QSlider" name="thrusterSlider8">
         <property name="minimum">
          <number>-100</number>
         </property>
@@ -404,7 +348,7 @@
        </widget>
       </item>
       <item>
-       <widget class="QLabel" name="label_8">
+       <widget class="QLabel" name="thrusterDLabel8">
         <property name="text">
          <string>0</string>
         </property>
@@ -414,6 +358,62 @@
        </widget>
       </item>
      </layout>
+    </item>
+    <item row="0" column="2">
+     <widget class="QCheckBox" name="thrusterInvert1">
+      <property name="text">
+       <string>Invert</string>
+      </property>
+     </widget>
+    </item>
+    <item row="1" column="2">
+     <widget class="QCheckBox" name="thrusterInvert2">
+      <property name="text">
+       <string>Invert</string>
+      </property>
+     </widget>
+    </item>
+    <item row="2" column="2">
+     <widget class="QCheckBox" name="thrusterInvert3">
+      <property name="text">
+       <string>Invert</string>
+      </property>
+     </widget>
+    </item>
+    <item row="3" column="2">
+     <widget class="QCheckBox" name="thrusterInvert4">
+      <property name="text">
+       <string>Invert</string>
+      </property>
+     </widget>
+    </item>
+    <item row="4" column="2">
+     <widget class="QCheckBox" name="thrusterInvert5">
+      <property name="text">
+       <string>Invert</string>
+      </property>
+     </widget>
+    </item>
+    <item row="5" column="2">
+     <widget class="QCheckBox" name="thrusterInvert6">
+      <property name="text">
+       <string>Invert</string>
+      </property>
+     </widget>
+    </item>
+    <item row="6" column="2">
+     <widget class="QCheckBox" name="thrusterInvert7">
+      <property name="text">
+       <string>Invert</string>
+      </property>
+     </widget>
+    </item>
+    <item row="7" column="2">
+     <widget class="QCheckBox" name="thrusterInvert8">
+      <property name="text">
+       <string>Invert</string>
+      </property>
+     </widget>
     </item>
    </layout>
   </widget>
@@ -431,6 +431,25 @@
    </property>
   </widget>
  </widget>
+ <tabstops>
+  <tabstop>thrusterSlider1</tabstop>
+  <tabstop>thrusterInvert1</tabstop>
+  <tabstop>thrusterSlider2</tabstop>
+  <tabstop>thrusterInvert2</tabstop>
+  <tabstop>thrusterSlider3</tabstop>
+  <tabstop>thrusterInvert3</tabstop>
+  <tabstop>thrusterSlider4</tabstop>
+  <tabstop>thrusterInvert4</tabstop>
+  <tabstop>thrusterSlider5</tabstop>
+  <tabstop>thrusterInvert5</tabstop>
+  <tabstop>thrusterSlider6</tabstop>
+  <tabstop>thrusterInvert6</tabstop>
+  <tabstop>thrusterSlider7</tabstop>
+  <tabstop>thrusterInvert7</tabstop>
+  <tabstop>thrusterSlider8</tabstop>
+  <tabstop>thrusterInvert8</tabstop>
+  <tabstop>overrideEnable</tabstop>
+ </tabstops>
  <resources/>
  <connections>
   <connection>

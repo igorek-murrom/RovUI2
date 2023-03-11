@@ -1,4 +1,6 @@
 #include "thrustersetupdialog.h"
+#include "helpers.h"
+#include "qdebug.h"
 #include "ui_thrustersetupdialog.h"
 
 ThrusterSetupDialog::ThrusterSetupDialog(QWidget *parent) :
@@ -8,6 +10,16 @@ ThrusterSetupDialog::ThrusterSetupDialog(QWidget *parent) :
 
 {
     ui->setupUi(this);
+    m_dataLabels[0] = ui->thrusterDLabel1;
+    m_dataLabels[1] = ui->thrusterDLabel2;
+    m_dataLabels[2] = ui->thrusterDLabel3;
+    m_dataLabels[3] = ui->thrusterDLabel4;
+    m_dataLabels[4] = ui->thrusterDLabel5;
+    m_dataLabels[5] = ui->thrusterDLabel6;
+    m_dataLabels[6] = ui->thrusterDLabel7;
+    m_dataLabels[7] = ui->thrusterDLabel8;
+
+    createConnections();
 }
 
 void ThrusterSetupDialog::createConnections(){
@@ -29,16 +41,18 @@ void ThrusterSetupDialog::createConnections(){
     connect(ui->thrusterInvert1, &QCheckBox::stateChanged, this, [this](int val){doUpdateInvert(7,val);});
     connect(ui->thrusterInvert1, &QCheckBox::stateChanged, this, [this](int val){doUpdateInvert(8,val);});
 
-    connect(ui->overrideEnable, SIGNAL(QCheckBox::stateChanged), this, SLOT(doChangeOverrideStatus(int)));
+    connect(ui->overrideEnable, SIGNAL(stateChanged(int)), this, SLOT(doChangeOverrideStatus(int)));
 }
 
 void ThrusterSetupDialog::doUpdateSliders(int ind, int pos){
     thrustersOverride[ind] = pos;
+    qDebug() << "pos: " << QString::number(pos) << thrustersOverride[ind];
+    m_dataLabels[ind-1]->setText(QString::number(pos));
     emit thrustersOverridden(thrustersOverride);
 }
 
 void ThrusterSetupDialog::doUpdateInvert(int ind, int state){
-    invertOverride[ind] = state;
+    state ? BIT_SET(invertOverride, ind) : BIT_CLEAR(invertOverride, ind);
     emit invertsOverridden(invertOverride);
 }
 

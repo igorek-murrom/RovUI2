@@ -1,6 +1,7 @@
 #ifndef THRUSTERSETUPDIALOG_H
 #define THRUSTERSETUPDIALOG_H
 
+#include "qlabel.h"
 #include <QDialog>
 #include <QSettings>
 
@@ -23,18 +24,19 @@ public slots:
 
 signals:
     void overrideStatusChanged(bool);
-    void thrustersOverridden(int[8]);
-    void invertsOverridden(bool[8]);
+    void thrustersOverridden(QList<qint8>);
+    void invertsOverridden(qint8);
 
 private:
     void createConnections();
 
     QScopedPointer<QSettings> m_settings;
+    QLabel *m_dataLabels[8];
 
     Ui::ThrusterSetupDialog *ui;
 
-    int thrustersOverride[8];
-    bool invertOverride[8];
+    QList<qint8> thrustersOverride = {0,0,0,0,0,0,0,0};
+    qint8 invertOverride;
 };
 
 #endif // THRUSTERSETUPDIALOG_H
