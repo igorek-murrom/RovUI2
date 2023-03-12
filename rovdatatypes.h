@@ -1,6 +1,7 @@
 #ifndef ROVDATATYPES_H
 #define ROVDATATYPES_H
 
+#include "qfloat16.h"
 #include <QtGlobal>
 
 struct RovControl
@@ -26,6 +27,17 @@ struct RovDatagram
     RovDatagram(){}
 };
 
+struct RovRegulators
+{
+    qint8 header = 0xAD;
+    bool yawOn:1 = 0;
+    bool depthOn:1 = 0;
+    bool pitchOn:1 = 0;
+    qfloat16 desYaw = 0.0f;
+    qfloat16 desDepth = 0.0f;
+    qfloat16 desPitch = 0.0f;
+};
+
 struct RovTelemetry
 {
     static const uint8_t header_telemetry = 0xAE;
@@ -39,7 +51,7 @@ struct RovTelemetry
     float pitch = 0; //! -180/180;
     float yaw = 0; //! 0 - 360;
     float roll = 0; //! -180/180;
-    float ammeter = 0.0f;
+    float current = 0.0f;
     float voltmeter = 0.0f;
     int8_t cameraIndex = 0; //! 0 / 1 video multiplexer
     float temperature = 0.0f;

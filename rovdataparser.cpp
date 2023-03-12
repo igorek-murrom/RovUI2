@@ -23,7 +23,7 @@ void RovDataParser::doEnableThrustersOverride(bool state){
 
 void RovDataParser::doSetThrustersOverride(QList<qint8> override){
     m_thrOvrMutex.lock();
-    for(int i = 0; i < 8; i++){
+    for(int i = 0; i < override.size(); i++){
 
         qDebug() << override[i];
         this->m_thrOvr[i] = override.at(i);
@@ -83,11 +83,6 @@ void RovDataParser::doPrepareDatagram(Joystick rc){
     m_datagram->cameraRotation[0] = rc.hats[0];
     m_datagram->cameraRotation[1] = rc.hats[1];
 
-
-
-    int i = 0;
-    qDebug() << QString(i) << ": " << m_datagram->thrusterPower[i++] << QString(i) << ": " << m_datagram->thrusterPower[i++] << QString(i) << ": " << m_datagram->thrusterPower[i++] << QString(i) << ": " << m_datagram->thrusterPower[i++] << QString(i) << ": " << m_datagram->thrusterPower[i++] << QString(i) << ": " << m_datagram->thrusterPower[i++] << QString(i) << ": " << m_datagram->thrusterPower[i++] << QString(i) << ": " << m_datagram->thrusterPower[i++];
-
     QByteArray ba;
 
     QDataStream in(&ba, QIODevice::WriteOnly);
@@ -126,7 +121,7 @@ void RovDataParser::doProcessTelemetry(QByteArray datagram){
             out >> telemetry.pitch;
             out >> telemetry.yaw;
             out >> telemetry.roll;
-            out >> telemetry.ammeter;
+            out >> telemetry.current;
             out >> telemetry.voltmeter;
             out >> telemetry.cameraIndex;
             out >> telemetry.temperature;

@@ -36,10 +36,13 @@
      <enum>QFrame::Sunken</enum>
     </property>
     <property name="text">
-     <string>TextLabel</string>
+     <string>Camera input here</string>
     </property>
     <property name="scaledContents">
      <bool>true</bool>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignCenter</set>
     </property>
    </widget>
   </widget>
@@ -71,9 +74,17 @@
     </property>
     <addaction name="actionDisplay_joystick_setup_dialog"/>
    </widget>
+   <widget class="QMenu" name="menuData_graphs">
+    <property name="title">
+     <string>Data graphs</string>
+    </property>
+    <addaction name="actionShow_graphs"/>
+    <addaction name="actionHide_graphs"/>
+   </widget>
    <addaction name="menuCamera"/>
    <addaction name="menuThrusters"/>
    <addaction name="menuJoystick"/>
+   <addaction name="menuData_graphs"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
   <widget class="QDockWidget" name="telemetryDockWidget">
@@ -215,6 +226,16 @@
   <action name="actionDisplay_joystick_setup_dialog">
    <property name="text">
     <string>Display joystick setup dialog[WIP]</string>
+   </property>
+  </action>
+  <action name="actionShow_graphs">
+   <property name="text">
+    <string>Show graphs</string>
+   </property>
+  </action>
+  <action name="actionHide_graphs">
+   <property name="text">
+    <string>Hide graphs</string>
    </property>
   </action>
  </widget>

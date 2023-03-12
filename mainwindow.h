@@ -8,6 +8,7 @@
 #include "joystickhandler.h"
 #include "joysticksetupdialog.h"
 #include "rovcameracapture.h"
+#include "rovdatasplines.h"
 #include "thrustersetupdialog.h"
 #include "rovcommunication.h"
 #include "rovdataparser.h"
@@ -31,6 +32,7 @@ public slots:
     void doUpdateCameraLabel(QImage);
     void doResizeCameraLabel();
     void doUpdateTelemetry(RovTelemetry);
+    void updateDatasplines(RovTelemetry);
 //    void updateRegulators(QBitArray regulators); //TODO: implement
     void doUpdateThrustFactor(float thrustFactor);
 
@@ -40,6 +42,9 @@ signals:
 private:
     void createConnections();
 
+    quint8 m_vSamples = 0;
+    quint8 m_aSamples = 0;
+
     Ui::MainWindow *ui;
     QScopedPointer<RovCameraCapture> m_camera;
     QScopedPointer<ThrusterSetupDialog> m_tsd;
@@ -47,5 +52,6 @@ private:
     QScopedPointer<JoystickSetupDialog> m_jsd;
     QScopedPointer<RovCommunication> m_communication;
     QScopedPointer<RovDataParser> m_dataparser;
+    QScopedPointer<RovDataSplines> m_datasplines;
 };
 #endif // MAINWINDOW_H

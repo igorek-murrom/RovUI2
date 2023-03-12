@@ -33,20 +33,20 @@ void ThrusterSetupDialog::createConnections(){
     connect(ui->thrusterSlider8, &QSlider::valueChanged, this, [this](int val){doUpdateSliders(8,val);});
 
     connect(ui->thrusterInvert1, &QCheckBox::stateChanged, this, [this](int val){doUpdateInvert(1,val);});
-    connect(ui->thrusterInvert1, &QCheckBox::stateChanged, this, [this](int val){doUpdateInvert(2,val);});
-    connect(ui->thrusterInvert1, &QCheckBox::stateChanged, this, [this](int val){doUpdateInvert(3,val);});
-    connect(ui->thrusterInvert1, &QCheckBox::stateChanged, this, [this](int val){doUpdateInvert(4,val);});
-    connect(ui->thrusterInvert1, &QCheckBox::stateChanged, this, [this](int val){doUpdateInvert(5,val);});
-    connect(ui->thrusterInvert1, &QCheckBox::stateChanged, this, [this](int val){doUpdateInvert(6,val);});
-    connect(ui->thrusterInvert1, &QCheckBox::stateChanged, this, [this](int val){doUpdateInvert(7,val);});
-    connect(ui->thrusterInvert1, &QCheckBox::stateChanged, this, [this](int val){doUpdateInvert(8,val);});
+    connect(ui->thrusterInvert2, &QCheckBox::stateChanged, this, [this](int val){doUpdateInvert(2,val);});
+    connect(ui->thrusterInvert3, &QCheckBox::stateChanged, this, [this](int val){doUpdateInvert(3,val);});
+    connect(ui->thrusterInvert4, &QCheckBox::stateChanged, this, [this](int val){doUpdateInvert(4,val);});
+    connect(ui->thrusterInvert5, &QCheckBox::stateChanged, this, [this](int val){doUpdateInvert(5,val);});
+    connect(ui->thrusterInvert6, &QCheckBox::stateChanged, this, [this](int val){doUpdateInvert(6,val);});
+    connect(ui->thrusterInvert7, &QCheckBox::stateChanged, this, [this](int val){doUpdateInvert(7,val);});
+    connect(ui->thrusterInvert8, &QCheckBox::stateChanged, this, [this](int val){doUpdateInvert(8,val);});
 
     connect(ui->overrideEnable, SIGNAL(stateChanged(int)), this, SLOT(doChangeOverrideStatus(int)));
 }
 
 void ThrusterSetupDialog::doUpdateSliders(int ind, int pos){
-    thrustersOverride[ind] = pos;
-    qDebug() << "pos: " << QString::number(pos) << thrustersOverride[ind];
+    thrustersOverride[ind-1] = pos;
+    qDebug() << "pos: " << QString::number(pos) << thrustersOverride[ind-1];
     m_dataLabels[ind-1]->setText(QString::number(pos));
     emit thrustersOverridden(thrustersOverride);
 }

@@ -1,6 +1,6 @@
 #include "mainwindow.h"
 #include "ui_mainwindow2.h"
-
+#include "unistd.h"
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -11,6 +11,7 @@ MainWindow::MainWindow(QWidget *parent)
     , m_jsd(new JoystickSetupDialog(this))
     , m_communication(new RovCommunication(this))
     , m_dataparser(new RovDataParser(this))
+    , m_datasplines(new RovDataSplines(this))
 {
     ui->setupUi(this);
     setWindowTitle("RovUI2 v0.95");
@@ -19,6 +20,10 @@ MainWindow::MainWindow(QWidget *parent)
     QTimer *timer = new QTimer(this);
     connect(timer, &QTimer::timeout, this, &MainWindow::doResizeCameraLabel);
     timer->start();
+    for(int i = 0; i < 150; i++){
+        m_datasplines->addVoltageSample(QPointF(i, QRandomGenerator::global()->bounded(6,12)));
+        m_datasplines->addCurrentSample(QPointF(i, QRandomGenerator::global()->bounded(0,25)));
+    }
 }
 
 MainWindow::~MainWindow()
@@ -36,6 +41,11 @@ void MainWindow::doUpdateCameraLabel(QImage img){
     ui->camLabel->setPixmap(QPixmap::fromImage(img));
 }
 
+void MainWindow::updateDatasplines(RovTelemetry tele){
+    m_datasplines.data()->addVoltageSample(QPointF(tele.voltmeter, m_vSamples++));
+    m_datasplines.data()->addCurrentSample(QPointF(tele.current, m_aSamples++));
+}
+
 void MainWindow::doUpdateTelemetry(RovTelemetry telemetry){
     QString text;
     ui->teleVersionLabel->setText(       "Version:   " + QString::number(telemetry.version));
@@ -45,7 +55,7 @@ void MainWindow::doUpdateTelemetry(RovTelemetry telemetry){
     ui->teleRollLabel->setText(          "Roll:      " + QString::number(telemetry.roll) + " deg");
     ui->teleTempLabel->setText(          "Twater:    " + QString::number(telemetry.temperature) + " C");
     ui->teleVoltageLabel->setText(       "Voltage:   " + QString::number(std::round(telemetry.voltmeter * 100)/100) + " V");
-    ui->teleCurrentLabel->setText(       "Current:   " + QString::number(std::round(telemetry.ammeter * 100000)/100) + " mA");
+    ui->teleCurrentLabel->setText(       "Current:   " + QString::number(std::round(telemetry.current * 100000)/100) + " mA");
     ui->teleCamSelLabel->setText(QString("CamSel:    ") + (telemetry.cameraIndex==0 ? "Front" : "Rear"));
 }
 
@@ -63,6 +73,8 @@ void MainWindow::createConnections()
     connect(ui->actionDisplay_thruster_setup_dialog, &QAction::triggered, [this]{m_tsd->show();});
     connect(ui->actionDisplay_joystick_setup_dialog, &QAction::triggered, [this]{m_jsd->show();});
 
+    connect(ui->actionShow_graphs, &QAction::triggered, [this]{ m_datasplines->show();});
+    connect(ui->actionHide_graphs, &QAction::triggered, [this]{ m_datasplines->hide();});
 
     connect(m_joystick.data(), SIGNAL(joystickUpdated(Joystick)), m_jsd.data(), SLOT(updateUi(Joystick)));
     connect(m_joystick.data(), SIGNAL(joystickChanged(Joystick)), m_jsd.data(), SLOT(populateUi(Joystick)));
@@ -76,4 +88,6 @@ void MainWindow::createConnections()
     connect(m_tsd.data(), SIGNAL(overrideStatusChanged(bool)), m_dataparser.data(), SLOT(doEnableThrustersOverride(bool)));
     connect(m_tsd.data(), SIGNAL(thrustersOverridden(QList<qint8>)), m_dataparser.data(), SLOT(doSetThrustersOverride(QList<qint8>)));
     connect(m_tsd.data(), SIGNAL(overrideStatusChanged(bool)), m_dataparser.data(), SLOT(doEnableThrustersOverride(bool)));
+
+    connect(m_dataparser.data(), SIGNAL(telemetryProcessed(RovTelemetry)), this, SLOT(updateDatasplines(RovTelemetry)));
 }
