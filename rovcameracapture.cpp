@@ -9,16 +9,13 @@ RovCameraCapture::RovCameraCapture(QWidget* parent) :
     connect(displayTimer, &QTimer::timeout, this, &RovCameraCapture::doProcessCamera);
 }
 
-void RovCameraCapture::doStartCapture(){
+void RovCameraCapture::startCapture(int index){
 
-    qWarning() << "Opening result: " << QString(cap.open(0));
+    qWarning() << "Opening result: " << QString(cap.open(index));
 }
 
-void RovCameraCapture::doStopCapture(){
+void RovCameraCapture::stopCapture(){
     cap.release();
-}
-
-void RovCameraCapture::createConnections(){
 }
 
 void RovCameraCapture::doProcessCamera(){

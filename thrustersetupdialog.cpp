@@ -23,40 +23,40 @@ ThrusterSetupDialog::ThrusterSetupDialog(QWidget *parent) :
 }
 
 void ThrusterSetupDialog::createConnections(){
-    connect(ui->thrusterSlider1, &QSlider::valueChanged, this, [this](int val){doUpdateSliders(1,val);});
-    connect(ui->thrusterSlider2, &QSlider::valueChanged, this, [this](int val){doUpdateSliders(2,val);});
-    connect(ui->thrusterSlider3, &QSlider::valueChanged, this, [this](int val){doUpdateSliders(3,val);});
-    connect(ui->thrusterSlider4, &QSlider::valueChanged, this, [this](int val){doUpdateSliders(4,val);});
-    connect(ui->thrusterSlider5, &QSlider::valueChanged, this, [this](int val){doUpdateSliders(5,val);});
-    connect(ui->thrusterSlider6, &QSlider::valueChanged, this, [this](int val){doUpdateSliders(6,val);});
-    connect(ui->thrusterSlider7, &QSlider::valueChanged, this, [this](int val){doUpdateSliders(7,val);});
-    connect(ui->thrusterSlider8, &QSlider::valueChanged, this, [this](int val){doUpdateSliders(8,val);});
+    connect(ui->thrusterSlider1, &QSlider::valueChanged, this, [this](int val){updateSliders(1,val);});
+    connect(ui->thrusterSlider2, &QSlider::valueChanged, this, [this](int val){updateSliders(2,val);});
+    connect(ui->thrusterSlider3, &QSlider::valueChanged, this, [this](int val){updateSliders(3,val);});
+    connect(ui->thrusterSlider4, &QSlider::valueChanged, this, [this](int val){updateSliders(4,val);});
+    connect(ui->thrusterSlider5, &QSlider::valueChanged, this, [this](int val){updateSliders(5,val);});
+    connect(ui->thrusterSlider6, &QSlider::valueChanged, this, [this](int val){updateSliders(6,val);});
+    connect(ui->thrusterSlider7, &QSlider::valueChanged, this, [this](int val){updateSliders(7,val);});
+    connect(ui->thrusterSlider8, &QSlider::valueChanged, this, [this](int val){updateSliders(8,val);});
 
-    connect(ui->thrusterInvert1, &QCheckBox::stateChanged, this, [this](int val){doUpdateInvert(1,val);});
-    connect(ui->thrusterInvert2, &QCheckBox::stateChanged, this, [this](int val){doUpdateInvert(2,val);});
-    connect(ui->thrusterInvert3, &QCheckBox::stateChanged, this, [this](int val){doUpdateInvert(3,val);});
-    connect(ui->thrusterInvert4, &QCheckBox::stateChanged, this, [this](int val){doUpdateInvert(4,val);});
-    connect(ui->thrusterInvert5, &QCheckBox::stateChanged, this, [this](int val){doUpdateInvert(5,val);});
-    connect(ui->thrusterInvert6, &QCheckBox::stateChanged, this, [this](int val){doUpdateInvert(6,val);});
-    connect(ui->thrusterInvert7, &QCheckBox::stateChanged, this, [this](int val){doUpdateInvert(7,val);});
-    connect(ui->thrusterInvert8, &QCheckBox::stateChanged, this, [this](int val){doUpdateInvert(8,val);});
+    connect(ui->thrusterInvert1, &QCheckBox::stateChanged, this, [this](int val){updateInvert(1,val);});
+    connect(ui->thrusterInvert2, &QCheckBox::stateChanged, this, [this](int val){updateInvert(2,val);});
+    connect(ui->thrusterInvert3, &QCheckBox::stateChanged, this, [this](int val){updateInvert(3,val);});
+    connect(ui->thrusterInvert4, &QCheckBox::stateChanged, this, [this](int val){updateInvert(4,val);});
+    connect(ui->thrusterInvert5, &QCheckBox::stateChanged, this, [this](int val){updateInvert(5,val);});
+    connect(ui->thrusterInvert6, &QCheckBox::stateChanged, this, [this](int val){updateInvert(6,val);});
+    connect(ui->thrusterInvert7, &QCheckBox::stateChanged, this, [this](int val){updateInvert(7,val);});
+    connect(ui->thrusterInvert8, &QCheckBox::stateChanged, this, [this](int val){updateInvert(8,val);});
 
-    connect(ui->overrideEnable, SIGNAL(stateChanged(int)), this, SLOT(doChangeOverrideStatus(int)));
+    connect(ui->overrideEnable, SIGNAL(stateChanged(int)), this, SLOT(changeOverrideStatus(int)));
 }
 
-void ThrusterSetupDialog::doUpdateSliders(int ind, int pos){
+void ThrusterSetupDialog::updateSliders(int ind, int pos){
     thrustersOverride[ind-1] = pos;
     qDebug() << "pos: " << QString::number(pos) << thrustersOverride[ind-1];
     m_dataLabels[ind-1]->setText(QString::number(pos));
     emit thrustersOverridden(thrustersOverride);
 }
 
-void ThrusterSetupDialog::doUpdateInvert(int ind, int state){
+void ThrusterSetupDialog::updateInvert(int ind, int state){
     state ? BIT_SET(invertOverride, ind) : BIT_CLEAR(invertOverride, ind);
     emit invertsOverridden(invertOverride);
 }
 
-void ThrusterSetupDialog::doChangeOverrideStatus(int state){
+void ThrusterSetupDialog::changeOverrideStatus(int state){
     emit overrideStatusChanged(state>0);
 }
 

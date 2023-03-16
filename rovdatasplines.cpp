@@ -6,13 +6,24 @@
 
 RovDataSplines::RovDataSplines(QWidget *parent) :
     QDialog(parent),
-    m_voltageSeries(new QSplineSeries()),
-    m_currentSeries(new QSplineSeries()),
+    m_voltageAxisV(new QValueAxis()),
+    m_voltageAxisH(new QValueAxis()),
+    m_currentAxisV(new QValueAxis()),
+    m_currentAxisH(new QValueAxis()),
+    m_voltageSeries(new QSplineSeries(this)),
+    m_currentSeries(new QSplineSeries(this)),
     m_voltageChart(new QChart()),
     m_currentChart(new QChart()),
     ui(new Ui::RovDataSplines)
 {
     ui->setupUi(this);
+    m_voltageAxisV->setRange(5,15);
+    m_voltageAxisV->setTickCount(11);
+    m_voltageAxisV->setMinorTickCount(3);
+
+    m_currentAxisV->setRange(0,30);
+    m_currentAxisV->setTickCount(7);
+    m_currentAxisV->setMinorTickCount(4);
 
     m_voltageSeries->setName("Voltage");
     m_currentSeries->setName("Current");
@@ -27,20 +38,27 @@ RovDataSplines::RovDataSplines(QWidget *parent) :
     m_voltageChart->legend()->hide();
     m_currentChart->legend()->hide();
 
-    m_voltageChart->addSeries(m_voltageSeries.data());
-    m_currentChart->addSeries(m_currentSeries.data());
+    m_voltageChart->addSeries(m_voltageSeries);
+    m_currentChart->addSeries(m_currentSeries);
 
     m_voltageChart->setTitle("Voltage chart");
     m_currentChart->setTitle("Current chart");
 
-    m_voltageChart->createDefaultAxes();
-    m_currentChart->createDefaultAxes();
 
-    m_voltageChart->axes(Qt::Vertical).first()->setRange(0, 12);
-    m_currentChart->axes(Qt::Vertical).first()->setRange(0, 25);
+    m_voltageChart->addAxis(m_voltageAxisH, Qt::AlignBottom);
+    m_voltageChart->addAxis(m_voltageAxisV, Qt::AlignLeft);
 
-    m_voltageChart->axes(Qt::Horizontal).first()->setRange(0, 10);
-    m_currentChart->axes(Qt::Horizontal).first()->setRange(0, 10);
+    m_voltageSeries->attachAxis(m_voltageAxisH);
+    m_voltageSeries->attachAxis(m_voltageAxisV);
+
+    m_currentChart->addAxis(m_currentAxisH, Qt::AlignBottom);
+    m_currentChart->addAxis(m_currentAxisV, Qt::AlignLeft);
+
+    m_currentSeries->attachAxis(m_currentAxisH);
+    m_currentSeries->attachAxis(m_currentAxisV);
+
+    m_voltageChart->axes(Qt::Horizontal).first()->hide();
+    m_currentChart->axes(Qt::Horizontal).first()->hide();
 
     m_voltageChart.data()->setTheme(QChart::ChartThemeQt);
     m_currentChart.data()->setTheme(QChart::ChartThemeQt);
@@ -51,26 +69,22 @@ RovDataSplines::RovDataSplines(QWidget *parent) :
 }
 
 void RovDataSplines::addVoltageSample(QPointF sample){
-    qDebug() << "appending V sample " << sample;
     m_voltageSeries->append(sample);
-    if (m_voltageSeries->count()>=50){
-        qDebug() << "removing outdated sample" << m_voltageSeries->at(0);
-        m_voltageSeries.data()->remove(0);
+    if (m_voltageSeries->count()>=maxVSamples){
+        m_voltageSeries->remove(0);
     }
     int rangeB = m_voltageSeries->at(0).x();
     int rangeE = m_voltageSeries->at(m_voltageSeries->count()).x();
-    m_voltageChart->axes(Qt::Horizontal).first()->setRange(rangeB, rangeE);
+    m_voltageChart->axes(Qt::Horizontal).front()->setRange(rangeB, rangeE);
 }
 void RovDataSplines::addCurrentSample(QPointF sample){
-    qDebug() << "appending A sample " << sample;
     m_currentSeries->append(sample);
-    if (m_currentSeries->count()>=50){
-        qDebug() << "removing outdated sample" << m_currentSeries->at(0);
-        m_currentSeries.data()->remove(0);
+    if (m_currentSeries->count()>=maxCSamples){
+        m_currentSeries->remove(0);
     }
     int rangeB = m_currentSeries->at(0).x();
     int rangeE = m_currentSeries->at(m_currentSeries->count()).x();
-    m_currentChart->axes(Qt::Horizontal).first()->setRange(rangeB, rangeE);
+    m_currentChart->axes(Qt::Horizontal).front()->setRange(rangeB, rangeE);
 }
 
 RovDataSplines::~RovDataSplines()

@@ -19,19 +19,24 @@ signals:
     void telemetryProcessed(RovTelemetry);
     void controlReady(QByteArray);
 public slots:
-    void doProcessTelemetry(QByteArray);
-    void doPrepareDatagram(Joystick);
-    void doEnableThrustersOverride(bool);
-    void doSetThrustersOverride(QList<qint8>);
-    void doSetThrustersOverrideInvert(qint8);
+    void processTelemetry(QByteArray);
+    void prepareControl(Joystick);
+    void prepareAuxControl();
+    void enableThrustersOverride(bool);
+    void setThrustersOverride(QList<qint8>);
+    void setThrustersOverrideInvert(qint8);
+    void setAuxFlags(qint8);
+
 
 private:
     constexpr static short thrusterDirections[10] = {1,-1,-1,1,-1,1,-1,1,1,1};
     QList<qint8> m_thrOvr = {0,0,0,0,0,0,0,0};
     qint8 m_thrOvrInv = 0b00000000;
+    QList<qint8> m_desiredRegVals = {0,0,0,0};
+    qint8 m_auxFlags = 0b00000000;
     bool m_override = false;
 
-    QScopedPointer<RovDatagram> m_datagram;
+    QScopedPointer<RovControlDatagram> m_datagram;
 
     QMutex m_thrOvrMutex;
     QMutex m_thrOvrInvMutex;

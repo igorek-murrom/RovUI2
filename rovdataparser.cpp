@@ -7,7 +7,7 @@ inline float constrain(float val, float min, float max){
 
 RovDataParser::RovDataParser(QObject *parent)
     : QObject{parent}
-    , m_datagram(new RovDatagram())
+    , m_datagram(new RovControlDatagram())
     , m_thrOvrMutex()
     , m_thrOvrInvMutex()
     , m_overrideMutex()
@@ -15,13 +15,13 @@ RovDataParser::RovDataParser(QObject *parent)
 
 }
 
-void RovDataParser::doEnableThrustersOverride(bool state){
+void RovDataParser::enableThrustersOverride(bool state){
     m_overrideMutex.lock();
     this->m_override = state;
     m_overrideMutex.unlock();
 }
 
-void RovDataParser::doSetThrustersOverride(QList<qint8> override){
+void RovDataParser::setThrustersOverride(QList<qint8> override){
     m_thrOvrMutex.lock();
     for(int i = 0; i < override.size(); i++){
 
@@ -31,13 +31,21 @@ void RovDataParser::doSetThrustersOverride(QList<qint8> override){
     m_thrOvrMutex.unlock();
 }
 
-void RovDataParser::doSetThrustersOverrideInvert(qint8 override){
+void RovDataParser::setThrustersOverrideInvert(qint8 override){
     m_thrOvrInvMutex.lock();
     this->m_thrOvrInv = override;
     m_thrOvrInvMutex.unlock();
 }
 
-void RovDataParser::doPrepareDatagram(Joystick rc){
+void RovDataParser::setAuxFlags(qint8 flags){
+    m_auxFlags = flags;
+}
+
+void RovDataParser::prepareAuxControl(){
+
+}
+
+void RovDataParser::prepareControl(Joystick rc){
     m_overrideMutex.lock();
     bool state = m_override;
     m_overrideMutex.unlock();
@@ -80,8 +88,8 @@ void RovDataParser::doPrepareDatagram(Joystick rc){
         m_datagram->thrusterPower[7] = constrain(thrusterDirections[7] * (z-d-r), -100, 100);
     }
     // Hats processing
-    m_datagram->cameraRotation[0] = rc.hats[0];
-    m_datagram->cameraRotation[1] = rc.hats[1];
+    m_datagram->cameraRotation[0] = rc.hats[1];
+    m_datagram->cameraRotation[1] = rc.hats[0];
 
     QByteArray ba;
 
@@ -92,7 +100,7 @@ void RovDataParser::doPrepareDatagram(Joystick rc){
     // begin v1
     in << m_datagram->header;
     in << m_datagram->version;
-    in << m_datagram->auxFlags;
+//    in << m_datagram->auxFlags;
     for (int i = 0; i < 10; i++) {
         qint8 t = m_datagram->thrusterPower[i];
         in << t;
@@ -108,7 +116,7 @@ void RovDataParser::doPrepareDatagram(Joystick rc){
     emit controlReady(QByteArray(ba));
 }
 
-void RovDataParser::doProcessTelemetry(QByteArray datagram){
+void RovDataParser::processTelemetry(QByteArray datagram){
         RovTelemetry telemetry = RovTelemetry();
 
         if (quint8(datagram[0]) == RovTelemetry::header_telemetry) {

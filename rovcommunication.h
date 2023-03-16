@@ -13,8 +13,10 @@ public:
 
 signals:
     void telemetryReady(QByteArray);
+    void telemetryStopped();
+    void telemetryStarted();
 public slots:
-    void doSendControl(QByteArray);
+    void sendControl(QByteArray);
 private slots:
     void doReadTelemetry();
 
@@ -22,6 +24,7 @@ private:
     quint16 m_inPort = 3010;
     QHostAddress m_rovAddress = QHostAddress("192.168.1.5");
     quint16 m_rovPort = 3010;
+
     QScopedPointer<QUdpSocket> m_udpSocket;
 };
 

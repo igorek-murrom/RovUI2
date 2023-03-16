@@ -19,9 +19,9 @@ signals:
     void joystickUpdated(Joystick);
     void joystickChanged(Joystick);
 public slots:
-    void doUpdateSettings();
-    void doUpdateJoystick();
-    void doUpdateASFs(int[6]);
+    void updateSettings();
+    void updateJoystick();
+    void updateASFs(int[6]);
 private slots:
     void timerEvent(QTimerEvent *event);
 

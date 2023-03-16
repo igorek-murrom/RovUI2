@@ -16,6 +16,7 @@ SOURCES += \
     cameralabel.cpp \
     joystickhandler.cpp \
     joysticksetupdialog.cpp \
+    ledindicator.cpp \
     main.cpp \
     mainwindow.cpp \
     rovcameracapture.cpp \
@@ -30,6 +31,7 @@ HEADERS += \
     joystick.h \
     joystickhandler.h \
     joysticksetupdialog.h \
+    ledindicator.h \
     mainwindow.h \
     rovcameracapture.h \
     rovcommunication.h \

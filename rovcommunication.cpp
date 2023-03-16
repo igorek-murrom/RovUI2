@@ -4,8 +4,7 @@ RovCommunication::RovCommunication(QObject *parent)
     : QObject{parent}
     , m_udpSocket(new QUdpSocket(this))
 {
-    bool status = m_udpSocket.data()->bind(m_inPort);
-    qInfo() << status;
+    m_udpSocket.data()->bind(m_inPort);
     connect(m_udpSocket.data(), &QUdpSocket::readyRead,
                 this, &RovCommunication::doReadTelemetry);
 
@@ -18,7 +17,7 @@ void RovCommunication::doReadTelemetry(){
         emit telemetryReady(QByteArray(datagram));
     }
 }
-void RovCommunication::doSendControl(QByteArray datagram){
+void RovCommunication::sendControl(QByteArray datagram){
     m_udpSocket->writeDatagram(datagram, m_rovAddress, m_rovPort);
 //    qInfo() << "Send CDV2" << datagram;
 }

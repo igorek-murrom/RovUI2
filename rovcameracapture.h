@@ -19,14 +19,13 @@ signals:
     void imgProcessed(QImage);
 
 public slots:
-    void doStartCapture();
-    void doStopCapture();
+    void startCapture(int);
+    void stopCapture();
 
 private slots:
     void doProcessCamera();
 
 private:
-    void createConnections();
     bool updateNeeded = true;
 
     cv::VideoCapture cap;

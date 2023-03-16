@@ -15,19 +15,18 @@ struct RovControl
     RovControl() {}
 };
 
-struct RovDatagram
+struct RovControlDatagram
 {
     qint8 header = 0xAC;
     quint8 version = 2;
-    quint8 auxFlags = 0b00000000;
     qint8 thrusterPower[10] = {0,0,0,0,0,0,0,0,0,0};
     qint8 cameraRotation[2] = {0,0}; // front, rear
     qint8 manipulator[2] = {0,0}; // open/close, rotate
     qint8 camsel = false;
-    RovDatagram(){}
+    RovControlDatagram(){}
 };
 
-struct RovRegulators
+struct RovRegulatorsDatagram
 {
     qint8 header = 0xAD;
     bool yawOn:1 = 0;

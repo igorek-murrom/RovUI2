@@ -18,9 +18,9 @@ public:
     ~ThrusterSetupDialog();
 
 public slots:
-    void doUpdateSliders(int, int);//state,num
-    void doUpdateInvert(int, int);//state,num
-    void doChangeOverrideStatus(int);
+    void updateSliders(int, int);//state,num
+    void updateInvert(int, int);//state,num
+    void changeOverrideStatus(int);
 
 signals:
     void overrideStatusChanged(bool);
