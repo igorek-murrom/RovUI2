@@ -204,29 +204,13 @@
     <number>1</number>
    </attribute>
    <widget class="QWidget" name="regulatorsDockWidgetContents">
-    <widget class="QPushButton" name="misc">
-     <property name="geometry">
-      <rect>
-       <x>90</x>
-       <y>0</y>
-       <width>161</width>
-       <height>241</height>
-      </rect>
-     </property>
-     <property name="text">
-      <string>whatever
-else we
-might think
-of</string>
-     </property>
-    </widget>
     <widget class="QCheckBox" name="depthRegulatorCB">
      <property name="geometry">
       <rect>
        <x>0</x>
        <y>0</y>
        <width>91</width>
-       <height>31</height>
+       <height>41</height>
       </rect>
      </property>
      <property name="text">
@@ -237,9 +221,9 @@ of</string>
      <property name="geometry">
       <rect>
        <x>0</x>
-       <y>30</y>
+       <y>40</y>
        <width>91</width>
-       <height>31</height>
+       <height>41</height>
       </rect>
      </property>
      <property name="text">
@@ -250,9 +234,9 @@ of</string>
      <property name="geometry">
       <rect>
        <x>0</x>
-       <y>60</y>
+       <y>80</y>
        <width>91</width>
-       <height>31</height>
+       <height>41</height>
       </rect>
      </property>
      <property name="text">
@@ -263,13 +247,105 @@ of</string>
      <property name="geometry">
       <rect>
        <x>0</x>
-       <y>90</y>
+       <y>120</y>
        <width>91</width>
-       <height>31</height>
+       <height>41</height>
       </rect>
      </property>
      <property name="text">
       <string>Pitch</string>
+     </property>
+    </widget>
+    <widget class="QLabel" name="label">
+     <property name="geometry">
+      <rect>
+       <x>0</x>
+       <y>160</y>
+       <width>241</width>
+       <height>61</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>FWNIY</string>
+     </property>
+     <property name="scaledContents">
+      <bool>true</bool>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignCenter</set>
+     </property>
+    </widget>
+    <widget class="QDoubleSpinBox" name="depthSpinBox">
+     <property name="geometry">
+      <rect>
+       <x>100</x>
+       <y>0</y>
+       <width>147</width>
+       <height>41</height>
+      </rect>
+     </property>
+     <property name="suffix">
+      <string>m</string>
+     </property>
+     <property name="maximum">
+      <double>4.000000000000000</double>
+     </property>
+     <property name="singleStep">
+      <double>0.050000000000000</double>
+     </property>
+    </widget>
+    <widget class="QDoubleSpinBox" name="yawSpinBox">
+     <property name="geometry">
+      <rect>
+       <x>100</x>
+       <y>40</y>
+       <width>147</width>
+       <height>41</height>
+      </rect>
+     </property>
+     <property name="suffix">
+      <string notr="true">°</string>
+     </property>
+     <property name="maximum">
+      <double>360.000000000000000</double>
+     </property>
+    </widget>
+    <widget class="QDoubleSpinBox" name="rollSpinBox">
+     <property name="geometry">
+      <rect>
+       <x>100</x>
+       <y>80</y>
+       <width>147</width>
+       <height>41</height>
+      </rect>
+     </property>
+     <property name="suffix">
+      <string notr="true">°</string>
+     </property>
+     <property name="minimum">
+      <double>-180.000000000000000</double>
+     </property>
+     <property name="maximum">
+      <double>180.000000000000000</double>
+     </property>
+    </widget>
+    <widget class="QDoubleSpinBox" name="pitchSpinBox">
+     <property name="geometry">
+      <rect>
+       <x>100</x>
+       <y>120</y>
+       <width>147</width>
+       <height>41</height>
+      </rect>
+     </property>
+     <property name="suffix">
+      <string notr="true">°</string>
+     </property>
+     <property name="minimum">
+      <double>-180.000000000000000</double>
+     </property>
+     <property name="maximum">
+      <double>180.000000000000000</double>
      </property>
     </widget>
    </widget>

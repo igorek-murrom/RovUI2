@@ -22,18 +22,11 @@ RovDataSplines::RovDataSplines(QWidget *parent) :
     m_voltageAxisV->setMinorTickCount(3);
 
     m_currentAxisV->setRange(0,30);
-    m_currentAxisV->setTickCount(7);
+    m_currentAxisV->setTickCount(13);
     m_currentAxisV->setMinorTickCount(4);
 
     m_voltageSeries->setName("Voltage");
     m_currentSeries->setName("Current");
-
-    QPen vPen(Qt::red);
-    vPen.setWidth(3);
-    m_voltageSeries->setPen(vPen);
-    QPen aPen(Qt::green);
-    aPen.setWidth(3);
-    m_currentSeries->setPen(aPen);
 
     m_voltageChart->legend()->hide();
     m_currentChart->legend()->hide();
@@ -90,4 +83,45 @@ void RovDataSplines::addCurrentSample(QPointF sample){
 RovDataSplines::~RovDataSplines()
 {
     delete ui;
+}
+
+ContinousDataSplineChart::ContinousDataSplineChart(int minVal, int maxVal, int ticksCount, int minorTicksCount) :
+    QChart(new QChart()),
+    m_splineSeries(new QSplineSeries(this)),
+    m_vertAxis(new QValueAxis),
+    m_horAxis(new QValueAxis),
+    m_maxSamples(100)
+{
+
+    m_vertAxis->setRange(minVal, maxVal);
+    m_vertAxis->setTickCount(ticksCount);
+    m_vertAxis->setMinorTickCount(minorTicksCount);
+
+    m_horAxis->setRange(0, m_maxSamples);
+
+    legend()->hide();
+
+    setTitle("Continous chart (" + QString(minVal) + "," + QString(maxVal) + ")");
+
+    addAxis(m_horAxis.data(), Qt::AlignBottom);
+    addAxis(m_vertAxis.data(), Qt::AlignLeft);
+
+    m_splineSeries->attachAxis(m_horAxis.data());
+    m_splineSeries->attachAxis(m_vertAxis.data());
+
+    m_horAxis->hide();
+}
+
+void ContinousDataSplineChart::addSample(QPointF sample){
+    m_splineSeries->append(sample);
+    if (m_splineSeries->count()>=m_maxSamples){
+        m_splineSeries->remove(0);
+    }
+    int p = m_splineSeries->at(0).x();
+    int q = m_splineSeries->at(m_splineSeries->count()).x();
+    m_horAxis->setRange(p, q);
+}
+
+void ContinousDataSplineChart::setMaxSamples(qint8 num){
+    m_maxSamples = num;
 }

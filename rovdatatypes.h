@@ -4,7 +4,7 @@
 #include "qfloat16.h"
 #include <QtGlobal>
 
-struct RovControl
+struct RovControlState
 {
     qint8 axes[6] = {0,0,0,0,0,0};
     qint8 directions[10] = {1,1,1,1,-1,1,-1,1,1,1};
@@ -12,7 +12,7 @@ struct RovControl
     quint16 buttons = 0;
     qint8 hats[4] = {0,0,0,0};
 
-    RovControl() {}
+    RovControlState() {}
 };
 
 struct RovControlDatagram
@@ -26,15 +26,15 @@ struct RovControlDatagram
     RovControlDatagram(){}
 };
 
-struct RovRegulatorsDatagram
+struct RovAuxDatagram
 {
     qint8 header = 0xAD;
-    bool yawOn:1 = 0;
-    bool depthOn:1 = 0;
-    bool pitchOn:1 = 0;
-    qfloat16 desYaw = 0.0f;
-    qfloat16 desDepth = 0.0f;
-    qfloat16 desPitch = 0.0f;
+    qint8 auxFlags = 0b00000000;
+    float dDepth = 0;
+    float dYaw = 0;
+    float dRoll = 0;
+    float dPitch = 0;
+    RovAuxDatagram(){};
 };
 
 struct RovTelemetry
@@ -42,7 +42,7 @@ struct RovTelemetry
     static const uint8_t header_telemetry = 0xAE;
     enum ErrorCode{
         NoError,
-        WrongCrc //TODO: maybe add smth else
+        WrongCrc //TODO: implement
     };
     uint8_t header = 0;
     int8_t version = 2;

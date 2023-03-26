@@ -180,19 +180,19 @@ void JoystickSetupDialog::populateUi(Joystick joy){
 void JoystickSetupDialog::updateUi(Joystick joystick){
     switch (ui->tabWidget->currentIndex()) {
     case 0:
-        for (uint i = 0; QProgressBar *pb : m_axesProgressBars) {
+        for (uint i = 0; QProgressBar *pb : qAsConst(m_axesProgressBars)) {
             pb->setValue(joystick.axes[i]);
             i++;
         }
         break;
     case 1:
-        for (uint i = 0; QCheckBox *chb : m_buttonsCheckBoxes) {
+        for (uint i = 0; QCheckBox *chb : qAsConst(m_buttonsCheckBoxes)) {
 //            qDebug() << i << BIT_CHECK(joystick.buttons, i) << QString::number(joystick.buttons, 2);
             chb->setCheckState(BIT_CHECK(joystick.buttons, i) ? Qt::CheckState::PartiallyChecked : Qt::CheckState::Unchecked);
             i++;
         }
     case 2:
-        for(uint i = 0; QProgressBar *pb : m_hatsSliders){
+        for(uint i = 0; QProgressBar *pb : qAsConst(m_hatsSliders)){
             pb->setValue(joystick.hats[i]);
             i++;
         }

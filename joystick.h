@@ -25,8 +25,6 @@ namespace JoystickNames {
 
 struct Joystick
 {
-    SDL_Joystick *sdlJoystick;
-
     //TODO: setup baseASF
     //Axes designations:
     //[0]: Axis X,

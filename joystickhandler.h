@@ -6,8 +6,10 @@
 #include <QDebug>
 #include <QSettings>
 #include <SDL.h>
+#include <SDL_joystick.h>
 #include "joystick.h"
 #include "helpers.h"
+#include "qmutex.h"
 
 class JoystickHandler : public QObject
 {
@@ -27,11 +29,21 @@ private slots:
 
 private:
 
+    void eventLoop();
+    void parseAxisEvent(SDL_Event event);
+    void parseButtonEvent(SDL_Event event);
+    void parseHatEvent(SDL_Event event);
+
     inline float map(float x, float in_min, float in_max, float out_min, float out_max){
         return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
     }
+
+    QMutex m_joystickMutex;
     QScopedPointer<Joystick> m_joystick;
+    SDL_Joystick *m_sdlJoystick;
+
     QScopedPointer<QSettings> m_settings;
+
     bool notifiedNoJoysticks = false;
     bool notifiedJoystickDisconnected = false;
     bool joystickConnected = false;

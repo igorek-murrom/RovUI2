@@ -7,18 +7,21 @@ inline float constrain(float val, float min, float max){
 
 RovDataParser::RovDataParser(QObject *parent)
     : QObject{parent}
-    , m_datagram(new RovControlDatagram())
     , m_thrOvrMutex()
     , m_thrOvrInvMutex()
-    , m_overrideMutex()
+    , m_thrOvrEnable()
+    , m_thrOvrEnableMutex()
+    , m_datagram(new RovControlDatagram())
+    , m_datagramMutex()
+    , m_auxDatagram(new RovAuxDatagram)
+    , m_auxDatagramMutex()
 {
-
 }
 
 void RovDataParser::enableThrustersOverride(bool state){
-    m_overrideMutex.lock();
-    this->m_override = state;
-    m_overrideMutex.unlock();
+    m_thrOvrEnableMutex.lock();
+    m_thrOvrEnable = state;
+    m_thrOvrEnableMutex.unlock();
 }
 
 void RovDataParser::setThrustersOverride(QList<qint8> override){
@@ -37,24 +40,65 @@ void RovDataParser::setThrustersOverrideInvert(qint8 override){
     m_thrOvrInvMutex.unlock();
 }
 
-void RovDataParser::setAuxFlags(qint8 flags){
-    m_auxFlags = flags;
+void RovDataParser::setAuxFlags(qint8 val){
+    m_auxDatagramMutex.lock();
+    m_auxDatagram->auxFlags = val;
+    m_auxDatagramMutex.unlock();
+}
+
+void RovDataParser::setDepth(double val){
+    m_auxDatagramMutex.lock();
+    m_auxDatagram->dDepth = val;
+    m_auxDatagramMutex.unlock();
+    prepareAuxControl();
+}
+void RovDataParser::setYaw(double val){
+    m_auxDatagramMutex.lock();
+    m_auxDatagram->dYaw = val;
+    m_auxDatagramMutex.unlock();
+    prepareAuxControl();
+}
+void RovDataParser::setRoll(double val){
+    m_auxDatagramMutex.lock();
+    m_auxDatagram->dRoll = val;
+    m_auxDatagramMutex.unlock();
+    prepareAuxControl();
+}
+void RovDataParser::setPitch(double val){
+    m_auxDatagramMutex.lock();
+    m_auxDatagram->dPitch = val;
+    m_auxDatagramMutex.unlock();
+    prepareAuxControl();
 }
 
 void RovDataParser::prepareAuxControl(){
+    QByteArray ba;
 
+    QDataStream in(&ba, QIODevice::WriteOnly);
+    in.setFloatingPointPrecision(QDataStream::SinglePrecision);
+    m_auxDatagramMutex.lock();
+    in << m_auxDatagram->header;
+    in << m_auxDatagram->auxFlags;
+    in << m_auxDatagram->dDepth;
+    in << m_auxDatagram->dYaw;
+    in << m_auxDatagram->dRoll;
+    in << m_auxDatagram->dPitch;
+    m_auxDatagramMutex.unlock();
+    emit auxControlReady(QByteArray(ba));
 }
 
 void RovDataParser::prepareControl(Joystick rc){
-    m_overrideMutex.lock();
-    bool state = m_override;
-    m_overrideMutex.unlock();
-//    qDebug() << QString::number(rc.buttons, 2);
+    m_thrOvrEnableMutex.lock();
+    bool state = m_thrOvrEnable;
+    m_thrOvrEnableMutex.unlock();
 
+    m_datagramMutex.lock();
     // Buttons processing
-    m_datagram->manipulator[0] = BIT_CHECK(rc.buttons, 0) - BIT_CHECK(rc.buttons, 1);
-    m_datagram->manipulator[1] = BIT_CHECK(rc.buttons, 2) - BIT_CHECK(rc.buttons, 3);
-    m_datagram->camsel = BIT_CHECK(rc.buttons, 8);
+    m_datagram->manipulator[0] = BIT_CHECK(rc.buttons, 0) - BIT_CHECK(rc.buttons, 1); // 0th is open, 1st is close
+    m_datagram->manipulator[1] = BIT_CHECK(rc.buttons, 2) - BIT_CHECK(rc.buttons, 3); // 2nd is CCW, 3rd is CW
+    if(m_prevCamSelState == 0 && BIT_CHECK(rc.buttons, 8) == 1)
+        m_datagram->camsel = !m_datagram->camsel;
+    m_prevCamSelState = BIT_CHECK(rc.buttons, 8);
 
 
     // Thrusters processing
@@ -112,7 +156,7 @@ void RovDataParser::prepareControl(Joystick rc){
     }
 
     in << m_datagram->camsel;
-
+    m_datagramMutex.unlock();
     emit controlReady(QByteArray(ba));
 }
 
@@ -133,23 +177,6 @@ void RovDataParser::processTelemetry(QByteArray datagram){
             out >> telemetry.voltmeter;
             out >> telemetry.cameraIndex;
             out >> telemetry.temperature;
-//            qDebug() << telemetry.voltmeter << "V";
-//            qDebug() << telemetry.ammeter << "A";
-
-//            qint16 crc = 0;
-//            out >> crc;
-
-//            qint16 currentCrc = calculateCRC(datagram.data(), datagram.size() - 2);
-
-//            if (currentCrc != crc) {
-//                telemetry.depth = 0.0f;
-//                telemetry.pitch = 0.0f;
-//                telemetry.yaw = 0.0f;
-//                telemetry.roll = 0.0f;
-//                telemetry.voltmeter = 0.0f;
-//                telemetry.ammeter = 0.0f;
-//                telemetry.cameraIndex = 0;
-//            }
 
         }
         else{

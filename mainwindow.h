@@ -40,6 +40,14 @@ public slots:
     void updateStatusbarProgress(int);
 //    void updateRegulators(QBitArray regulators); //TODO: implement
     void updateASF(float thrustFactor);
+    void setDesiredDepth(float val);
+    void setDesiredYaw(float val);
+    void setDesiredPitch(float val);
+    void setDesiredRoll(float val);
+    void overrideDepth(bool ro);
+    void overrideYaw(bool ro);
+    void overridePitch(bool ro);
+    void overrideRoll(bool ro);
 
 signals:
     void asfUpdated(float thrustFactor); // TODO: implement

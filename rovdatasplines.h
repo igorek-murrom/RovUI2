@@ -41,4 +41,25 @@ private:
     Ui::RovDataSplines *ui;
 };
 
+class ContinousDataSplineChart : QChart{
+    Q_OBJECT
+    int maxSamples(){return m_maxSamples;};
+
+    explicit ContinousDataSplineChart(int minVal, int maxVal, int ticksCount, int minorTicksCount);
+
+public slots:
+    void addSample(QPointF sample);
+    void setMaxSamples(qint8);
+
+private:
+    QScopedPointer<QSplineSeries> m_splineSeries;
+
+    QScopedPointer<QValueAxis> m_vertAxis;
+    QScopedPointer<QValueAxis> m_horAxis;
+
+    int m_maxSamples;
+
+};
+
+
 #endif // ROVDATASPLINES_H

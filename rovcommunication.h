@@ -16,9 +16,9 @@ signals:
     void telemetryStopped();
     void telemetryStarted();
 public slots:
-    void sendControl(QByteArray);
+    void write(QByteArray);
 private slots:
-    void doReadTelemetry();
+    void read();
 
 private:
     quint16 m_inPort = 3010;

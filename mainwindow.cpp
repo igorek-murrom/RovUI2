@@ -35,7 +35,6 @@ MainWindow::MainWindow(QWidget *parent)
 
     updateStatusbarText("RovUI2 initialization complete ^_^");
     updateStatusbarProgress(100);
-    m_datasplines->show();
 }
 
 MainWindow::~MainWindow()
@@ -72,6 +71,36 @@ void MainWindow::updateStatusbarIndicators(){
 
 }
 
+void MainWindow::setDesiredDepth(float val){
+    ui->depthSpinBox->setValue(val);
+}
+void MainWindow::setDesiredYaw(float val){
+    ui->yawSpinBox->setValue(val);
+}
+void MainWindow::setDesiredRoll(float val){
+    ui->rollSpinBox->setValue(val);
+}
+void MainWindow::setDesiredPitch(float val){
+    ui->pitchSpinBox->setValue(val);
+}
+
+void MainWindow::overrideDepth(bool readonly){
+    ui->depthSpinBox->setReadOnly(readonly);
+    ui->depthRegulatorCB->setCheckable(readonly);
+}
+void MainWindow::overrideYaw(bool readonly){
+    ui->yawSpinBox->setReadOnly(readonly);
+    ui->yawRegulatorCB->setCheckable(readonly);
+}
+void MainWindow::overrideRoll(bool readonly){
+    ui->rollSpinBox->setReadOnly(readonly);
+    ui->rollRegulatorCB->setCheckable(readonly);
+}
+void MainWindow::overridePitch(bool readonly){
+    ui->pitchSpinBox->setReadOnly(readonly);
+    ui->pitchRegulatorCB->setCheckable(readonly);
+}
+
 void MainWindow::updateTelemetry(RovTelemetry telemetry){
     ui->teleVersionLabel->setText("Version:   " + QString::number(telemetry.version));
     ui->teleDepthLabel->setText(  "Depth:     " + QString::number(telemetry.depth) + " m");
@@ -106,11 +135,16 @@ void MainWindow::createConnections()
     connect(m_joystick.data(), SIGNAL(joystickUpdated(Joystick)), m_dataparser.data(), SLOT(prepareControl(Joystick)));
     connect(m_jsd.data(), SIGNAL(settingsUpdated()), m_joystick.data(), SLOT(updateSettings()));
 
-    connect(m_dataparser.data(), SIGNAL(controlReady(QByteArray)), m_communication.data(), SLOT(sendControl(QByteArray)));
+    connect(ui->depthSpinBox, SIGNAL(valueChanged(double)), m_dataparser.data(), SLOT(setDepth(double)));
+    connect(ui->yawSpinBox, SIGNAL(valueChanged(double)), m_dataparser.data(), SLOT(setYaw(double)));
+    connect(ui->rollSpinBox, SIGNAL(valueChanged(double)), m_dataparser.data(), SLOT(setRoll(double)));
+    connect(ui->pitchSpinBox, SIGNAL(valueChanged(double)), m_dataparser.data(), SLOT(setPitch(double)));
+
+    connect(m_dataparser.data(), SIGNAL(auxControlReady(QByteArray)), m_communication.data(), SLOT(write(QByteArray)));
+
+    connect(m_dataparser.data(), SIGNAL(controlReady(QByteArray)), m_communication.data(), SLOT(write(QByteArray)));
     connect(m_communication.data(), SIGNAL(telemetryReady(QByteArray)), m_dataparser.data(), SLOT(processTelemetry(QByteArray)));
     connect(m_dataparser.data(), SIGNAL(telemetryProcessed(RovTelemetry)), this, SLOT(updateTelemetry(RovTelemetry)));
-//    connect(m_dataparser.data(), SIGNAL(telemetryProcessed(RovTelemetry)), this,
-//            [this]{m_lastTelemetryRecieveTime = std::chrono::system_clock::now();});
 
     connect(m_tsd.data(), SIGNAL(overrideStatusChanged(bool)), m_dataparser.data(), SLOT(enableThrustersOverride(bool)));
     connect(m_tsd.data(), SIGNAL(thrustersOverridden(QList<qint8>)), m_dataparser.data(), SLOT(setThrustersOverride(QList<qint8>)));
