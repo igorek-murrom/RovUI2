@@ -13,11 +13,9 @@ RovCommunication::RovCommunication(QObject *parent)
 void RovCommunication::read(){
     while (m_udpSocket.data()->hasPendingDatagrams()) {
         QByteArray datagram = m_udpSocket->receiveDatagram().data();
-//        qInfo() << "Recieve TDV2" << datagram;
         emit telemetryReady(QByteArray(datagram));
     }
 }
 void RovCommunication::write(QByteArray datagram){
     m_udpSocket->writeDatagram(datagram, m_rovAddress, m_rovPort);
-//    qInfo() << "Send CDV2" << datagram;
 }

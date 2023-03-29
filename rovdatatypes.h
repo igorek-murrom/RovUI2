@@ -4,57 +4,156 @@
 #include "qfloat16.h"
 #include <QtGlobal>
 
-struct RovControlState
+/*!
+ * \brief The RovControl struct is used for ordering of the data used by RovUI to control the ROV
+ */
+struct RovControl
 {
-    qint8 axes[6] = {0,0,0,0,0,0};
-    qint8 directions[10] = {1,1,1,1,-1,1,-1,1,1,1};
-    float asf[6] = {1.0f,1.0f,1.0f,1.0f,1.0f,1.0f};//Axes Scale Factor
-    quint16 buttons = 0;
-    qint8 hats[4] = {0,0,0,0};
-
-    RovControlState() {}
-};
-
-struct RovControlDatagram
-{
-    qint8 header = 0xAC;
+    /*!
+     * \brief Header of the packet, used for distinguishing it from other types of packets
+     */
+    const static qint8 header = 0xAC;
+    /*!
+     * \brief Version of the protocol used by the RovUI and ROV to communicate
+     * \todo Implement handshake protocol
+     */
     quint8 version = 2;
+    /*!
+     * \brief Thrusters power to be set on the ROV
+     */
     qint8 thrusterPower[10] = {0,0,0,0,0,0,0,0,0,0};
-    qint8 cameraRotation[2] = {0,0}; // front, rear
-    qint8 manipulator[2] = {0,0}; // open/close, rotate
+    /*!
+     * \brief Pending camera rotation (<0 is down, >0 is up): 1st is for the front camera, 2nd is for the rear one
+     */
+    qint8 cameraRotationDelta[2] = {0,0};
+    /*!
+     * \brief Pending manipulator action (<0 is open, >0 is close)
+     */
+    qint8 manipulatorOpenClose = 0;
+    /*!
+     * \brief Pending manipultor action (<0 is CCW, >0 is CW)
+     */
+    qint8 manipulatorRotate = 0;
+    /*!
+     * \brief Camera select variable (false is front camera, true is back camera)
+     */
     qint8 camsel = false;
-    RovControlDatagram(){}
+    /*!
+     * \brief Default constructor
+     */
+    RovControl(){}
 };
 
-struct RovAuxDatagram
+/*!
+ * \brief The RovAuxControl struct is used for controlling the regulators data used by RovUI to control the ROV
+ */
+struct RovAuxControl
 {
-    qint8 header = 0xAD;
+    /*!
+     * \brief Header of the packet, used for distinguishing it from other types of packets
+     */
+    const static qint8 header = 0xAD;
+    /*!
+     * \brief Auxilary flags, used to control the regulators, and possibly something else
+     */
     qint8 auxFlags = 0b00000000;
+    /*!
+     * \brief Desired depth
+     */
     float dDepth = 0;
+    /*!
+     * \brief Desired yaw
+     */
     float dYaw = 0;
+    /*!
+     * \brief Desired roll
+     */
     float dRoll = 0;
+    /*!
+     * \brief Desired pitch
+     */
     float dPitch = 0;
-    RovAuxDatagram(){};
+    /*!
+     * \brief Default constructor
+     */
+    RovAuxControl(){};
 };
 
+/*!
+ * \brief The RovHeartBeat struct is used for ordering of the data with the heartbeat signals coming from the ROV
+ */
+struct RovHeartBeat
+{
+    /*!
+     * \brief Header of the packet, used for distinguishing it from other types of packets
+     */
+    const static qint8 header = 0xAF;
+
+    /*!
+     * \brief Milliseconds from the start of the ROV
+     */
+    quint64 millis = 0;
+    /*!
+     * \brief Sequence number, used to detect possible network failures
+     */
+    qint8 seqNumber = 0;
+};
+
+/*!
+ * \brief The RovTelemetry struct is used for ordering of the data with the telemetry coming from the ROV
+ */
 struct RovTelemetry
 {
-    static const uint8_t header_telemetry = 0xAE;
-    enum ErrorCode{
-        NoError,
-        WrongCrc //TODO: implement
-    };
-    uint8_t header = 0;
-    int8_t version = 2;
+    /*!
+     * \brief Header of the packet, used for distinguishing it from other types of packets
+     */
+    const static qint8 header = 0xAE;
+    /*!
+     * \brief Version of the protocol used by the RovUI and ROV to communicate
+     * \todo Implement handshake protocol
+     */
+    qint8 version = 2;
+    /*!
+     * \brief Depth data from the ROV
+     */
     float depth = 0.0f;
-    float pitch = 0; //! -180/180;
-    float yaw = 0; //! 0 - 360;
-    float roll = 0; //! -180/180;
+    /*!
+     * \brief Pitch angle data from the ROV
+     * Valid values are from -180 to 180, in degrees
+     * \image html rov_pitch_img.png
+     */
+    float pitch = 0;
+    /*!
+     * \brief Yaw angle data from the ROV
+     * Valid values are from 0 to 360, in degrees
+     * \image html rov_yaw_img.png
+     */
+    float yaw = 0;
+    /*!
+     * \brief Roll angle data from the ROV
+     * Valid values are from -180 to 180, in degrees
+     * \image html rov_roll_img.png
+     */
+    float roll = 0;
+    /*!
+     * \brief Current consumption data from the ROV, in A
+     * \b {SHOULD BE LESS THAN 25A}
+     */
     float current = 0.0f;
-    float voltmeter = 0.0f;
-    int8_t cameraIndex = 0; //! 0 / 1 video multiplexer
+    /*!
+     * \brief Voltage coming to the ROV, in V
+     * \b {SHOULD BE NO LESS THAN 6V AND NO MORE THAN 12V}
+     */
+    float voltage = 0.0f;
+    /*!
+     * \see RovControl.camsel
+     */
+    qint8 cameraIndex = 0;
+    /*!
+     * \brief Temperature data from the ROV
+     * Temperature sensor is located outside the electronics enclosure
+     */
     float temperature = 0.0f;
-    ErrorCode ec = NoError;
     RovTelemetry() {}
 };
 

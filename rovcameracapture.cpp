@@ -4,23 +4,23 @@ RovCameraCapture::RovCameraCapture(QWidget* parent) :
     QWidget(parent)
 {
     displayTimer = new QTimer(this);
-    displayTimer->setInterval(16);
+    displayTimer->setInterval(16 + 2/3);
     displayTimer->start();
-    connect(displayTimer, &QTimer::timeout, this, &RovCameraCapture::doProcessCamera);
+    connect(displayTimer, &QTimer::timeout, this, &RovCameraCapture::processCamera);
 }
 
 void RovCameraCapture::startCapture(int index){
 
-    qWarning() << "Opening result: " << QString(cap.open(index));
+    qWarning() << "Opening result: " << QString(cap.open("/dev/video2"));
+    updateNeeded = true;
 }
 
 void RovCameraCapture::stopCapture(){
     cap.release();
 }
 
-void RovCameraCapture::doProcessCamera(){
+void RovCameraCapture::processCamera(){
     if(cap.isOpened()){
-        updateNeeded = true;
         cv::Mat img;
         cap.read(img);
         cv::cvtColor(img, img, cv::COLOR_BGR2RGB);

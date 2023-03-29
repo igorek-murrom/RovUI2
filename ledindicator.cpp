@@ -1,5 +1,4 @@
 #include "ledindicator.h"
-#include "qdebug.h"
 
 LEDIndicator::LEDIndicator(QWidget *parent) :
     QLabel(parent)
@@ -10,7 +9,6 @@ LEDIndicator::LEDIndicator(QWidget *parent) :
 
 void LEDIndicator::setState(State state)
 {
-    qDebug() << state;
     switch (state) {
         case StateOk:
             setStyleSheet(okStyleSheet.arg(10));

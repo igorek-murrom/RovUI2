@@ -1,39 +1,41 @@
 #include "mainwindow.h"
-#include "qsurfaceformat.h"
 
 #include <QApplication>
-void setMessageOutput(QtMsgType type, const QMessageLogContext& context, const QString& msg)
+
+/*!
+ * \brief Me
+ * \param type Type of message
+ * \param context Mesffs redo thissage context
+ * \param msg Message
+ */
+void RovUIMessageHandler(QtMsgType type, const QMessageLogContext &context, const QString &msg)
 {
-    QString infoHtml = "<font color=\"Lime\">";
-    QString alertHtml = "<font color=\"DeepPink\">";
-    QString criticalHtml = "<font color=\"Red\">";
-    QString debugHtml = "<font color=\"Aqua\">";
-    QString endHtml = "</font>";
-    QString infoMsg = msg;
-//    QString time = QDateTime::currentDateTime().toString("hh.mm.ss.z ");
     QByteArray localMsg = msg.toLocal8Bit();
+    const char *file = context.file ? context.file : "";
+    const char *function = context.function ? context.function : "";
     switch (type) {
-    case QtInfoMsg:
-        fprintf(stdout, "Info: %s (%s:%u, %s)\n", localMsg.constData(), context.file, context.line, context.function);
-        break;
     case QtDebugMsg:
-        fprintf(stdout, "Debug: %s (%s:%u, %s)\n", localMsg.constData(), context.file, context.line, context.function);
+        fprintf(stdout, "Debug: %s (%s:%u, %s)\n", localMsg.constData(), file, context.line, function);
+        break;
+    case QtInfoMsg:
+        fprintf(stdout, "Info: %s (%s:%u, %s)\n", localMsg.constData(), file, context.line, function);
         break;
     case QtWarningMsg:
-        fprintf(stdout, "Warning: %s (%s:%u, %s)\n", localMsg.constData(), context.file, context.line, context.function);
+        fprintf(stderr, "Warning: %s (%s:%u, %s)\n", localMsg.constData(), file, context.line, function);
         break;
     case QtCriticalMsg:
-        fprintf(stderr, "Critical: %s (%s:%u, %s)\n", localMsg.constData(), context.file, context.line, context.function);
+        fprintf(stderr, "Critical: %s (%s:%u, %s)\n", localMsg.constData(), file, context.line, function);
         break;
     case QtFatalMsg:
-        fprintf(stderr, "Fatal: %s (%s:%u, %s)\n", localMsg.constData(), context.file, context.line, context.function);
-        abort();
+        fprintf(stderr, "Fatal: %s (%s:%u, %s)\n", localMsg.constData(), file, context.line, function);
+        break;
     }
 }
 
+
 int main(int argc, char *argv[])
 {
-    qInstallMessageHandler(setMessageOutput);
+    qInstallMessageHandler(RovUIMessageHandler);
 
     QApplication a(argc, argv);
 

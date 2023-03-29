@@ -37,7 +37,7 @@ void JoystickHandler::updateJoystick(){
 
 void JoystickHandler::updateASFs(int asf[6]){
     for (int i = 0; i < 8; ++i) {
-        m_joystick->asf[i] = asf[i];
+        m_joystick->runtimeASF[i] = asf[i];
     }
 }
 
@@ -81,20 +81,20 @@ void JoystickHandler::timerEvent(QTimerEvent *){
                 }
 
                 if(BIT_CHECK(m_joystick.data()->buttons, 5)){
-                    for(size_t i = 0; i < helpers::size(m_joystick.data()->asf); i++)
-                        m_joystick.data()->asf[i] = 1.0f;
+                    for(size_t i = 0; i < helpers::size(m_joystick.data()->runtimeASF); i++)
+                        m_joystick.data()->runtimeASF[i] = 1.0f;
                 }
                 if(BIT_CHECK(m_joystick.data()->buttons, 6)){
-                    for(size_t i = 0; i < helpers::size(m_joystick.data()->asf); i++)
-                        m_joystick.data()->asf[i] = .75f;
+                    for(size_t i = 0; i < helpers::size(m_joystick.data()->runtimeASF); i++)
+                        m_joystick.data()->runtimeASF[i] = .75f;
                 }
                 if(BIT_CHECK(m_joystick.data()->buttons, 7)){
-                    for(size_t i = 0; i < helpers::size(m_joystick.data()->asf); i++)
-                        m_joystick.data()->asf[i] = .5f;
+                    for(size_t i = 0; i < helpers::size(m_joystick.data()->runtimeASF); i++)
+                        m_joystick.data()->runtimeASF[i] = .5f;
                 }
                 if(BIT_CHECK(m_joystick.data()->buttons, 8)){
-                    for(size_t i = 0; i < helpers::size(m_joystick.data()->asf); i++)
-                        m_joystick.data()->asf[i] = .25f;
+                    for(size_t i = 0; i < helpers::size(m_joystick.data()->runtimeASF); i++)
+                        m_joystick.data()->runtimeASF[i] = .25f;
                 }
 
                 emit joystickUpdated(Joystick(m_joystick.data()));
@@ -102,7 +102,7 @@ void JoystickHandler::timerEvent(QTimerEvent *){
                 m_sdlJoystick = SDL_JoystickOpen(0);
                 qInfo() << "Connected joystick 0 (" << SDL_JoystickName(m_sdlJoystick) <<
                            "), " << SDL_JoystickNumAxes(m_sdlJoystick) <<
-                           " axes, " << SDL_JoystickNumButtons(m_sdlJoystick) << " buttons" << Qt::endl;
+                           " axes, " << SDL_JoystickNumButtons(m_sdlJoystick) << " buttons";
                 joystickConnected = true;
                 updateJoystick();
                 updateSettings();
@@ -111,7 +111,7 @@ void JoystickHandler::timerEvent(QTimerEvent *){
             m_sdlJoystick = SDL_JoystickOpen(0);
             qInfo() << "Connected joystick 0 (" << SDL_JoystickName(m_sdlJoystick) <<
                        ")," << SDL_JoystickNumAxes(m_sdlJoystick) <<
-                       " axes," << SDL_JoystickNumButtons(m_sdlJoystick) << "buttons" << Qt::endl;
+                       " axes," << SDL_JoystickNumButtons(m_sdlJoystick) << "buttons";
             joystickConnected = true;
             updateJoystick();
             updateSettings();
@@ -119,7 +119,7 @@ void JoystickHandler::timerEvent(QTimerEvent *){
     }
     else{ // no joysticks connected
         if(!notifiedNoJoysticks){
-            qInfo() << "SDL cannot find joysticks on this system" << Qt::endl;
+            qInfo() << "SDL cannot find joysticks on this system";
             emit joystickUpdated(Joystick());
             notifiedNoJoysticks = true;
             joystickConnected = false;

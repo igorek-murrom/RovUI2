@@ -71,3 +71,10 @@ Thumbs.db
 *.dll
 *.exe
 
+# Documentation
+docs/
+
+.vscode
+.cache
+.codechecker
+compile_commands.json
