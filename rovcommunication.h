@@ -1,25 +1,24 @@
 #ifndef ROVCOMMUNICATION_H
 #define ROVCOMMUNICATION_H
 
+#include "rovdatatypes.h"
 #include <QObject>
 #include <QtNetwork>
-#include "rovdatatypes.h"
 
 /*!
- * \brief The RovCommunication class is responsible for transmitting data to the ROV via UDP
+ * \brief The RovCommunication class is responsible for transmitting data to the
+ * ROV via UDP
  */
-class RovCommunication : public QObject
-{
+class RovCommunication : public QObject {
     Q_OBJECT
-public:
-
+  public:
     /*!
      * \brief Default constructor
      * \param parent Parent
      */
     explicit RovCommunication(QObject *parent = nullptr);
 
-signals:
+  signals:
     /*!
      * \brief Emitted when a packet with telemetry is recieved
      * \param tele Telemetry
@@ -37,28 +36,28 @@ signals:
      * \see RovHeartBeat
      */
     void telemetryStarted();
-public slots:
+  public slots:
 
     /*!
      * \brief Write data to the UDP socket
      */
     void write(QByteArray);
-private slots:
+  private slots:
 
     /*!
      * \brief Read data from the UDP socket if available
      */
     void read();
 
-private:
+  private:
     /*!
      * \brief Incoming data port
      */
-    quint16 m_inPort = 3010;
+    quint16 m_rcPort = 46176;
     /*!
      * \brief Outcoming data port
      */
-    quint16 m_rovPort = 3010;
+    quint16 m_rovPort = 46175;
     /*!
      * \brief ROV address
      */

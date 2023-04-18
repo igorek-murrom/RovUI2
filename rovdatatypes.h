@@ -5,58 +5,94 @@
 #include <QtGlobal>
 
 /*!
- * \brief The RovControl struct is used for ordering of the data used by RovUI to control the ROV
+ * \brief The RovControl struct is used for ordering of the data used by RovUI
+ * to control the ROV
  */
-struct RovControl
-{
+struct RovControl {
     /*!
-     * \brief Header of the packet, used for distinguishing it from other types of packets
+     * \brief Header of the packet, used for distinguishing it from other types
+     * of packets
      */
-    const static qint8 header = 0xAC;
+    const static int8_t header = 0xAC;
     /*!
      * \brief Version of the protocol used by the RovUI and ROV to communicate
      * \todo Implement handshake protocol
      */
-    quint8 version = 2;
+    uint8_t version = 2;
     /*!
      * \brief Thrusters power to be set on the ROV
      */
-    qint8 thrusterPower[10] = {0,0,0,0,0,0,0,0,0,0};
+    int8_t thrusterPower[10] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
     /*!
-     * \brief Pending camera rotation (<0 is down, >0 is up): 1st is for the front camera, 2nd is for the rear one
+     * \brief Pending camera rotation (<0 is down, >0 is up): 1st is for the
+     * front camera, 2nd is for the rear one
      */
-    qint8 cameraRotationDelta[2] = {0,0};
+    int8_t cameraRotationDelta[2] = {0, 0};
     /*!
      * \brief Pending manipulator action (<0 is open, >0 is close)
      */
-    qint8 manipulatorOpenClose = 0;
+    int8_t manipulatorOpenClose = 0;
     /*!
      * \brief Pending manipultor action (<0 is CCW, >0 is CW)
      */
-    qint8 manipulatorRotate = 0;
+    int8_t manipulatorRotate = 0;
     /*!
-     * \brief Camera select variable (false is front camera, true is back camera)
+     * \brief Camera select variable (false is front camera, true is back
+     * camera)
      */
-    qint8 camsel = false;
+    int8_t camsel = false;
     /*!
      * \brief Default constructor
      */
-    RovControl(){}
+    RovControl() {}
 };
 
 /*!
- * \brief The RovAuxControl struct is used for controlling the regulators data used by RovUI to control the ROV
+ * \brief The RovAuxControl struct is used for controlling the auxiliary data
+ * used by RovUI to control the ROV
  */
-struct RovAuxControl
-{
+struct RovAuxControl {
     /*!
-     * \brief Header of the packet, used for distinguishing it from other types of packets
+     * \brief Header of the packet, used for distinguishing it from other types
+     * of packets
      */
-    const static qint8 header = 0xAD;
-    /*!
-     * \brief Auxilary flags, used to control the regulators, and possibly something else
-     */
-    qint8 auxFlags = 0b00000000;
+    int8_t header = 0xAD;
+    // /*!
+    //  * \brief Auxilary flags, used to control the regulators, and possibly
+    //  * something else
+    //  */
+    union _auxFlags {
+        /*!
+         * \brief Raw flags of the union
+         */
+        int8_t rawFlags = 0b00000000;
+        struct {
+            /*!
+             * \brief Depth regulator flag
+             */
+            int8_t eDepth : 1;
+
+            /*!
+             * \brief Yaw regulator flag
+             */
+            int8_t eYaw : 1;
+
+            /*!
+             * \brief Roll regulator flag
+             */
+            int8_t eRoll : 1;
+
+            /*!
+             * \brief Pitch regulator flag
+             */
+            int8_t ePitch : 1;
+
+            /*!
+             * \brief Reserved
+             */
+            int8_t __res : 4;
+        };
+    } auxFlags;
     /*!
      * \brief Desired depth
      */
@@ -80,46 +116,48 @@ struct RovAuxControl
 };
 
 /*!
- * \brief The RovHeartBeat struct is used for ordering of the data with the heartbeat signals coming from the ROV
+ * \brief The RovHeartBeat struct is used for ordering of the data with the
+ * heartbeat signals coming from the ROV
  */
-struct RovHeartBeat
-{
+struct RovHeartBeat {
     /*!
-     * \brief Header of the packet, used for distinguishing it from other types of packets
+     * \brief Header of the packet, used for distinguishing it from other types
+     * of packets
      */
-    const static qint8 header = 0xAF;
+    const static int8_t header = 0xAF;
 
     /*!
      * \brief Milliseconds from the start of the ROV
      */
-    quint64 millis = 0;
+    uint64_t millis = 0;
     /*!
      * \brief Sequence number, used to detect possible network failures
      */
-    qint8 seqNumber = 0;
+    int8_t seqNumber = 0;
 };
 
 /*!
- * \brief The RovTelemetry struct is used for ordering of the data with the telemetry coming from the ROV
+ * \brief The RovTelemetry struct is used for ordering of the data with the
+ * telemetry coming from the ROV
  */
-struct RovTelemetry
-{
+struct RovTelemetry {
     /*!
-     * \brief Header of the packet, used for distinguishing it from other types of packets
+     * \brief Header of the packet, used for distinguishing it from other types
+     * of packets
      */
-    const static qint8 header = 0xAE;
+    const static int8_t header = 0xAE;
     /*!
      * \brief Version of the protocol used by the RovUI and ROV to communicate
      * \todo Implement handshake protocol
      */
-    qint8 version = 2;
+    uint8_t version = 2;
     /*!
      * \brief Depth data from the ROV
      */
     float depth = 0.0f;
     /*!
      * \brief Pitch angle data from the ROV
-     * Valid values are from -180 to 180, in degrees
+     * Valid values are from 0 to 360, in degrees
      * \image html rov_pitch_img.png
      */
     float pitch = 0;
@@ -131,7 +169,7 @@ struct RovTelemetry
     float yaw = 0;
     /*!
      * \brief Roll angle data from the ROV
-     * Valid values are from -180 to 180, in degrees
+     * Valid values are from 0 to 360, in degrees
      * \image html rov_roll_img.png
      */
     float roll = 0;
@@ -148,7 +186,7 @@ struct RovTelemetry
     /*!
      * \see RovControl.camsel
      */
-    qint8 cameraIndex = 0;
+    int8_t cameraIndex = 0;
     /*!
      * \brief Temperature data from the ROV
      * Temperature sensor is located outside the electronics enclosure
@@ -156,7 +194,4 @@ struct RovTelemetry
     float temperature = 0.0f;
     RovTelemetry() {}
 };
-
-
-
 #endif // ROVDATATYPES_H

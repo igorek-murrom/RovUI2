@@ -1,27 +1,27 @@
 #ifndef ROVDATAPARSER_H
 #define ROVDATAPARSER_H
 
-#include <QObject>
-#include <QDebug>
-#include <QDataStream>
-#include <QMutex>
-#include <algorithm>
 #include "joystick.h"
 #include "rovdatatypes.h"
+#include <QDataStream>
+#include <QDebug>
+#include <QMutex>
+#include <QObject>
+#include <algorithm>
 /*!
- * \brief The RovDataParser class is responsible for packing control data in QByteArrays and unpacking telemetry data from them.
+ * \brief The RovDataParser class is responsible for packing control data in
+ * QByteArrays and unpacking telemetry data from them.
  */
-class RovDataParser : public QObject
-{
+class RovDataParser : public QObject {
     Q_OBJECT
-public:
+  public:
     /*!
      * \brief Default constructor
      * \param parent Parent
      */
     explicit RovDataParser(QObject *parent = nullptr);
 
-signals:
+  signals:
     /*!
      * \brief Emitted when the class is finished processing raw QByteArray
      * \param tele Telemetry object
@@ -29,27 +29,27 @@ signals:
     void telemetryProcessed(RovTelemetry tele);
 
     /*!
-     * \brief Emitted when the class is finished packing RovControl struct into a QByteArray
-     * \param ba QByteArray with the control data
+     * \brief Emitted when the class is finished packing RovControl struct into
+     * a QByteArray \param ba QByteArray with the control data
      */
     void controlReady(QByteArray ba);
 
     /*!
-     * \brief Emitted when the class is finished packing RovAuxControl struct into a QByteArray
-     * \param ba QByteArray with the auxiliary data
+     * \brief Emitted when the class is finished packing RovAuxControl struct
+     * into a QByteArray \param ba QByteArray with the auxiliary data
      */
     void auxControlReady(QByteArray ba);
-public slots:
+  public slots:
 
     /*!
-     * \brief Called to unpack telemetry data from the QByteArray into the RovTelemetry struct
-     * \param ba Datagrem with telemetry data
+     * \brief Called to unpack telemetry data from the QByteArray into the
+     * RovTelemetry struct \param ba Datagrem with telemetry data
      */
     void processTelemetry(QByteArray ba);
 
     /*!
-     * \brief Called to pack joystick data from Joystick struct and then into QByteArray
-     * \param joy Joystick struct with data
+     * \brief Called to pack joystick data from Joystick struct and then into
+     * QByteArray \param joy Joystick struct with data
      */
     void prepareControl(Joystick joy);
 
@@ -82,11 +82,21 @@ public slots:
     void setAuxFlags(qint8 aFlags);
 
     /*!
+     * \brief Enables or disables depth regulator
+     * \param status
+     */
+    void setDepthStatus(int status);
+    /*!
      * \brief Sets desired depth
      * \param dVal Desired value
      */
     void setDepth(double dVal);
 
+    /*!
+     * \brief Enables or disables depth regulator
+     * \param status
+     */
+    void setYawStatus(int status);
     /*!
      * \brief Sets desired yaw
      * \param dVal Desired value
@@ -94,28 +104,32 @@ public slots:
     void setYaw(double dVal);
 
     /*!
+     * \brief Enables or disables depth regulator
+     * \param status
+     */
+    void setRollStatus(int status);
+    /*!
      * \brief Sets desired roll
      * \param dVal Desired value
      */
     void setRoll(double dVal);
 
     /*!
+     * \brief Enables or disables depth regulator
+     * \param status
+     */
+    void setPitchStatus(int status);
+    /*!
      * \brief Sets desired pitch
      * \param dVal Desired value
      */
     void setPitch(double dVal);
 
-
-private:
-    /*!
-     * \brief Thruster directions. Thrusters' values are multiplied by these in prepareControl
-     */
-    constexpr static short thrusterDirections[10] = {1,-1,-1,1,-1,1,-1,1,1,1};
-
+  private:
     /*!
      * \brief Thruster override values
      */
-    QList<qint8> m_thrOvr = {0,0,0,0,0,0,0,0};
+    QList<qint8> m_thrOvr = {0, 0, 0, 0, 0, 0, 0, 0};
     /*!
      * \brief Mutex for m_thrOvr
      */
@@ -162,8 +176,6 @@ private:
      * \brief Mutex for m_auxControl
      */
     QMutex m_auxControlMutex;
-
-
 };
 
 #endif // ROVDATAPARSER_H

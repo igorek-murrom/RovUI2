@@ -6,17 +6,17 @@
 #include <QSettings>
 
 namespace Ui {
-class ThrusterSetupDialog;
+    class ThrusterSetupDialog;
 }
 
 /*!
- * \brief The ThrusterSetupDialog class is responsible for the corresponding dialog
+ * \brief The ThrusterSetupDialog class is responsible for the corresponding
+ * dialog
  */
-class ThrusterSetupDialog : public QDialog
-{
+class ThrusterSetupDialog : public QDialog {
     Q_OBJECT
 
-public:
+  public:
     /*!
      * \brief Default constructor
      * \param parent Parent
@@ -28,7 +28,7 @@ public:
      */
     ~ThrusterSetupDialog();
 
-private slots:
+  private slots:
     /*!
      * \brief Packs sliders data and emits thrustersOverridden
      * \param index index of the slider
@@ -43,12 +43,12 @@ private slots:
     void updateInvert(int index, int state);
 
     /*!
-     * \brief Emits overrideStatusChanged(true) if state>0 else emits overrideStatusChanged(false)
-     * \param state State
+     * \brief Emits overrideStatusChanged(true) if state>0 else emits
+     * overrideStatusChanged(false) \param state State
      */
     void changeOverrideStatus(int state);
 
-signals:
+  signals:
     /*!
      * \brief Emitted when overrides turn on and off
      * \param status Override status
@@ -64,7 +64,7 @@ signals:
      */
     void invertsOverridden(qint8);
 
-private:
+  private:
     /*!
      * \brief Connects UI to the slots etc etc
      */
@@ -88,7 +88,7 @@ private:
     /*!
      * \brief QList of override values, ready to be sent whenever needed
      */
-    QList<qint8> thrustersOverride = {0,0,0,0,0,0,0,0};
+    QList<qint8> thrustersOverride = {0, 0, 0, 0, 0, 0, 0, 0};
 
     /*!
      * \brief Packed buttons' states

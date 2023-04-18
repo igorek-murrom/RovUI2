@@ -5,22 +5,22 @@
 #include <QtCharts>
 
 /*!
- * \brief The ContinousDataSplineChart class is responsible for simplifying the work with graphs
+ * \brief The ContinousDataSplineChart class is responsible for simplifying the
+ * work with graphs
  */
-class ContinousDataSplineChart : public QChart{
+class ContinousDataSplineChart : public QChart {
     Q_OBJECT
-public:
-
+  public:
     /*!
      * \brief Getter for m_maxSamples
      */
-    int maxSamples(){return m_maxSamples;};
+    int maxSamples() { return m_maxSamples; };
 
     /*!
      * \brief Setter for m_maxSamples
      * \param samples Samples
      */
-    void setMaxSamples(int samples){m_maxSamples = samples;};
+    void setMaxSamples(int samples) { m_maxSamples = samples; };
 
     /*!
      * \brief ContinousDataSplineChart
@@ -29,17 +29,17 @@ public:
      * \param ticksCount Y axis tick count
      * \param minorTicksCount Y axis minor tick count
      */
-    explicit ContinousDataSplineChart(int minVal, int maxVal, int ticksCount, int minorTicksCount);
+    explicit ContinousDataSplineChart(int minVal, int maxVal, int ticksCount,
+                                      int minorTicksCount);
 
-public slots:
+  public slots:
     /*!
      * \brief Adds a sample to the chart
      * \param sample Sample
      */
     void addSample(QPointF sample);
 
-private:
-
+  private:
     /*!
      * \brief Spline series with data points
      */
@@ -58,22 +58,21 @@ private:
      * \brief maximum amount of samples
      */
     int m_maxSamples;
-
 };
 
 namespace Ui {
-class RovDataSplines;
+    class RovDataSplines;
 }
 
 /*!
  * \brief The RovDataSplines class is responsible for pretty graphs
- * \todo transition to ContinousDataSplineChart and make an ROV angles visualisation
+ * \todo transition to ContinousDataSplineChart and make an ROV angles
+ * visualisation
  */
-class RovDataSplines : public QDialog
-{
+class RovDataSplines : public QDialog {
     Q_OBJECT
 
-public:
+  public:
     /*!
      * \brief Default constructor
      * \param parent Parent
@@ -85,7 +84,7 @@ public:
      */
     ~RovDataSplines();
 
-public slots:
+  public slots:
     /*!
      * \brief Adds a sample to the voltage chart
      * \param sample You guessed it, sample
@@ -98,7 +97,7 @@ public slots:
      */
     void addCurrentSample(QPointF sample);
 
-private:
+  private:
     /*!
      * \brief Voltage chart
      */
@@ -120,8 +119,5 @@ private:
      */
     Ui::RovDataSplines *ui;
 };
-
-
-
 
 #endif // ROVDATASPLINES_H

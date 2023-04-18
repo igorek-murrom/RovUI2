@@ -1,35 +1,35 @@
 #ifndef ROVCAMERACAPTURE_H
 #define ROVCAMERACAPTURE_H
 
-#include <QWidget>
+#include <QDebug>
 #include <QLabel>
 #include <QTimer>
-#include <QDebug>
+#include <QWidget>
 #include <opencv2/core.hpp>
-#include <opencv2/videoio.hpp>
-#include <opencv2/imgproc.hpp>
 #include <opencv2/imgcodecs.hpp>
+#include <opencv2/imgproc.hpp>
+#include <opencv2/videoio.hpp>
 
 /*!
  * \brief The RovCameraCapture class
  */
 class RovCameraCapture : public QWidget {
     Q_OBJECT
-public:
+  public:
     /*!
      * \brief Default consrtuctor
      * \param parent Parent
      */
-    RovCameraCapture(QWidget* parent);
+    RovCameraCapture(QWidget *parent);
 
-signals:
+  signals:
     /*!
      * \brief Emitted on processed image change
      * \param image Processed image
      */
     void imgProcessed(QImage image);
 
-public slots:
+  public slots:
     /*!
      * \brief Starts video capture from the specified index
      * \param index Index of capture
@@ -41,13 +41,13 @@ public slots:
      */
     void stopCapture();
 
-private slots:
+  private slots:
     /*!
      * \brief Process camera capture
      */
     void processCamera();
 
-private:
+  private:
     /*!
      * \brief Set to true when capture is set to video mode
      */

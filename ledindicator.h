@@ -1,27 +1,22 @@
 #ifndef LEDINDICATOR_H
 #define LEDINDICATOR_H
 
+#include <QDebug>
 #include <QLabel>
 #include <QObject>
 #include <QWidget>
-#include <QDebug>
 
 /*!
- * \brief The LEDIndicator class will be used to indicate ROV status when the heartbeat protocol will be implemented, for now it's just a stub
+ * \brief The LEDIndicator class will be used to indicate ROV status when the
+ * heartbeat protocol will be implemented, for now it's just a stub
  */
-class LEDIndicator : public QLabel
-{
+class LEDIndicator : public QLabel {
     Q_OBJECT
-public:
+  public:
     /*!
      * \brief The State enum is used to set the state of the indicator
      */
-    enum State{
-        StateOk,
-        StateWarn,
-        StateError,
-        StateFatal
-    };
+    enum State { StateOk, StateWarn, StateError, StateFatal };
 
     /*!
      * \brief Explicit defult constructor
@@ -35,7 +30,7 @@ public:
      */
     void setState(State state);
 
-private:
+  private:
     /*!
      * \brief Style sheet for the "Ok" status: green
      */
@@ -64,19 +59,21 @@ private:
     /*!
      * \brief Style sheet for the "Err" status: red
      */
-    const QString errStyleSheet = QString("color: white;"
-                                          "border-radius: %1;"
-                                          "border: 1.4px solid white;"
-                                          "background-color: qlineargradient("
-                                          "spread:pad, "
-                                          "x1:0.145, y1:0.16, "
-                                          "x2:0.92, y2:0.988636, "
-                                          "stop:0 rgba(255, 12, 12, 255), "
-                                          "stop:0.869347 rgba(103, 0, 0, 255));");
-//    const QString blueSS = QString("color: white;border-radius: %1;background-color: qlineargradient(spread:pad, x1:0.04, y1:0.0565909, x2:0.799, y2:0.795, stop:0 rgba(203, 220, 255, 255), stop:0.41206 rgba(0, 115, 255, 255), stop:1 rgba(0, 49, 109, 255));").arg(SIZE/2);
-
-
-
+    const QString errStyleSheet =
+        QString("color: white;"
+                "border-radius: %1;"
+                "border: 1.4px solid white;"
+                "background-color: qlineargradient("
+                "spread:pad, "
+                "x1:0.145, y1:0.16, "
+                "x2:0.92, y2:0.988636, "
+                "stop:0 rgba(255, 12, 12, 255), "
+                "stop:0.869347 rgba(103, 0, 0, 255));");
+    //    const QString blueSS = QString("color: white;border-radius:
+    //    %1;background-color: qlineargradient(spread:pad, x1:0.04,
+    //    y1:0.0565909, x2:0.799, y2:0.795, stop:0 rgba(203, 220, 255, 255),
+    //    stop:0.41206 rgba(0, 115, 255, 255), stop:1 rgba(0, 49, 109,
+    //    255));").arg(SIZE/2);
 };
 
 #endif // LEDINDICATOR_H

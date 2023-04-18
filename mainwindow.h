@@ -1,34 +1,36 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
-#include <QMainWindow>
-#include <QString>
-#include <QDebug>
-#include <chrono>
-#include "math.h"
 #include "joystickhandler.h"
 #include "joysticksetupdialog.h"
+#include "ledindicator.h"
+#include "math.h"
 #include "rovcameracapture.h"
-#include "rovdatasplines.h"
-#include "thrustersetupdialog.h"
 #include "rovcommunication.h"
 #include "rovdataparser.h"
+#include "rovdatasplines.h"
 #include "rovdatatypes.h"
-#include "ledindicator.h"
+#include "thrustersetupdialog.h"
+#include <QDebug>
+#include <QMainWindow>
+#include <QString>
+#include <chrono>
 
 QT_BEGIN_NAMESPACE
-namespace Ui { class MainWindow; }
+namespace Ui {
+    class MainWindow;
+}
 QT_END_NAMESPACE
 
 /*!
- * \brief The MainWindow class is responsible for displaying the main window of the app and tying it all together
- * \todo maybe create another class that manages all the backend and provides data for the MainWindow
+ * \brief The MainWindow class is responsible for displaying the main window of
+ * the app and tying it all together \todo maybe create another class that
+ * manages all the backend and provides data for the MainWindow
  */
-class MainWindow : public QMainWindow
-{
+class MainWindow : public QMainWindow {
     Q_OBJECT
 
-public:
+  public:
     /*!
      * \brief Default constructor
      * \param parent Parent
@@ -40,8 +42,7 @@ public:
      */
     ~MainWindow();
 
-public slots:
-
+  public slots:
     /*!
      * \brief Called to change image of the camera label
      */
@@ -76,7 +77,7 @@ public slots:
      * \todo implement
      */
     void updateStatusbarProgress(int progress);
-//    void updateRegulators(QBitArray regulators);
+    //    void updateRegulators(QBitArray regulators);
 
     /*!
      * \brief Updates rASFs across all of the program
@@ -109,36 +110,40 @@ public slots:
     void setDesiredRoll(float val);
 
     /*!
-     * \brief Sets depth QDoubleSpinBox to be readonly or rw for aux programlets purpose
-     * \param ro If this true then the spinbox blocks user input. Else it allows user input, overriding previous value
+     * \brief Sets depth QDoubleSpinBox to be readonly or rw for aux programlets
+     * purpose \param ro If this true then the spinbox blocks user input. Else
+     * it allows user input, overriding previous value
      */
     void overrideDepth(bool ro);
 
     /*!
-     * \brief Sets yaw QDoubleSpinBox to be readonly or rw for aux programlets purpose
-     * \param ro If this true then the spinbox blocks user input. Else it allows user input, overriding previous value
+     * \brief Sets yaw QDoubleSpinBox to be readonly or rw for aux programlets
+     * purpose \param ro If this true then the spinbox blocks user input. Else
+     * it allows user input, overriding previous value
      */
     void overrideYaw(bool ro);
 
     /*!
-     * \brief Sets pitch QDoubleSpinBox to be readonly or rw for aux programlets purpose
-     * \param ro If this true then the spinbox blocks user input. Else it allows user input, overriding previous value
+     * \brief Sets pitch QDoubleSpinBox to be readonly or rw for aux programlets
+     * purpose \param ro If this true then the spinbox blocks user input. Else
+     * it allows user input, overriding previous value
      */
     void overridePitch(bool ro);
 
     /*!
-     * \brief Sets roll QDoubleSpinBox to be readonly or rw for aux programlets purpose
-     * \param ro If this true then the spinbox blocks user input. Else it allows user input, overriding previous value
+     * \brief Sets roll QDoubleSpinBox to be readonly or rw for aux programlets
+     * purpose \param ro If this true then the spinbox blocks user input. Else
+     * it allows user input, overriding previous value
      */
     void overrideRoll(bool ro);
 
-private slots:
+  private slots:
     /*!
      * \brief Internal slot. Called to resize camera label
      */
     void resizeCameraLabel();
 
-signals:
+  signals:
 
     /*!
      * \brief Emitted when rASFs are updated either by programlets or user input
@@ -147,7 +152,7 @@ signals:
      */
     void asfUpdated(float thrustFactor);
 
-private:
+  private:
     /*!
      * \brief Connects all modules together
      */

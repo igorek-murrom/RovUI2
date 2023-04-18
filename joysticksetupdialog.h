@@ -1,26 +1,26 @@
 #ifndef JOYSTICKSETUPDIALOG_H
 #define JOYSTICKSETUPDIALOG_H
 
-#include <QDialog>
-#include <QDebug>
-#include <QSettings>
-#include <QComboBox>
-#include <QCheckBox>
-#include <QProgressBar>
-#include "joystick.h"
 #include "helpers.h"
+#include "joystick.h"
+#include <QCheckBox>
+#include <QComboBox>
+#include <QDebug>
+#include <QDialog>
+#include <QProgressBar>
+#include <QSettings>
 
 namespace Ui {
-class JoystickSetupDialog;
+    class JoystickSetupDialog;
 }
 
 /*!
- * \brief The JoystickSetupDialog class is responsible for the dialog which allows user to setup their joystick
+ * \brief The JoystickSetupDialog class is responsible for the dialog which
+ * allows user to setup their joystick
  */
-class JoystickSetupDialog : public QDialog
-{
+class JoystickSetupDialog : public QDialog {
     Q_OBJECT
-public:
+  public:
     /*!
      * \brief Explicit default constructor
      * \param parent Parent
@@ -30,13 +30,13 @@ public:
      * \brief Default destructor
      */
     ~JoystickSetupDialog();
-signals:
+  signals:
     /*!
      * \brief Emitted when user changes settings or closes the dualog
      */
     void settingsUpdated();
 
-public slots:
+  public slots:
     /*!
      * \brief Called to update UI based on joystick data(like axes, buttons etc)
      * \param joy a Joystick struct with info about the joystick
@@ -44,12 +44,13 @@ public slots:
     void updateUi(Joystick joy);
 
     /*!
-     * \brief Called to redo the UI based on joystick data i.e. when user (un)plugs joystick
-     * \param joy a Joystick struct with info about the joystick
+     * \brief Called to redo the UI based on joystick data i.e. when user
+     * (un)plugs joystick \param joy a Joystick struct with info about the
+     * joystick
      */
     void populateUi(Joystick joy);
 
-private slots:
+  private slots:
 
     /*!
      * \brief Called to write axes settings to settings file
@@ -66,8 +67,7 @@ private slots:
      */
     void writeHatsSettings(int);
 
-private:
-
+  private:
     /*!
      * \brief Unused override
      * \param event Event
@@ -103,14 +103,13 @@ private:
     QList<QProgressBar *> m_axesProgressBars;
 
     /*!
-     * \brief Helper QList with buttons' QComboBoxes, used to select joystick buttons
-     * \todo migrate to QScopedPointer
+     * \brief Helper QList with buttons' QComboBoxes, used to select joystick
+     * buttons \todo migrate to QScopedPointer
      */
     QList<QComboBox *> m_buttonsComboBoxes;
     /*!
-     * \brief Helper QList with buttons' QCheckBoxes, used to display button status
-     * \todo migrate to QScopedPointer
-     * \todo make a proper indicator
+     * \brief Helper QList with buttons' QCheckBoxes, used to display button
+     * status \todo migrate to QScopedPointer \todo make a proper indicator
      */
     QList<QCheckBox *> m_buttonsCheckBoxes;
 
@@ -120,14 +119,13 @@ private:
      */
     QList<QComboBox *> m_hatsComboBoxes;
     /*!
-     * \brief Helper QList with hats' QCheckBoxes, used to select joystick hats' orientation
-     * \todo migrate to QScopedPointer
-     * \see Joystick::hats_hor
+     * \brief Helper QList with hats' QCheckBoxes, used to select joystick hats'
+     * orientation \todo migrate to QScopedPointer \see Joystick::hats_hor
      */
     QList<QCheckBox *> m_hatsCheckBoxes;
     /*!
-     * \brief Helper QList with hats' QProgressBars, used to display joystick hats' state
-     * \todo migrate to QScopedPointer
+     * \brief Helper QList with hats' QProgressBars, used to display joystick
+     * hats' state \todo migrate to QScopedPointer
      */
     QList<QProgressBar *> m_hatsSliders;
 
