@@ -49,14 +49,14 @@ void MainWindow::resizeCameraLabel() {
         targetWidth = ui->camLabel->widthForHeight(targetHeight);
         ui->camLabel->setFixedSize(QSize(targetWidth, targetHeight));
     }
-    if (targetWidth >
-        ui->centralwidget->width() -
-            12) { // if wanted width is larger than the available width
-        targetWidth =
-            ui->camLabel->widthForHeight(ui->centralwidget->height() - 12);
-        targetHeight = ui->camLabel->heightForWidth(targetWidth);
-        ui->camLabel->setFixedSize(QSize(targetWidth, targetHeight));
-    }
+//    if (targetWidth >
+//        ui->centralwidget->width() -
+//            12) { // if wanted width is larger than the available width
+//        targetWidth =
+//            ui->camLabel->widthForHeight(ui->centralwidget->height() - 12);
+//        targetHeight = ui->camLabel->heightForWidth(targetWidth);
+//        ui->camLabel->setFixedSize(QSize(targetWidth, targetHeight));
+//    }
     ui->camLabel->setFixedSize(QSize(targetWidth, targetHeight));
 }
 
@@ -107,17 +107,17 @@ void MainWindow::updateTelemetry(RovTelemetry telemetry) {
     ui->teleVersionLabel->setText(QString::number(telemetry.version));
     ui->teleDepthLabel->setText(
         (telemetry.depth < 3.4E+38
-             ? QString::number(telemetry.depth) + QString(" m")
+             ? QString::number(telemetry.depth, 'g', 2) + QString(" m")
              : "[DIS]"));
-    ui->telePitchLabel->setText(QString::number(telemetry.pitch) + " deg");
-    ui->teleYawLabel->setText(QString::number(telemetry.yaw) + " deg");
-    ui->teleRollLabel->setText(QString::number(telemetry.roll) + " deg");
-    ui->teleTemperatureLabel->setText(QString::number(telemetry.temperature) +
+    ui->telePitchLabel->setText(QString::number(telemetry.pitch, 'f', 2) + " deg");
+    ui->teleYawLabel->setText(QString::number(telemetry.yaw, 'f', 2) + " deg");
+    ui->teleRollLabel->setText(QString::number(telemetry.roll, 'f', 2) + " deg");
+    ui->teleTemperatureLabel->setText(QString::number(telemetry.temperature, 'f', 2) +
                                       " C");
     ui->teleVoltageLabel->setText(
-        QString::number(std::round(telemetry.voltage * 100) / 100) + " V");
+        QString::number(telemetry.voltage, 'f', 2) + " V");
     ui->teleCurrentLabel->setText(
-        QString::number(std::round(telemetry.current * 100000) / 100) + " mA");
+        QString::number(telemetry.current*1000, 'f', 2) + " mA");
     ui->teleCamSelLabel->setText(
         QString((telemetry.cameraIndex == 0 ? "Front" : "Rear")));
 }

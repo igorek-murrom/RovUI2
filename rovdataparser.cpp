@@ -156,8 +156,8 @@ void RovDataParser::prepareControl(Joystick rc) {
         // Horizontal thrusters
         m_control->thrusterPower[0] = constrain(x - y - w, -100, 100);
         m_control->thrusterPower[1] = constrain(x + y + w, -100, 100);
-        m_control->thrusterPower[2] = constrain(x + y - w, -100, 100);
-        m_control->thrusterPower[3] = constrain(x - y + w, -100, 100);
+        m_control->thrusterPower[2] = constrain(x + y*.5 - w, -100, 100);
+        m_control->thrusterPower[3] = constrain(x - y*.5 + w, -100, 100);
         // Vertical thrusters
         m_control->thrusterPower[4] = constrain(z + d + r, -100, 100);
         m_control->thrusterPower[5] = constrain(z + d - r, -100, 100);
