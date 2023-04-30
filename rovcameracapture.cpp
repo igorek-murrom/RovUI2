@@ -23,11 +23,11 @@ void RovCameraCapture::processCamera() {
         cv::cvtColor(img, img, cv::COLOR_BGR2RGB);
         QImage qImg((uchar *)img.data, img.cols, img.rows, img.step,
                     QImage::Format_RGB888);
-        emit imgProcessed(qImg);
+        emit   imgProcessed(qImg);
     } else {
         if (updateNeeded) {
             QImage qImg(":/images/placeholder.jpg");
-            emit imgProcessed(qImg);
+            emit   imgProcessed(qImg);
             updateNeeded = false;
         }
     }

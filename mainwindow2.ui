@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
+ <author>Mango</author>
  <class>MainWindow</class>
  <widget class="QMainWindow" name="MainWindow">
   <property name="geometry">
@@ -81,10 +82,59 @@
     <addaction name="actionShow_graphs"/>
     <addaction name="actionHide_graphs"/>
    </widget>
+   <widget class="QMenu" name="menuAdditional_functions">
+    <property name="title">
+     <string>Additional functions</string>
+    </property>
+    <addaction name="actionPump_off_on"/>
+   </widget>
+   <widget class="QMenu" name="menuRegulators">
+    <property name="title">
+     <string>Regulators</string>
+    </property>
+    <widget class="QMenu" name="menuDepthReg">
+     <property name="title">
+      <string>Depth</string>
+     </property>
+     <addaction name="actionDepthOff"/>
+     <addaction name="actionDepthOn"/>
+     <addaction name="actionDepthOnWC"/>
+    </widget>
+    <widget class="QMenu" name="menuYawReg">
+     <property name="title">
+      <string>Yaw</string>
+     </property>
+     <addaction name="actionYawOff"/>
+     <addaction name="actionYawOn"/>
+     <addaction name="actionYawOnWC"/>
+    </widget>
+    <widget class="QMenu" name="menuRollReg">
+     <property name="title">
+      <string>Roll</string>
+     </property>
+     <addaction name="actionRollOff"/>
+     <addaction name="actionRollOn"/>
+     <addaction name="actionRollOnWC"/>
+    </widget>
+    <widget class="QMenu" name="menuPitchReg">
+     <property name="title">
+      <string>Pitch</string>
+     </property>
+     <addaction name="actionPitchOff"/>
+     <addaction name="actionPitchOn"/>
+     <addaction name="actionPitchOnWC"/>
+    </widget>
+    <addaction name="menuDepthReg"/>
+    <addaction name="menuYawReg"/>
+    <addaction name="menuRollReg"/>
+    <addaction name="menuPitchReg"/>
+   </widget>
    <addaction name="menuCamera"/>
    <addaction name="menuThrusters"/>
    <addaction name="menuJoystick"/>
    <addaction name="menuData_graphs"/>
+   <addaction name="menuAdditional_functions"/>
+   <addaction name="menuRegulators"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
   <widget class="QDockWidget" name="telemetryDockWidget">
@@ -96,8 +146,8 @@
    </property>
    <property name="minimumSize">
     <size>
-     <width>0</width>
-     <height>0</height>
+     <width>202</width>
+     <height>310</height>
     </size>
    </property>
    <property name="maximumSize">
@@ -114,21 +164,15 @@
    </attribute>
    <widget class="QWidget" name="telemetryDockWidgetContents">
     <layout class="QGridLayout" name="gridLayout_2">
-     <item row="0" column="0">
-      <widget class="QLabel" name="teleVersionLabelD">
-       <property name="maximumSize">
-        <size>
-         <width>100</width>
-         <height>16777215</height>
-        </size>
-       </property>
+     <item row="3" column="1">
+      <widget class="QLabel" name="teleYawLabel">
        <property name="text">
-        <string>Version:</string>
+        <string>TextLabel</string>
        </property>
       </widget>
      </item>
      <item row="1" column="0">
-      <widget class="QLabel" name="teleTemperatureLabelD">
+      <widget class="QLabel" name="teleTempLabelD">
        <property name="maximumSize">
         <size>
          <width>100</width>
@@ -137,78 +181,6 @@
        </property>
        <property name="text">
         <string>Twater:</string>
-       </property>
-      </widget>
-     </item>
-     <item row="11" column="0">
-      <widget class="QLabel" name="teleVoltageLabelD">
-       <property name="maximumSize">
-        <size>
-         <width>100</width>
-         <height>16777215</height>
-        </size>
-       </property>
-       <property name="text">
-        <string>Voltage:</string>
-       </property>
-      </widget>
-     </item>
-     <item row="2" column="0">
-      <widget class="QLabel" name="teleDepthLabelD">
-       <property name="maximumSize">
-        <size>
-         <width>100</width>
-         <height>16777215</height>
-        </size>
-       </property>
-       <property name="text">
-        <string>Depth:</string>
-       </property>
-      </widget>
-     </item>
-     <item row="3" column="0">
-      <widget class="QLabel" name="teleYawLabelD">
-       <property name="maximumSize">
-        <size>
-         <width>100</width>
-         <height>16777215</height>
-        </size>
-       </property>
-       <property name="text">
-        <string>Yaw:</string>
-       </property>
-      </widget>
-     </item>
-     <item row="8" column="0">
-      <widget class="QLabel" name="telePitchLabelD">
-       <property name="maximumSize">
-        <size>
-         <width>100</width>
-         <height>16777215</height>
-        </size>
-       </property>
-       <property name="text">
-        <string>Pitch:</string>
-       </property>
-      </widget>
-     </item>
-     <item row="7" column="1">
-      <widget class="QLabel" name="teleRollLabel">
-       <property name="text">
-        <string>TextLabel</string>
-       </property>
-      </widget>
-     </item>
-     <item row="7" column="0">
-      <widget class="QLabel" name="teleRollLabelD">
-       <property name="maximumSize">
-        <size>
-         <width>100</width>
-         <height>16777215</height>
-        </size>
-       </property>
-       <property name="text">
-        <string>Roll:</string>
        </property>
       </widget>
      </item>
@@ -237,38 +209,23 @@
        </property>
       </widget>
      </item>
-     <item row="0" column="1">
-      <widget class="QLabel" name="teleVersionLabel">
+     <item row="15" column="1">
+      <widget class="QLabel" name="teleCurrentLabel">
        <property name="text">
         <string>TextLabel</string>
        </property>
       </widget>
      </item>
-     <item row="1" column="1">
-      <widget class="QLabel" name="teleTemperatureLabel">
-       <property name="text">
-        <string>TextLabel</string>
+     <item row="3" column="0">
+      <widget class="QLabel" name="teleYawLabelD">
+       <property name="maximumSize">
+        <size>
+         <width>100</width>
+         <height>16777215</height>
+        </size>
        </property>
-      </widget>
-     </item>
-     <item row="2" column="1">
-      <widget class="QLabel" name="teleDepthLabel">
        <property name="text">
-        <string>TextLabel</string>
-       </property>
-      </widget>
-     </item>
-     <item row="3" column="1">
-      <widget class="QLabel" name="teleYawLabel">
-       <property name="text">
-        <string>TextLabel</string>
-       </property>
-      </widget>
-     </item>
-     <item row="8" column="1">
-      <widget class="QLabel" name="telePitchLabel">
-       <property name="text">
-        <string>TextLabel</string>
+        <string>Yaw:</string>
        </property>
       </widget>
      </item>
@@ -279,8 +236,41 @@
        </property>
       </widget>
      </item>
-     <item row="15" column="1">
-      <widget class="QLabel" name="teleCurrentLabel">
+     <item row="10" column="1">
+      <widget class="QLabel" name="teleCamSelLabel">
+       <property name="text">
+        <string>TextLabel</string>
+       </property>
+      </widget>
+     </item>
+     <item row="11" column="0">
+      <widget class="QLabel" name="teleVoltageLabelD">
+       <property name="maximumSize">
+        <size>
+         <width>100</width>
+         <height>16777215</height>
+        </size>
+       </property>
+       <property name="text">
+        <string>Voltage:</string>
+       </property>
+      </widget>
+     </item>
+     <item row="7" column="0">
+      <widget class="QLabel" name="teleRollLabelD">
+       <property name="maximumSize">
+        <size>
+         <width>100</width>
+         <height>16777215</height>
+        </size>
+       </property>
+       <property name="text">
+        <string>Roll:</string>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="1">
+      <widget class="QLabel" name="teleTempLabel">
        <property name="text">
         <string>TextLabel</string>
        </property>
@@ -299,8 +289,82 @@
        </property>
       </widget>
      </item>
-     <item row="10" column="1">
-      <widget class="QLabel" name="teleCamSelLabel">
+     <item row="0" column="0">
+      <widget class="QLabel" name="teleVersionLabelD">
+       <property name="maximumSize">
+        <size>
+         <width>100</width>
+         <height>16777215</height>
+        </size>
+       </property>
+       <property name="text">
+        <string>Version:</string>
+       </property>
+      </widget>
+     </item>
+     <item row="7" column="1">
+      <widget class="QLabel" name="teleRollLabel">
+       <property name="text">
+        <string>TextLabel</string>
+       </property>
+      </widget>
+     </item>
+     <item row="8" column="0">
+      <widget class="QLabel" name="telePitchLabelD">
+       <property name="maximumSize">
+        <size>
+         <width>100</width>
+         <height>16777215</height>
+        </size>
+       </property>
+       <property name="text">
+        <string>Pitch:</string>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="1">
+      <widget class="QLabel" name="teleVersionLabel">
+       <property name="text">
+        <string>TextLabel</string>
+       </property>
+      </widget>
+     </item>
+     <item row="2" column="1">
+      <widget class="QLabel" name="teleDepthLabel">
+       <property name="text">
+        <string>TextLabel</string>
+       </property>
+      </widget>
+     </item>
+     <item row="8" column="1">
+      <widget class="QLabel" name="telePitchLabel">
+       <property name="text">
+        <string>TextLabel</string>
+       </property>
+      </widget>
+     </item>
+     <item row="2" column="0">
+      <widget class="QLabel" name="teleDepthLabelD">
+       <property name="maximumSize">
+        <size>
+         <width>100</width>
+         <height>16777215</height>
+        </size>
+       </property>
+       <property name="text">
+        <string>Depth:</string>
+       </property>
+      </widget>
+     </item>
+     <item row="16" column="0">
+      <widget class="QLabel" name="asfLabelD">
+       <property name="text">
+        <string>ASF:</string>
+       </property>
+      </widget>
+     </item>
+     <item row="16" column="1">
+      <widget class="QLabel" name="asfLabel">
        <property name="text">
         <string>TextLabel</string>
        </property>
@@ -408,10 +472,16 @@
    <property name="text">
     <string>Begin camera capture</string>
    </property>
+   <property name="shortcut">
+    <string>C</string>
+   </property>
   </action>
   <action name="actionEnd_camera_capture">
    <property name="text">
     <string>End camera capture</string>
+   </property>
+   <property name="shortcut">
+    <string>Shift+C</string>
    </property>
   </action>
   <action name="actionDisplay_thruster_setup_dialog">
@@ -428,10 +498,125 @@
    <property name="text">
     <string>Show graphs</string>
    </property>
+   <property name="shortcut">
+    <string>G</string>
+   </property>
   </action>
   <action name="actionHide_graphs">
    <property name="text">
     <string>Hide graphs</string>
+   </property>
+   <property name="shortcut">
+    <string>Shift+G</string>
+   </property>
+  </action>
+  <action name="actionLight_off_on">
+   <property name="text">
+    <string>Light off/on</string>
+   </property>
+  </action>
+  <action name="actionPump_off_on">
+   <property name="text">
+    <string>Pump off/on</string>
+   </property>
+   <property name="shortcut">
+    <string>L</string>
+   </property>
+  </action>
+  <action name="actionDepthOff">
+   <property name="text">
+    <string>Off</string>
+   </property>
+   <property name="shortcut">
+    <string>Shift+D</string>
+   </property>
+  </action>
+  <action name="actionDepthOn">
+   <property name="text">
+    <string>On</string>
+   </property>
+   <property name="shortcut">
+    <string>D</string>
+   </property>
+  </action>
+  <action name="actionDepthOnWC">
+   <property name="text">
+    <string>On with current value</string>
+   </property>
+   <property name="shortcut">
+    <string>Alt+D</string>
+   </property>
+  </action>
+  <action name="actionYawOff">
+   <property name="text">
+    <string>Off</string>
+   </property>
+   <property name="shortcut">
+    <string>Shift+Y</string>
+   </property>
+  </action>
+  <action name="actionYawOn">
+   <property name="text">
+    <string>On</string>
+   </property>
+   <property name="shortcut">
+    <string>Y</string>
+   </property>
+  </action>
+  <action name="actionYawOnWC">
+   <property name="text">
+    <string>On with current</string>
+   </property>
+   <property name="shortcut">
+    <string>Alt+Y</string>
+   </property>
+  </action>
+  <action name="actionRollOff">
+   <property name="text">
+    <string>Off</string>
+   </property>
+   <property name="shortcut">
+    <string>Shift+R</string>
+   </property>
+  </action>
+  <action name="actionRollOn">
+   <property name="text">
+    <string>On</string>
+   </property>
+   <property name="shortcut">
+    <string>R</string>
+   </property>
+  </action>
+  <action name="actionRollOnWC">
+   <property name="text">
+    <string>On with current</string>
+   </property>
+   <property name="shortcut">
+    <string>Alt+R</string>
+   </property>
+  </action>
+  <action name="actionPitchOff">
+   <property name="text">
+    <string>Off</string>
+   </property>
+   <property name="shortcut">
+    <string>Shift+P</string>
+   </property>
+  </action>
+  <action name="actionPitchOn">
+   <property name="text">
+    <string>On</string>
+   </property>
+   <property name="shortcut">
+    <string>P</string>
+   </property>
+  </action>
+  <action name="actionPitchOnWC">
+   <property name="text">
+    <string>On with current</string>
+   </property>
+   <property name="shortcut">
+    <string>Alt+P</string>
    </property>
   </action>
  </widget>

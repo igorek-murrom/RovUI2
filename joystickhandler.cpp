@@ -7,7 +7,7 @@ JoystickHandler::JoystickHandler(QObject *parent)
     SDL_Init(SDL_INIT_JOYSTICK);
     SDL_JoystickUpdate();
     if (SDL_NumJoysticks() > 0) {
-        m_sdlJoystick = SDL_JoystickOpen(0);
+        m_sdlJoystick     = SDL_JoystickOpen(0);
         joystickConnected = true;
         updateJoystick();
         updateSettings();
@@ -51,9 +51,9 @@ void JoystickHandler::updateSettings() {
 }
 
 void JoystickHandler::updateJoystick() {
-    m_joystick->numAxes = SDL_JoystickNumAxes(m_sdlJoystick);
-    m_joystick->numHats = SDL_JoystickNumHats(m_sdlJoystick);
-    m_joystick->numButtons = SDL_JoystickNumButtons(m_sdlJoystick);
+    m_joystick->numAxes      = SDL_JoystickNumAxes(m_sdlJoystick);
+    m_joystick->numHats      = SDL_JoystickNumHats(m_sdlJoystick);
+    m_joystick->numButtons   = SDL_JoystickNumButtons(m_sdlJoystick);
     m_joystick->joystickName = QString(SDL_JoystickName(m_sdlJoystick));
     emit joystickChanged(Joystick(m_joystick.data()));
 }
@@ -76,7 +76,7 @@ void JoystickHandler::timerEvent(QTimerEvent *) {
                     if (m_joystick.data()->axes_id[i] >= 0) {
                         float currentAxisVal = SDL_JoystickGetAxis(
                             m_sdlJoystick, m_joystick.data()->axes_id[i]);
-                        float lastAxisVal = m_joystick.data()->axes[i];
+                        float lastAxisVal    = m_joystick.data()->axes[i];
                         float secLastAxisVal = m_joystick.data()->axes_last[i];
 
                         m_joystick.data()->axes[i] =
@@ -85,7 +85,7 @@ void JoystickHandler::timerEvent(QTimerEvent *) {
                             3;
                         m_joystick.data()->axes_last[i] = lastAxisVal;
                     } else {
-                        m_joystick.data()->axes[i] = 0;
+                        m_joystick.data()->axes[i]      = 0;
                         m_joystick.data()->axes_last[i] = 0;
                     }
                 }
@@ -166,7 +166,7 @@ void JoystickHandler::timerEvent(QTimerEvent *) {
             qInfo() << "SDL cannot find joysticks on this system";
             emit joystickUpdated(Joystick());
             notifiedNoJoysticks = true;
-            joystickConnected = false;
+            joystickConnected   = false;
         }
     }
 }

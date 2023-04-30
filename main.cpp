@@ -2,7 +2,7 @@
 
 #include <QApplication>
 
-/*!
+/**
  * \brief Me
  * \param type Type of message
  * \param context Mesffs redo thissage context
@@ -10,8 +10,8 @@
  */
 void RovUIMessageHandler(QtMsgType type, const QMessageLogContext &context,
                          const QString &msg) {
-    QByteArray localMsg = msg.toLocal8Bit();
-    const char *file = context.file ? context.file : "";
+    QByteArray  localMsg = msg.toLocal8Bit();
+    const char *file     = context.file ? context.file : "";
     const char *function = context.function ? context.function : "";
     switch (type) {
     case QtDebugMsg:

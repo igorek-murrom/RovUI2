@@ -6,45 +6,45 @@
 #include <QObject>
 #include <QWidget>
 
-/*!
+/**
  * \brief The LEDIndicator class will be used to indicate ROV status when the
  * heartbeat protocol will be implemented, for now it's just a stub
  */
 class LEDIndicator : public QLabel {
     Q_OBJECT
   public:
-    /*!
+    /**
      * \brief The State enum is used to set the state of the indicator
      */
     enum State { StateOk, StateWarn, StateError, StateFatal };
 
-    /*!
+    /**
      * \brief Explicit defult constructor
      * \param parent Parent
      */
     explicit LEDIndicator(QWidget *parent = 0);
 
-    /*!
+    /**
      * \brief Sets state of the indicator
      * \param state State to set
      */
     void setState(State state);
 
   private:
-    /*!
+    /**
      * \brief Style sheet for the "Ok" status: green
      */
-    const QString okStyleSheet = QString("color: white;"
-                                         "border-radius: %1;"
-                                         "border: 0px;"
-                                         "background-color: qlineargradient("
-                                         "spread:pad, "
-                                         "x1:0.145, y1:0.16, "
-                                         "x2:1, y2:1, "
-                                         "stop:0 rgba(20, 252, 7, 255), "
-                                         "stop:1 rgba(25, 134, 5, 255)"
-                                         ");");
-    /*!
+    const QString okStyleSheet   = QString("color: white;"
+                                             "border-radius: %1;"
+                                             "border: 0px;"
+                                             "background-color: qlineargradient("
+                                             "spread:pad, "
+                                             "x1:0.145, y1:0.16, "
+                                             "x2:1, y2:1, "
+                                             "stop:0 rgba(20, 252, 7, 255), "
+                                             "stop:1 rgba(25, 134, 5, 255)"
+                                             ");");
+    /**
      * \brief Style sheet for the "Warn" status: orange
      */
     const QString warnStyleSheet = QString("color: white;"
@@ -56,7 +56,7 @@ class LEDIndicator : public QLabel {
                                            "x2:0.98, y2:0.959773, "
                                            "stop:0 rgba(255, 113, 4, 255), "
                                            "stop:1 rgba(91, 41, 7, 255))");
-    /*!
+    /**
      * \brief Style sheet for the "Err" status: red
      */
     const QString errStyleSheet =

@@ -1,4 +1,8 @@
 #include "mainwindow.h"
+#include "joystick.h"
+#include "joystickhandler.h"
+#include "qnamespace.h"
+#include "qobjectdefs.h"
 #include "ui_mainwindow2.h"
 #include "unistd.h"
 
@@ -39,7 +43,7 @@ MainWindow::MainWindow(QWidget *parent)
 MainWindow::~MainWindow() { delete ui; }
 
 void MainWindow::resizeCameraLabel() {
-    int targetWidth = ui->camLabel->heightForWidth(ui->camLabel->width());
+    int targetWidth  = ui->camLabel->heightForWidth(ui->camLabel->width());
     int targetHeight = ui->camLabel->widthForHeight(ui->camLabel->height());
     if (targetHeight >
         ui->centralwidget->height() -
@@ -49,14 +53,15 @@ void MainWindow::resizeCameraLabel() {
         targetWidth = ui->camLabel->widthForHeight(targetHeight);
         ui->camLabel->setFixedSize(QSize(targetWidth, targetHeight));
     }
-//    if (targetWidth >
-//        ui->centralwidget->width() -
-//            12) { // if wanted width is larger than the available width
-//        targetWidth =
-//            ui->camLabel->widthForHeight(ui->centralwidget->height() - 12);
-//        targetHeight = ui->camLabel->heightForWidth(targetWidth);
-//        ui->camLabel->setFixedSize(QSize(targetWidth, targetHeight));
-//    }
+    //    if (targetWidth >
+    //        ui->centralwidget->width() -
+    //            12) { // if wanted width is larger than the available width
+    //        targetWidth =
+    //            ui->camLabel->widthForHeight(ui->centralwidget->height() -
+    //            12);
+    //        targetHeight = ui->camLabel->heightForWidth(targetWidth);
+    //        ui->camLabel->setFixedSize(QSize(targetWidth, targetHeight));
+    //    }
     ui->camLabel->setFixedSize(QSize(targetWidth, targetHeight));
 }
 
@@ -103,85 +108,114 @@ void MainWindow::overridePitch(bool readonly) {
     ui->pitchRegulatorCB->setCheckable(readonly);
 }
 
-void MainWindow::updateTelemetry(RovTelemetry telemetry) {
-    ui->teleVersionLabel->setText(QString::number(telemetry.version));
-    ui->teleDepthLabel->setText(
-        (telemetry.depth < 3.4E+38
-             ? QString::number(telemetry.depth, 'g', 2) + QString(" m")
-             : "[DIS]"));
-    ui->telePitchLabel->setText(QString::number(telemetry.pitch, 'f', 2) + " deg");
-    ui->teleYawLabel->setText(QString::number(telemetry.yaw, 'f', 2) + " deg");
-    ui->teleRollLabel->setText(QString::number(telemetry.roll, 'f', 2) + " deg");
-    ui->teleTemperatureLabel->setText(QString::number(telemetry.temperature, 'f', 2) +
-                                      " C");
-    ui->teleVoltageLabel->setText(
-        QString::number(telemetry.voltage, 'f', 2) + " V");
+void MainWindow::updateTelemetry(RovTelemetry tele) {
+    ui->teleVersionLabel->setText(QString::number(tele.version));
+    if (tele.depth < 3.4E+38)
+        ui->teleDepthLabel->setText(QString::number(tele.depth, 'g', 2) +
+                                    QString(lastDepth < tele.depth   ? " m ↑"
+                                            : lastDepth > tele.depth ? " m ↓"
+                                                                     : " m ="));
+    else
+        ui->teleDepthLabel->setText(QString("[DIS]"));
+    lastDepth = tele.depth;
+    ui->telePitchLabel->setText(QString::number(tele.pitch, 'f', 2) + " deg");
+    ui->teleYawLabel->setText(QString::number(tele.yaw, 'f', 2) + " deg");
+    ui->teleRollLabel->setText(QString::number(tele.roll, 'f', 2) + " deg");
+    ui->teleTempLabel->setText(QString::number(tele.temp / 100, 'f', 2) +
+                               " °C");
+    ui->teleVoltageLabel->setText(QString::number(tele.voltage, 'f', 2) + " V");
     ui->teleCurrentLabel->setText(
-        QString::number(telemetry.current*1000, 'f', 2) + " mA");
+        QString::number(std::min(tele.current * 1000, 25000.0f), 'f', 2) +
+        " mA");
     ui->teleCamSelLabel->setText(
-        QString((telemetry.cameraIndex == 0 ? "Front" : "Rear")));
+        QString((tele.cameraIndex == 0 ? "Front" : "Rear")));
 }
 
 void MainWindow::updateASF(float factor) { emit asfUpdated(factor); }
 
 void MainWindow::createConnections() {
-    connect(ui->actionBegin_camera_capture, &QAction::triggered, this,
-            [this] { m_cameraCapture.data()->startCapture(2); });
-    connect(ui->actionEnd_camera_capture, &QAction::triggered, this,
-            [this] { m_cameraCapture.data()->stopCapture(); });
-
+    // Camera capture
     connect(m_cameraCapture.data(), SIGNAL(imgProcessed(QImage)), this,
             SLOT(updateCameraLabel(QImage)));
 
+    // Show setup dialogs
     connect(ui->actionDisplay_thruster_setup_dialog, &QAction::triggered, this,
             [this] { m_tsd->show(); });
     connect(ui->actionDisplay_joystick_setup_dialog, &QAction::triggered, this,
             [this] { m_jsd->show(); });
 
+    // Show graphs
     connect(ui->actionShow_graphs, &QAction::triggered, this,
             [this] { m_datasplines->show(); });
     connect(ui->actionHide_graphs, &QAction::triggered, this,
             [this] { m_datasplines->hide(); });
 
+    // JoystickHandler to:
+    // JSD
     connect(m_joystickHandler.data(), SIGNAL(joystickUpdated(Joystick)),
             m_jsd.data(), SLOT(updateUi(Joystick)));
     connect(m_joystickHandler.data(), SIGNAL(joystickChanged(Joystick)),
             m_jsd.data(), SLOT(populateUi(Joystick)));
+    // DataParser
     connect(m_joystickHandler.data(), SIGNAL(joystickUpdated(Joystick)),
             m_rovDataParser.data(), SLOT(prepareControl(Joystick)));
+
+    // UI ASF
+    connect(m_joystickHandler.data(), &JoystickHandler::joystickUpdated, this,
+            [this](Joystick joy) {
+                ui->asfLabel->setText(QString::number(joy.runtimeASF[0]));
+            });
+
+    // Settings update requests
     connect(m_jsd.data(), SIGNAL(settingsUpdated()), m_joystickHandler.data(),
             SLOT(updateSettings()));
 
+    // Regulators:
+    // Depth
     connect(ui->depthSpinBox, SIGNAL(valueChanged(double)),
             m_rovDataParser.data(), SLOT(setDepth(double)));
     connect(ui->depthRegulatorCB, SIGNAL(stateChanged(int)),
             m_rovDataParser.data(), SLOT(setDepthStatus(int)));
 
+    // Yaw
     connect(ui->yawSpinBox, SIGNAL(valueChanged(double)),
             m_rovDataParser.data(), SLOT(setYaw(double)));
     connect(ui->yawRegulatorCB, SIGNAL(stateChanged(int)),
             m_rovDataParser.data(), SLOT(setYawStatus(int)));
 
+    // Roll
     connect(ui->rollSpinBox, SIGNAL(valueChanged(double)),
             m_rovDataParser.data(), SLOT(setRoll(double)));
     connect(ui->rollRegulatorCB, SIGNAL(stateChanged(int)),
             m_rovDataParser.data(), SLOT(setRollStatus(int)));
-
+    // Pitch
     connect(ui->pitchSpinBox, SIGNAL(valueChanged(double)),
             m_rovDataParser.data(), SLOT(setPitch(double)));
     connect(ui->pitchRegulatorCB, SIGNAL(stateChanged(int)),
             m_rovDataParser.data(), SLOT(setPitchStatus(int)));
 
+    // DataParser:
+    // Send AuxControl to ROV
     connect(m_rovDataParser.data(), SIGNAL(auxControlReady(QByteArray)),
             m_rovCommunication.data(), SLOT(write(QByteArray)));
 
+    // Send RovControl to ROV
     connect(m_rovDataParser.data(), SIGNAL(controlReady(QByteArray)),
             m_rovCommunication.data(), SLOT(write(QByteArray)));
+
+    // Process recieved RovTelemetry from ROV
     connect(m_rovCommunication.data(), SIGNAL(telemetryReady(QByteArray)),
             m_rovDataParser.data(), SLOT(processTelemetry(QByteArray)));
+
+    // Update UI with telemetry data
     connect(m_rovDataParser.data(), SIGNAL(telemetryProcessed(RovTelemetry)),
             this, SLOT(updateTelemetry(RovTelemetry)));
 
+    // Update DataSplines with telemetry data
+    connect(m_rovDataParser.data(), SIGNAL(telemetryProcessed(RovTelemetry)),
+            this, SLOT(updateDatasplines(RovTelemetry)));
+
+    // TSD to DataParser
     connect(m_tsd.data(), SIGNAL(overrideStatusChanged(bool)),
             m_rovDataParser.data(), SLOT(enableThrustersOverride(bool)));
     connect(m_tsd.data(), SIGNAL(thrustersOverridden(QList<qint8>)),
@@ -189,9 +223,60 @@ void MainWindow::createConnections() {
     connect(m_tsd.data(), SIGNAL(overrideStatusChanged(bool)),
             m_rovDataParser.data(), SLOT(enableThrustersOverride(bool)));
 
-    connect(m_rovDataParser.data(), SIGNAL(telemetryProcessed(RovTelemetry)),
-            this, SLOT(updateDatasplines(RovTelemetry)));
-}
+    // Menu actions
+    // Light on/off
+    connect(ui->actionLight_off_on, SIGNAL(triggered(bool)),
+            m_rovDataParser.data(), SLOT(toggleLight()));
+    // Pump on/off
+    connect(ui->actionPump_off_on, SIGNAL(triggered(bool)),
+            m_rovDataParser.data(), SLOT(togglePump()));
+
+    // Camera start/stop
+    connect(ui->actionBegin_camera_capture, &QAction::triggered, this,
+            [this] { m_cameraCapture.data()->startCapture(2); });
+    connect(ui->actionEnd_camera_capture, &QAction::triggered, this,
+            [this] { m_cameraCapture.data()->startCapture(2); });
+    // Regulators:
+    // Depth
+    connect(ui->actionDepthOff, &QAction::triggered, this, [this](bool) {
+        ui->depthRegulatorCB->setCheckState(Qt::Unchecked);
+    });
+    connect(ui->actionDepthOn, &QAction::triggered, this,
+            [this](bool) { ui->depthRegulatorCB->setCheckState(Qt::Checked); });
+    connect(ui->actionDepthOnWC, &QAction::triggered, this, [this](bool) {
+        ui->depthSpinBox->setValue(lastTele.depth);
+        ui->depthRegulatorCB->setCheckState(Qt::Checked);
+    });
+    // Yaw
+    connect(ui->actionYawOff, &QAction::triggered, this, [this](bool) {
+        ui->yawRegulatorCB->setCheckState(Qt::Unchecked);
+    });
+    connect(ui->actionYawOn, &QAction::triggered, this,
+            [this](bool) { ui->yawRegulatorCB->setCheckState(Qt::Checked); });
+    connect(ui->actionYawOnWC, &QAction::triggered, this, [this](bool) {
+        ui->yawSpinBox->setValue(lastTele.yaw);
+        ui->yawRegulatorCB->setCheckState(Qt::Checked);
+    });    
+    // Roll
+    connect(ui->actionRollOff, &QAction::triggered, this, [this](bool) {
+        ui->rollRegulatorCB->setCheckState(Qt::Unchecked);
+    });
+    connect(ui->actionRollOn, &QAction::triggered, this,
+            [this](bool) { ui->rollRegulatorCB->setCheckState(Qt::Checked); });
+    connect(ui->actionRollOnWC, &QAction::triggered, this, [this](bool) {
+        ui->rollSpinBox->setValue(lastTele.roll);
+        ui->rollRegulatorCB->setCheckState(Qt::Checked);
+    });    
+    // Pitch
+    connect(ui->actionPitchOff, &QAction::triggered, this, [this](bool) {
+        ui->pitchRegulatorCB->setCheckState(Qt::Unchecked);
+    });
+    connect(ui->actionPitchOn, &QAction::triggered, this,
+            [this](bool) { ui->pitchRegulatorCB->setCheckState(Qt::Checked); });
+    connect(ui->actionPitchOnWC, &QAction::triggered, this, [this](bool) {
+        ui->pitchSpinBox->setValue(lastTele.pitch);
+        ui->pitchRegulatorCB->setCheckState(Qt::Checked);
+    });}
 
 void MainWindow::setupStatusbar() {
     m_rovStatusLabel->setText(" ROV status ");
