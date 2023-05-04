@@ -14,6 +14,7 @@ QMAKE_CXXFLAGS += -Wno-c++20-extensions -Wall
 
 SOURCES += \
     cameralabel.cpp \
+    filetransmitter.cpp \
     joystickhandler.cpp \
     joysticksetupdialog.cpp \
     ledindicator.cpp \
@@ -27,6 +28,7 @@ SOURCES += \
 
 HEADERS += \
     cameralabel.h \
+    filetransmitter.h \
     helpers.h \
     joystick.h \
     joystickhandler.h \
@@ -42,7 +44,6 @@ HEADERS += \
 
 FORMS += \
     joysticksetupdialog.ui \
-    mainwindow.ui \
     mainwindow2.ui \
     rovdatasplines.ui \
     thrustersetupdialog.ui

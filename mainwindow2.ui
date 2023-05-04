@@ -21,31 +21,11 @@
      <verstretch>0</verstretch>
     </sizepolicy>
    </property>
-   <widget class="CameraLabel" name="camLabel">
-    <property name="geometry">
-     <rect>
-      <x>6</x>
-      <y>6</y>
-      <width>174</width>
-      <height>25</height>
-     </rect>
-    </property>
-    <property name="frameShape">
-     <enum>QFrame::StyledPanel</enum>
-    </property>
-    <property name="frameShadow">
-     <enum>QFrame::Sunken</enum>
-    </property>
-    <property name="text">
-     <string>Camera input here</string>
-    </property>
-    <property name="scaledContents">
-     <bool>true</bool>
-    </property>
-    <property name="alignment">
-     <set>Qt::AlignCenter</set>
-    </property>
-   </widget>
+   <layout class="QGridLayout" name="gridLayout">
+    <item row="0" column="0">
+     <widget class="QCameraViewfinder" name="viewfinder" native="true"/>
+    </item>
+   </layout>
   </widget>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">
@@ -87,6 +67,7 @@
      <string>Additional functions</string>
     </property>
     <addaction name="actionPump_off_on"/>
+    <addaction name="actionLight_on_off"/>
    </widget>
    <widget class="QMenu" name="menuRegulators">
     <property name="title">
@@ -387,6 +368,9 @@
        <property name="suffix">
         <string notr="true">°</string>
        </property>
+       <property name="minimum">
+        <double>-360.000000000000000</double>
+       </property>
        <property name="maximum">
         <double>360.000000000000000</double>
        </property>
@@ -412,7 +396,7 @@
         <string notr="true">°</string>
        </property>
        <property name="minimum">
-        <double>0.000000000000000</double>
+        <double>-360.000000000000000</double>
        </property>
        <property name="maximum">
         <double>360.000000000000000</double>
@@ -438,7 +422,7 @@
         <string notr="true">°</string>
        </property>
        <property name="minimum">
-        <double>0.000000000000000</double>
+        <double>-360.000000000000000</double>
        </property>
        <property name="maximum">
         <double>360.000000000000000</double>
@@ -462,11 +446,80 @@
     </layout>
    </widget>
   </widget>
-  <widget class="QDockWidget" name="asfDockWidget">
+  <widget class="QDockWidget" name="recordSendDockWidget">
+   <property name="windowTitle">
+    <string>Record/Send</string>
+   </property>
    <attribute name="dockWidgetArea">
     <number>1</number>
    </attribute>
-   <widget class="QWidget" name="dockWidgetContents_3"/>
+   <widget class="QWidget" name="recordSendDockWidgetContents">
+    <layout class="QVBoxLayout" name="verticalLayout">
+     <item>
+      <widget class="QPushButton" name="sendScreenShotButton">
+       <property name="enabled">
+        <bool>true</bool>
+       </property>
+       <property name="text">
+        <string>Send screenshot</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QGroupBox" name="groupBox">
+       <property name="title">
+        <string>Video</string>
+       </property>
+       <layout class="QVBoxLayout" name="verticalLayout_2">
+        <item>
+         <layout class="QHBoxLayout" name="horizontalLayout">
+          <item>
+           <widget class="QPushButton" name="startSeriesButton">
+            <property name="enabled">
+             <bool>true</bool>
+            </property>
+            <property name="text">
+             <string>Start</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="pauseSeriesButton">
+            <property name="text">
+             <string>Pause</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="sendSeriesButton">
+            <property name="text">
+             <string>Send</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </item>
+       </layout>
+      </widget>
+     </item>
+     <item>
+      <widget class="QComboBox" name="hostsComboBox"/>
+     </item>
+     <item>
+      <widget class="QProgressBar" name="uploadPB">
+       <property name="enabled">
+        <bool>true</bool>
+       </property>
+       <property name="value">
+        <number>24</number>
+       </property>
+       <property name="invertedAppearance">
+        <bool>false</bool>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </widget>
   </widget>
   <action name="actionBegin_camera_capture">
    <property name="text">
@@ -517,10 +570,10 @@
   </action>
   <action name="actionPump_off_on">
    <property name="text">
-    <string>Pump off/on</string>
+    <string>Pump on/off</string>
    </property>
    <property name="shortcut">
-    <string>L</string>
+    <string>U</string>
    </property>
   </action>
   <action name="actionDepthOff">
@@ -619,12 +672,21 @@
     <string>Alt+P</string>
    </property>
   </action>
+  <action name="actionLight_on_off">
+   <property name="text">
+    <string>Light on/off</string>
+   </property>
+   <property name="shortcut">
+    <string>L</string>
+   </property>
+  </action>
  </widget>
  <customwidgets>
   <customwidget>
-   <class>CameraLabel</class>
-   <extends>QLabel</extends>
-   <header>cameralabel.h</header>
+   <class>QCameraViewfinder</class>
+   <extends>QWidget</extends>
+   <header location="global">qcameraviewfinder.h</header>
+   <container>1</container>
   </customwidget>
  </customwidgets>
  <resources/>

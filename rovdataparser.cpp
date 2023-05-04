@@ -130,8 +130,8 @@ void RovDataParser::prepareControl(Joystick joy) {
     m_controlMutex.lock();
     // Buttons processing
     m_control->manipulatorOpenClose =
-        joy.buttons.ManipOpen - joy.buttons.ManipClose;
-    m_control->manipulatorRotate = joy.buttons.ManipCCW - joy.buttons.ManipCW;
+        (joy.buttons.ManipOpen - joy.buttons.ManipClose) * 100;
+    m_control->manipulatorRotate = (joy.buttons.ManipCCW - joy.buttons.ManipCW) * 60;
     if (m_prevCamSelState == 0 && joy.buttons.CameraSelect != 0)
         m_control->camsel = !m_control->camsel;
     m_prevCamSelState = joy.buttons.CameraSelect;
@@ -149,11 +149,11 @@ void RovDataParser::prepareControl(Joystick joy) {
     } else {
         // clang-format off
         qint8 x = joy.axes[0] * joy.runtimeASF[0] * joy.baseASF[0] *
-                  joy.directions[0] ;//* joy.buttons.CameraSelect == 1 ? -1 : 1; // left-right
+                  joy.directions[0] * (m_control->camsel == 1 ? -1 : 1); // left-right
         qint8 y = joy.axes[1] * joy.runtimeASF[1] * joy.baseASF[1] *
-                  joy.directions[1] ;//* joy.buttons.CameraSelect == 1 ? -1 : 1; // forward-backward
+                  joy.directions[1] * (m_control->camsel == 1 ? -1 : 1); // forward-backward
         // clang-format on
-        qint8 z = joy.axes[2] * joy.runtimeASF[2] * joy.baseASF[2] *
+        qint8 z = joy.axes[2] * 1 * joy.baseASF[2] *
                   joy.directions[2]; // up-down
         qint8 w = joy.axes[3] * joy.runtimeASF[3] * joy.baseASF[3] *
                   joy.directions[3]; // rotation

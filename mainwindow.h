@@ -1,10 +1,14 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
+#include "filetransmitter.h"
 #include "joystickhandler.h"
 #include "joysticksetupdialog.h"
 #include "ledindicator.h"
 #include "math.h"
+#include "qlist.h"
+#include "qscopedpointer.h"
+#include "qthread.h"
 #include "rovcameracapture.h"
 #include "rovcommunication.h"
 #include "rovdataparser.h"
@@ -46,7 +50,7 @@ class MainWindow : public QMainWindow {
     /**
      * \brief Called to change image of the camera label
      */
-    void updateCameraLabel(QImage);
+    void updateStatusbar();
 
     /**
      * \brief You guessed it
@@ -241,5 +245,8 @@ class MainWindow : public QMainWindow {
      * \brief Statusbar indicator, used to display connection status
      */
     QScopedPointer<LEDIndicator> m_rovStatusIndicator;
+
+    QScopedPointer<FileTransmitter> m_filetransmitter;
+    QScopedPointer<QThread> m_networkThread;
 };
 #endif // MAINWINDOW_H
