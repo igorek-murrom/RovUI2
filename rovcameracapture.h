@@ -16,10 +16,6 @@
 #include <QVariant>
 #include <QWidget>
 #include <cstdint>
-#include <opencv2/core.hpp>
-#include <opencv2/imgcodecs.hpp>
-#include <opencv2/imgproc.hpp>
-#include <opencv2/videoio.hpp>
 
 /**
  * \brief The RovCameraCapture class
@@ -81,8 +77,6 @@ class RovCameraCapture : public QWidget {
     /**
      * \brief OpenCV video capture
      */
-    cv::VideoCapture cap;
-
     QScopedPointer<QCamera> m_camera;
 
     QScopedPointer<QMediaRecorder> m_recorder;

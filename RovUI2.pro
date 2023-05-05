@@ -54,7 +54,6 @@ RESOURCES += \
 
 unix{
     CONFIG += link_pkgconfig
-    PKGCONFIG += opencv4
     PKGCONFIG += sdl2
 }
 

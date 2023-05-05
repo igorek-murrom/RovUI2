@@ -175,8 +175,6 @@ void RovDataParser::prepareControl(Joystick joy) {
         m_control->thrusterPower[7] = constrain(z - d - r, -100, 100);
     }
     // Hats processing
-    m_control->cameraRotationDelta[0] = joy.hats[1];
-    m_control->cameraRotationDelta[1] = -joy.hats[0];
 
     QByteArray ba;
 

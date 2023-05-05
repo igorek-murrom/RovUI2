@@ -247,6 +247,5 @@ class MainWindow : public QMainWindow {
     QScopedPointer<LEDIndicator> m_rovStatusIndicator;
 
     QScopedPointer<FileTransmitter> m_filetransmitter;
-    QScopedPointer<QThread> m_networkThread;
 };
 #endif // MAINWINDOW_H

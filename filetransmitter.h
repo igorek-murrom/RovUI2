@@ -7,6 +7,8 @@
 #include "qlist.h"
 #include "qobjectdefs.h"
 #include "qscopedpointer.h"
+#include "qsctpserver.h"
+#include "qsctpsocket.h"
 #include "qtcpserver.h"
 #include "qtcpsocket.h"
 #include "qthread.h"
@@ -15,14 +17,16 @@
 #include <QObject>
 #include <cstddef>
 
-class FileTransmitter : public QTcpServer {
+#define DATAGRAM_SIZE 65000
+
+class FileTransmitter : public QSctpServer {
     Q_OBJECT
 
     struct Host {
-        Host(QTcpSocket *socket, QHostInfo hostInfo)
+        Host(QSctpSocket *socket, QHostInfo hostInfo)
             : socket(socket),
               hostInfo(hostInfo) {}
-        QTcpSocket *socket;
+        QSctpSocket *socket;
         QHostInfo hostInfo;
     };
 

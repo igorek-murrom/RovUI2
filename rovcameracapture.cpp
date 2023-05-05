@@ -14,7 +14,7 @@
 
 RovCameraCapture::RovCameraCapture(QWidget *parent)
     : QWidget(parent),
-      m_camera(new QCamera(QCameraInfo::availableCameras()[0])),
+      m_camera(new QCamera(QCameraInfo::availableCameras().last())),
       m_recorder(new QMediaRecorder(m_camera.data())),
       m_cameraCapture(new QCameraImageCapture(m_camera.data())), m_record() {
     // qDebug() << "Supported video codecs: " << m_recorder->supportedVideoCodecs()
@@ -78,7 +78,8 @@ void RovCameraCapture::pauseRecord(){
 
 void RovCameraCapture::stopRecord() {
     m_recorder->stop();
-    emit recordingReady(m_recorder->outputLocation().toString());
+    // m_recorder->state()
+    // emit recordingReady(m_recorder->outputLocation().toString());
 }
 
 void RovCameraCapture::screenshot() {

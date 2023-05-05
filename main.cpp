@@ -60,7 +60,7 @@ void RovUIMessageHandler(QtMsgType type, const QMessageLogContext &context,
 }
 
 int main(int argc, char *argv[]) {
-    qInstallMessageHandler(RovUIMessageHandler);
+//     qInstallMessageHandler(RovUIMessageHandler);
 
     QApplication a(argc, argv);
     

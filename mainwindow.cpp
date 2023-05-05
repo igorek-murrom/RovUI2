@@ -24,14 +24,11 @@ MainWindow::MainWindow(QWidget *parent)
       m_datasplines(new RovDataSplines(this)),
       m_rovStatusLabel(new QLabel(this)),
       m_rovStatusIndicator(new LEDIndicator(this)),
-      m_filetransmitter(new FileTransmitter()),
-      m_networkThread(new QThread(this)) {
+      m_filetransmitter(new FileTransmitter()) {
 
     ui->setupUi(this);
     setWindowTitle("RovUI2 v0.95");
     m_cameraCapture->setViewfinder(ui->viewfinder);
-//     m_filetransmitter->moveToThread(m_networkThread.data());
-//     m_networkThread->start();
 
     setupStatusbar();
     updateStatusbarText("Initialization...");
@@ -47,11 +44,7 @@ MainWindow::MainWindow(QWidget *parent)
     updateStatusbarProgress(100);
 }
 
-MainWindow::~MainWindow() {
-    delete ui;
-    m_networkThread->quit();
-    m_networkThread->wait();
-}
+MainWindow::~MainWindow() { delete ui; }
 
 void MainWindow::resizeCameraLabel() {
     //    int targetWidth  =
@@ -143,8 +136,9 @@ void MainWindow::updateTelemetry(RovTelemetry tele) {
     ui->telePitchLabel->setText(QString::number(tele.pitch, 'f', 2) + " deg");
     ui->teleYawLabel->setText(QString::number(tele.yaw, 'f', 2) + " deg");
     ui->teleRollLabel->setText(QString::number(tele.roll, 'f', 2) + " deg");
-    ui->teleTempLabel->setText(QString::number(tele.temp / 100, 'f', 2) +
-                               " °C");
+    ui->teleTempLabel->setText(
+        tele.depth < 3.4E+38 ? QString::number(tele.temp / 100, 'f', 2) + " °C"
+                             : "[DIS]");
     ui->teleVoltageLabel->setText(QString::number(tele.voltage, 'f', 2) + " V");
     ui->teleCurrentLabel->setText(
         QString::number(std::min(tele.current * 1000, 25000.0f), 'f', 2) +
@@ -286,11 +280,14 @@ void MainWindow::createConnections() {
                 m_filetransmitter->clients[ui->hostsComboBox->currentIndex()]);
         });
 
-    connect(m_filetransmitter.data(), &FileTransmitter::newHost, this,
-            [this](qint64 index) {
-                qDebug() << "Adding host " << m_filetransmitter->clients[index].hostInfo.hostName();
-                ui->hostsComboBox->addItem(m_filetransmitter->clients[index].hostInfo.hostName());
-            });
+    connect(
+        m_filetransmitter.data(), &FileTransmitter::newHost, this,
+        [this](qint64 index) {
+            qDebug() << "Adding host "
+                     << m_filetransmitter->clients[index].hostInfo.hostName();
+            ui->hostsComboBox->addItem(
+                m_filetransmitter->clients[index].hostInfo.hostName());
+        });
 
     // Menu actions
     // Light on/off
