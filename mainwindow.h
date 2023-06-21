@@ -185,7 +185,7 @@ class MainWindow : public QMainWindow {
 
     /**
      * @brief Last telemetry data, usually no more than 10ms behind
-     * 
+     *
      */
     RovTelemetry lastTele;
 

@@ -1,24 +1,30 @@
 #include "rovcameracapture.h"
+#include "qapplication.h"
 #include "qcamera.h"
 #include "qcameraimagecapture.h"
 #include "qcamerainfo.h"
 #include "qcameraviewfinder.h"
 #include "qcameraviewfindersettings.h"
 #include "qdebug.h"
+#include "qfileinfo.h"
 #include "qmediaencodersettings.h"
+#include "qmediaplayer.h"
 #include "qmediarecorder.h"
 #include "qmultimedia.h"
 #include "qscopedpointer.h"
 #include "qurl.h"
+#include "qvideowidget.h"
 #include <regex>
 
 RovCameraCapture::RovCameraCapture(QWidget *parent)
-    : QWidget(parent),
-      m_camera(new QCamera(QCameraInfo::availableCameras().last())),
+    : QWidget(parent), m_camera(new QCamera("192.168.0.12:5000")),
       m_recorder(new QMediaRecorder(m_camera.data())),
-      m_cameraCapture(new QCameraImageCapture(m_camera.data())), m_record() {
-    // qDebug() << "Supported video codecs: " << m_recorder->supportedVideoCodecs()
-    //          << "\nSupported containers: " << m_recorder->supportedContainers()
+      m_cameraCapture(new QCameraImageCapture(m_camera.data())),
+      m_mediaPlayer(new QMediaPlayer(this)), m_record() {
+    // qDebug() << "Supported video codecs: " <<
+    // m_recorder->supportedVideoCodecs()
+    //          << "\nSupported containers: " <<
+    //          m_recorder->supportedContainers()
     //          << "\nSupported buffer formats: "
     //          << m_cameraCapture->supportedBufferFormats()
     //          << "\nsupported image codecs: "
@@ -40,7 +46,7 @@ RovCameraCapture::RovCameraCapture(QWidget *parent)
     connect(m_cameraCapture.data(), &QCameraImageCapture::imageCaptured, this,
             [this](int id, QImage img) {
                 QTemporaryFile *screenshotFile =
-                    new QTemporaryFile("/tmp/screenshot-XXXXXX.png");
+                    new QTemporaryFile("file:///tmp/screenshot-XXXXXX.png");
                 screenshotFile->open();
                 screenshotFile->close();
                 QString generatedName = screenshotFile->fileName();
@@ -48,17 +54,19 @@ RovCameraCapture::RovCameraCapture(QWidget *parent)
 
                 QFile file(generatedName);
                 file.open(QIODevice::WriteOnly);
-                qDebug() << "Saving screenshot into " + generatedName;
 
                 img.save(&file, "PNG");
                 emit screenshotReady(file.fileName());
+                qDebug() << "Saving screenshot into " + generatedName;
             });
 
     m_camera->searchAndLock();
+    m_mediaPlayer->setMedia(QUrl("gst-pipeline: udpsrc address=127.0.0.1 port=5000 ! application/x-rtp,media=video,payload=26,clock-rate=90000,encoding-name=JPEG,framerate=30/1 ! queue ! rtpjpegdepay ! jpegparse ! jpegdec ! timeoverlay ! xvimagesink name=\"qtvideosink\""));
 }
 
-void RovCameraCapture::setViewfinder(QCameraViewfinder *vf) {
-    m_camera->setViewfinder(vf);
+void RovCameraCapture::setViewfinder(QVideoWidget *vf) {
+    qDebug() << "Adding ViewFinder " << vf;
+    m_mediaPlayer->setVideoOutput(vf);
 }
 
 void RovCameraCapture::startRecord() {
@@ -67,18 +75,31 @@ void RovCameraCapture::startRecord() {
     recordFile->open();
     recordFile->close();
     QString generatedName = recordFile->fileName();
+    recordFile->remove();
     delete recordFile;
     m_recorder->setOutputLocation(generatedName);
+    qDebug() << m_recorder->errorString();
+    qDebug() << "Generated file name: " << generatedName;
     m_recorder->record();
 }
 
-void RovCameraCapture::pauseRecord(){
-    m_recorder->pause();
-}
+void RovCameraCapture::pauseRecord() { m_recorder->pause(); }
 
 void RovCameraCapture::stopRecord() {
     m_recorder->stop();
-    // m_recorder->state()
+    qDebug() << m_recorder->state();
+    qDebug() << m_recorder->status();
+    qDebug() << m_recorder->errorString();
+    qDebug() << m_recorder->state();
+    qDebug() << "recordingReady file name: "
+             << m_recorder->outputLocation().toString();
+    QFileInfo check_file(m_recorder->outputLocation().toString());
+
+    qDebug() << "waiting for record to appear @ "
+             << m_recorder->outputLocation().toString();
+    // while (!check_file.exists()) {
+    //     QCoreApplication::processEvents(QEventLoop::AllEvents, 100);
+    // }
     // emit recordingReady(m_recorder->outputLocation().toString());
 }
 
@@ -90,11 +111,14 @@ void RovCameraCapture::screenshot() {
 void RovCameraCapture::startCapture() {
     m_camera->load();
     m_camera->start();
+    m_mediaPlayer->play();
+
 }
 
 void RovCameraCapture::stopCapture() {
     m_camera->stop();
     m_camera->unload();
+    m_mediaPlayer->stop();
 }
 
 QString RovCameraCapture::getRecordInfo() {

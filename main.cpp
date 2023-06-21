@@ -10,8 +10,8 @@
  */
 void RovUIMessageHandler(QtMsgType type, const QMessageLogContext &context,
                          const QString &msg) {
-    QByteArray  localMsg = msg.toLocal8Bit();
-#ifdef  __QTDEBUG__
+    QByteArray localMsg = msg.toLocal8Bit();
+#ifdef __QTDEBUG__
     const char *file     = context.file ? context.file : "";
     const char *function = context.function ? context.function : "";
 #endif
@@ -60,10 +60,9 @@ void RovUIMessageHandler(QtMsgType type, const QMessageLogContext &context,
 }
 
 int main(int argc, char *argv[]) {
-//     qInstallMessageHandler(RovUIMessageHandler);
+    qInstallMessageHandler(RovUIMessageHandler);
 
     QApplication a(argc, argv);
-    
 
     MainWindow w;
     w.show();

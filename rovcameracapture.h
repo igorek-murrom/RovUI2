@@ -1,7 +1,8 @@
 #ifndef ROVCAMERACAPTURE_H
 #define ROVCAMERACAPTURE_H
 
-#include <QTemporaryFile>
+#include "qscopedpointer.h"
+#include "qvideowidget.h"
 #include <QCamera>
 #include <QCameraImageCapture>
 #include <QCameraInfo>
@@ -12,9 +13,11 @@
 #include <QLabel>
 #include <QMediaRecorder>
 #include <QScopedPointer>
+#include <QTemporaryFile>
 #include <QTimer>
 #include <QVariant>
 #include <QWidget>
+#include <QMediaPlayer>
 #include <cstdint>
 
 /**
@@ -31,7 +34,7 @@ class RovCameraCapture : public QWidget {
 
     QString getRecordInfo();
 
-    void setViewfinder(QCameraViewfinder *viewfinder);
+    void setViewfinder(QVideoWidget *viewfinder);
 
   signals:
     /**
@@ -82,6 +85,7 @@ class RovCameraCapture : public QWidget {
     QScopedPointer<QMediaRecorder> m_recorder;
 
     QScopedPointer<QCameraImageCapture> m_cameraCapture;
+    QScopedPointer<QMediaPlayer> m_mediaPlayer;
 
 
     /**

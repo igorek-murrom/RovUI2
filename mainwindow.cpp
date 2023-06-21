@@ -28,6 +28,7 @@ MainWindow::MainWindow(QWidget *parent)
 
     ui->setupUi(this);
     setWindowTitle("RovUI2 v0.95");
+    ui->viewfinder->show();
     m_cameraCapture->setViewfinder(ui->viewfinder);
 
     setupStatusbar();
@@ -268,26 +269,37 @@ void MainWindow::createConnections() {
     connect(
         m_cameraCapture.data(), &RovCameraCapture::recordingReady, this,
         [this](QString path) {
-            m_filetransmitter->sendFileAt(
-                path,
+            m_filetransmitter->setPath(path);
+            m_filetransmitter->setHost(
                 m_filetransmitter->clients[ui->hostsComboBox->currentIndex()]);
+            m_filetransmitter->sendFile();
         });
     connect(
         m_cameraCapture.data(), &RovCameraCapture::screenshotReady, this,
         [this](QString path) {
-            m_filetransmitter->sendFileAt(
-                path,
+            if (m_filetransmitter->clients.size() <= 0)
+                return;
+            m_filetransmitter->setPath(path);
+            m_filetransmitter->setHost(
                 m_filetransmitter->clients[ui->hostsComboBox->currentIndex()]);
+            m_filetransmitter->sendFile();
         });
 
     connect(
         m_filetransmitter.data(), &FileTransmitter::newHost, this,
         [this](qint64 index) {
             qDebug() << "Adding host "
-                     << m_filetransmitter->clients[index].hostInfo.hostName();
-            ui->hostsComboBox->addItem(
-                m_filetransmitter->clients[index].hostInfo.hostName());
+                     << m_filetransmitter->clients[index].socket->peerAddress();
+            ui->hostsComboBox->addItem(m_filetransmitter->clients[index]
+                                           .socket->peerAddress()
+                                           .toString());
         });
+
+    connect(m_filetransmitter.data(), &FileTransmitter::removeHost, this,
+            [this](qint64 index) {
+                qDebug() << "Removing host ";
+                ui->hostsComboBox->removeItem(index);
+            });
 
     // Menu actions
     // Light on/off
