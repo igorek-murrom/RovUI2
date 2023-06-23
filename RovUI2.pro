@@ -1,4 +1,4 @@
-QT       += core gui network multimedia multimediawidgets charts
+QT       += core gui network multimedia multimediawidgets charts websockets
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -24,7 +24,9 @@ SOURCES += \
     rovcommunication.cpp \
     rovdataparser.cpp \
     rovdatasplines.cpp \
-    thrustersetupdialog.cpp
+    thrustersetupdialog.cpp \
+    rovcameracommunication.cpp \
+    client.cpp
 
 HEADERS += \
     cameralabel.h \
@@ -40,9 +42,12 @@ HEADERS += \
     rovdataparser.h \
     rovdatasplines.h \
     rovdatatypes.h \
-    thrustersetupdialog.h
+    thrustersetupdialog.h \
+    rovcameracommunication.h \
+    client.h
 
 FORMS += \
+    camerasettings.ui \
     joysticksetupdialog.ui \
     mainwindow2.ui \
     rovdatasplines.ui \

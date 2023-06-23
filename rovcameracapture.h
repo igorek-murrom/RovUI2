@@ -14,11 +14,27 @@
 #include <QMediaRecorder>
 #include <QScopedPointer>
 #include <QTemporaryFile>
+#include <QAbstractVideoSurface>
 #include <QTimer>
 #include <QVariant>
 #include <QWidget>
 #include <QMediaPlayer>
 #include <cstdint>
+
+class Surface : public QAbstractVideoSurface
+{
+public:
+    Surface(QObject *p) : QAbstractVideoSurface(p) { }
+    QList<QVideoFrame::PixelFormat> supportedPixelFormats(QAbstractVideoBuffer::HandleType) const override
+    {
+        // Make sure that the driver supports this pixel format.
+        return QList<QVideoFrame::PixelFormat>() << QVideoFrame::Format_YUYV;
+    }
+
+    // Video frames are handled here.
+    bool present(const QVideoFrame &) override { return true; }
+};
+
 
 /**
  * \brief The RovCameraCapture class

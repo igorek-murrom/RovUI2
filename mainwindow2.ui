@@ -42,6 +42,7 @@
     </property>
     <addaction name="actionBegin_camera_capture"/>
     <addaction name="actionEnd_camera_capture"/>
+    <addaction name="actionDigiCam_report"/>
    </widget>
    <widget class="QMenu" name="menuThrusters">
     <property name="title">
@@ -454,83 +455,7 @@
     <number>1</number>
    </attribute>
    <widget class="QWidget" name="recordSendDockWidgetContents">
-    <layout class="QVBoxLayout" name="verticalLayout">
-     <item>
-      <widget class="QPushButton" name="sendScreenShotButton">
-       <property name="enabled">
-        <bool>true</bool>
-       </property>
-       <property name="text">
-        <string>Send screenshot</string>
-       </property>
-       <property name="shortcut">
-        <string>Shift+S</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QGroupBox" name="groupBox">
-       <property name="title">
-        <string>Video</string>
-       </property>
-       <layout class="QVBoxLayout" name="verticalLayout_2">
-        <item>
-         <layout class="QHBoxLayout" name="horizontalLayout">
-          <item>
-           <widget class="QPushButton" name="startSeriesButton">
-            <property name="enabled">
-             <bool>true</bool>
-            </property>
-            <property name="text">
-             <string>Start</string>
-            </property>
-            <property name="shortcut">
-             <string>S</string>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QPushButton" name="pauseSeriesButton">
-            <property name="text">
-             <string>Pause</string>
-            </property>
-            <property name="shortcut">
-             <string>Shift+V</string>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QPushButton" name="sendSeriesButton">
-            <property name="text">
-             <string>Send</string>
-            </property>
-            <property name="shortcut">
-             <string>V</string>
-            </property>
-           </widget>
-          </item>
-         </layout>
-        </item>
-       </layout>
-      </widget>
-     </item>
-     <item>
-      <widget class="QComboBox" name="hostsComboBox"/>
-     </item>
-     <item>
-      <widget class="QProgressBar" name="uploadPB">
-       <property name="enabled">
-        <bool>true</bool>
-       </property>
-       <property name="value">
-        <number>24</number>
-       </property>
-       <property name="invertedAppearance">
-        <bool>false</bool>
-       </property>
-      </widget>
-     </item>
-    </layout>
+    <layout class="QVBoxLayout" name="verticalLayout"/>
    </widget>
   </widget>
   <action name="actionBegin_camera_capture">
@@ -692,6 +617,11 @@
     <string>L</string>
    </property>
   </action>
+  <action name="actionDigiCam_report">
+   <property name="text">
+    <string>DigiCam report</string>
+   </property>
+  </action>
  </widget>
  <customwidgets>
   <customwidget>
@@ -702,7 +632,6 @@
   </customwidget>
  </customwidgets>
  <tabstops>
-  <tabstop>sendScreenShotButton</tabstop>
   <tabstop>depthRegulatorCB</tabstop>
   <tabstop>depthSpinBox</tabstop>
   <tabstop>yawRegulatorCB</tabstop>
@@ -711,10 +640,6 @@
   <tabstop>rollSpinBox</tabstop>
   <tabstop>pitchRegulatorCB</tabstop>
   <tabstop>pitchSpinBox</tabstop>
-  <tabstop>startSeriesButton</tabstop>
-  <tabstop>pauseSeriesButton</tabstop>
-  <tabstop>sendSeriesButton</tabstop>
-  <tabstop>hostsComboBox</tabstop>
  </tabstops>
  <resources/>
  <connections/>

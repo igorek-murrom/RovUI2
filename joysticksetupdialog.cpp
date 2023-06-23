@@ -237,11 +237,13 @@ void JoystickSetupDialog::updateUi(Joystick joystick) {
                                    : Qt::CheckState::Unchecked);
             i++;
         }
+        break;
     case 2:
         for (uint i = 0; QProgressBar * pb : qAsConst(m_hatsSliders)) {
             pb->setValue(joystick.hats[i]);
             i++;
         }
+        break;
     default:
         break;
     }

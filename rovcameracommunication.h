@@ -6,18 +6,20 @@
 #include <QDebug>
 #include <QMap>
 struct Setting {
-    QString name;
     int maxValue;
     int minValue;
     int currentValue;
+    QString name;
+    QMap <QString, int> menu;
+
     //    bool hasChanged;
 };
 
-class rovcameracommunication : public QObject
+class RovCameraCommunication : public QObject
 {
     Q_OBJECT
 public:
-    explicit rovcameracommunication(QObject *parent = nullptr);
+    explicit RovCameraCommunication(QObject *parent = nullptr);
 
 signals:
 
@@ -41,7 +43,7 @@ public slots:
 
     void sendPacket();
     void echo();
-    void parsing(QJsonObject objec);
+    void parse(QJsonObject objec);
 
 private:
 //    QList<Setting*> cameraSettings;

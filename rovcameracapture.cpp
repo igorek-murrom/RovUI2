@@ -61,12 +61,12 @@ RovCameraCapture::RovCameraCapture(QWidget *parent)
             });
 
     m_camera->searchAndLock();
-    m_mediaPlayer->setMedia(QUrl("gst-pipeline: udpsrc address=127.0.0.1 port=5000 ! application/x-rtp,media=video,payload=26,clock-rate=90000,encoding-name=JPEG,framerate=30/1 ! queue ! rtpjpegdepay ! jpegparse ! jpegdec ! timeoverlay ! xvimagesink name=\"qtvideosink\""));
 }
 
 void RovCameraCapture::setViewfinder(QVideoWidget *vf) {
     qDebug() << "Adding ViewFinder " << vf;
     m_mediaPlayer->setVideoOutput(vf);
+    m_mediaPlayer->setMedia(QUrl("gst-pipeline: udpsrc address=mangotree.local port=5000 ! application/x-rtp,media=video,payload=26,clock-rate=90000,encoding-name=JPEG,framerate=30/1 ! queue ! rtpjpegdepay ! jpegparse ! jpegdec ! timeoverlay ! videoconvert ! waylandsink name=\"qtvideosink\""));
 }
 
 void RovCameraCapture::startRecord() {

@@ -1,16 +1,11 @@
 #include "mainwindow.h"
-#include "filetransmitter.h"
 #include "joystick.h"
 #include "joystickhandler.h"
-#include "qcombobox.h"
-#include "qhostinfo.h"
+#include "qaction.h"
 #include "qnamespace.h"
 #include "qobjectdefs.h"
-#include "qpushbutton.h"
-#include "qthread.h"
 #include "rovcameracapture.h"
 #include "ui_mainwindow2.h"
-#include "unistd.h"
 #include <cstddef>
 
 MainWindow::MainWindow(QWidget *parent)
@@ -24,7 +19,7 @@ MainWindow::MainWindow(QWidget *parent)
       m_datasplines(new RovDataSplines(this)),
       m_rovStatusLabel(new QLabel(this)),
       m_rovStatusIndicator(new LEDIndicator(this)),
-      m_filetransmitter(new FileTransmitter()) {
+      m_rovCameraCommunication(new RovCameraCommunication(this)) {
 
     ui->setupUi(this);
     setWindowTitle("RovUI2 v0.95");
@@ -156,6 +151,9 @@ void MainWindow::createConnections() {
     //     connect(m_cameraCapture.data(), SIGNAL(imgProcessed(QImage)), this,
     //             SLOT(updateCameraLabel()));
 
+    connect(ui->actionDigiCam_report, &QAction::triggered, this,
+            [this] { m_rovCameraCommunication->echo(); });
+
     // Show setup dialogs
     connect(ui->actionDisplay_thruster_setup_dialog, &QAction::triggered, this,
             [this] { m_tsd->show(); });
@@ -240,66 +238,6 @@ void MainWindow::createConnections() {
             m_rovDataParser.data(), SLOT(setThrustersOverride(QList<qint8>)));
     connect(m_tsd.data(), SIGNAL(overrideStatusChanged(bool)),
             m_rovDataParser.data(), SLOT(enableThrustersOverride(bool)));
-
-    // Files Send/Recieve
-    connect(ui->startSeriesButton, &QPushButton::clicked, this, [this]() {
-        m_cameraCapture->startRecord();
-        ui->sendScreenShotButton->setEnabled(false);
-        ui->startSeriesButton->setEnabled(false);
-        ui->pauseSeriesButton->setEnabled(true);
-        ui->sendSeriesButton->setEnabled(true);
-    });
-    connect(ui->pauseSeriesButton, &QPushButton::clicked, this, [this]() {
-        m_cameraCapture->pauseRecord();
-        ui->sendScreenShotButton->setEnabled(false);
-        ui->startSeriesButton->setEnabled(true);
-        ui->pauseSeriesButton->setEnabled(false);
-        ui->sendSeriesButton->setEnabled(true);
-    });
-    connect(ui->sendSeriesButton, &QPushButton::clicked, this, [this]() {
-        m_cameraCapture->stopRecord();
-        ui->sendScreenShotButton->setEnabled(true);
-        ui->startSeriesButton->setEnabled(true);
-        ui->pauseSeriesButton->setEnabled(false);
-        ui->sendSeriesButton->setEnabled(false);
-    });
-    connect(ui->sendScreenShotButton, SIGNAL(clicked()), m_cameraCapture.data(),
-            SLOT(screenshot()));
-
-    connect(
-        m_cameraCapture.data(), &RovCameraCapture::recordingReady, this,
-        [this](QString path) {
-            m_filetransmitter->setPath(path);
-            m_filetransmitter->setHost(
-                m_filetransmitter->clients[ui->hostsComboBox->currentIndex()]);
-            m_filetransmitter->sendFile();
-        });
-    connect(
-        m_cameraCapture.data(), &RovCameraCapture::screenshotReady, this,
-        [this](QString path) {
-            if (m_filetransmitter->clients.size() <= 0)
-                return;
-            m_filetransmitter->setPath(path);
-            m_filetransmitter->setHost(
-                m_filetransmitter->clients[ui->hostsComboBox->currentIndex()]);
-            m_filetransmitter->sendFile();
-        });
-
-    connect(
-        m_filetransmitter.data(), &FileTransmitter::newHost, this,
-        [this](qint64 index) {
-            qDebug() << "Adding host "
-                     << m_filetransmitter->clients[index].socket->peerAddress();
-            ui->hostsComboBox->addItem(m_filetransmitter->clients[index]
-                                           .socket->peerAddress()
-                                           .toString());
-        });
-
-    connect(m_filetransmitter.data(), &FileTransmitter::removeHost, this,
-            [this](qint64 index) {
-                qDebug() << "Removing host ";
-                ui->hostsComboBox->removeItem(index);
-            });
 
     // Menu actions
     // Light on/off
