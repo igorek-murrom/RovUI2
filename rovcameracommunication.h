@@ -22,33 +22,25 @@ public:
     explicit RovCameraCommunication(QObject *parent = nullptr);
 
 signals:
+    void reportReady(QJsonObject jsonObject);
+    void outputReady(QJsonObject jsonObject);
+    void cameraSettingsReady(QMap<QString, Setting>);
 
 public slots:
-//    void Brightness(int value);
-//    void Contrast(int value);
-//    void Saturation(int value);
-//    void Hue(int value);
-//    void Gamma(int value);
-//    void Sharpness(int value);
-//    void Gain(int value);
-//    void White_Balance_Temperature_Auto(int value);
-//    void White_Balance_Temperature(int value);
-//    void Exposure_Auto(int value);
-//    void Exposure_Auto_Priority(int value);
-//    void Exposure_Absolute(int value);
-//    void Backlight_Compensation(int value);
-//    void Power_Line_Frequency(int value);
-
-//    void addSetting(Setting *setting);
-
     void sendPacket();
     void echo();
-    void parse(QJsonObject objec);
+    void startStream();
+    void stopStream();
+
+private slots:
+    void processingMessage(QJsonObject jsonObject);
+    void parseSettings(QJsonObject settings);
+    void displayOutput(QJsonObject message);
 
 private:
-//    QList<Setting*> cameraSettings;
     Client *socket;
     QMap<QString, Setting> cameraSettings;
+    void sendJSON(QJsonObject jsonObject);
 };
 
 #endif // ROVCAMERACOMMUNICATION_H
