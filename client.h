@@ -8,6 +8,9 @@
 #include <QTimer>
 #include <QJsonDocument>
 #include <QJsonObject>
+#include <QAbstractSocket>
+#include <QTimer>
+
 class Client : public QObject
 {
     Q_OBJECT
@@ -17,14 +20,19 @@ public:
 signals:
     void reportReady(QJsonObject obj);
 public slots:
-    void onConnected();
-    void onTextMessageReceived(QString message);
     void sendText(QString message);
-    void closedConnect();
+
+private slots:
+    void onConnected();
+    void closeConnection();
+    void tryConnect();
+    void stateCheck(QAbstractSocket::SocketState state);
+    void onTextMessageReceived(QString message);
 
 private:
     QWebSocket m_webSocket;
     QUrl m_url;
+    QTimer *m_timerConnect;
 };
 
 #endif // CLIENT_H
