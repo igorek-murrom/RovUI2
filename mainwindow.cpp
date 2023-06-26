@@ -5,6 +5,7 @@
 #include "qnamespace.h"
 #include "qobjectdefs.h"
 #include "rovcameracapture.h"
+#include "rovcameracommunication.h"
 #include "ui_mainwindow2.h"
 #include <cstddef>
 
@@ -153,6 +154,9 @@ void MainWindow::createConnections() {
 
     connect(ui->actionDigiCam_report, &QAction::triggered, this,
             [this] { m_rovCameraCommunication->echo(); });
+    connect(m_rovCameraCommunication.data(), &RovCameraCommunication::settingsReady, this, [this]{
+        
+    });
 
     // Show setup dialogs
     connect(ui->actionDisplay_thruster_setup_dialog, &QAction::triggered, this,

@@ -14,6 +14,7 @@ QMAKE_CXXFLAGS += -Wno-c++20-extensions -Wall
 
 SOURCES += \
     cameralabel.cpp \
+    camerasettings.cpp \
     filetransmitter.cpp \
     joystickhandler.cpp \
     joysticksetupdialog.cpp \
@@ -30,6 +31,7 @@ SOURCES += \
 
 HEADERS += \
     cameralabel.h \
+    camerasettings.h \
     filetransmitter.h \
     helpers.h \
     joystick.h \

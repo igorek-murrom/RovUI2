@@ -9,6 +9,7 @@
 #include "qlist.h"
 #include "qscopedpointer.h"
 #include "qthread.h"
+#include "qwidget.h"
 #include "rovcameracapture.h"
 #include "rovcameracommunication.h"
 #include "rovcommunication.h"
@@ -248,5 +249,7 @@ class MainWindow : public QMainWindow {
     QScopedPointer<LEDIndicator> m_rovStatusIndicator;
 
     QScopedPointer<RovCameraCommunication> m_rovCameraCommunication;
+
+
 };
 #endif // MAINWINDOW_H

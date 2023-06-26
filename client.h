@@ -15,7 +15,7 @@ public:
     explicit Client(const QUrl &url, QObject *parent = nullptr);
 
 signals:
-    void echoReady(QJsonObject obj);
+    void reportReady(QJsonObject obj);
 public slots:
     void onConnected();
     void onTextMessageReceived(QString message);

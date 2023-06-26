@@ -23,9 +23,8 @@ void Client::onTextMessageReceived(QString message)
     QJsonDocument doc = QJsonDocument::fromJson(message.toUtf8());
     QJsonObject object = doc.object();
     if (object["_type"] == "v4l2_ctrls/report") {
-        emit echoReady(object);
+        emit reportReady(object);
     }
-    qDebug() << message;
 }
 
 void Client::closedConnect() {

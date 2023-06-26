@@ -2,7 +2,7 @@
 
 RovCameraCommunication::RovCameraCommunication(QObject *parent)
     : QObject{parent}, socket(new Client(QUrl("ws://raspberrypi.local:8080"))) {
-    connect(socket, SIGNAL(echoReady(QJsonObject)), this,
+    connect(socket, SIGNAL(reportReady(QJsonObject)), this,
             SLOT(parse(QJsonObject)));
 }
 
@@ -44,6 +44,7 @@ void RovCameraCommunication::parse(QJsonObject settings) {
         for (auto menuName : menuKeys)
             cameraSettings[name].menu[menuName] =
                 menuSettings[menuName].toInt();
-        qDebug() << "cock name " << name << "\n MinVal " << cameraSettings[name].minValue << "\n MaxVal " << cameraSettings[name].maxValue << "\n CurVal " << cameraSettings[name].currentValue;
+        qDebug() << cameraSettings[name].toString().toStdString().c_str();
     }
+    
 }
