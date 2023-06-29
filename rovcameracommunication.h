@@ -45,6 +45,7 @@ signals:
     void cameraSettingsReady(QMap<QString, Setting>);
 
 public slots:
+    void sendSettings(QMap<QString, Setting> settingsMap);
     void sendPacket();
     void echo();
     void startStream();

@@ -1,6 +1,7 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
+#include "camerasettings.h"
 #include "filetransmitter.h"
 #include "joystickhandler.h"
 #include "joysticksetupdialog.h"
@@ -249,6 +250,7 @@ class MainWindow : public QMainWindow {
     QScopedPointer<LEDIndicator> m_rovStatusIndicator;
 
     QScopedPointer<RovCameraCommunication> m_rovCameraCommunication;
+    QScopedPointer<CameraSettings> m_cameraSettings;
 
 
 };

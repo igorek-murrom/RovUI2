@@ -4,23 +4,24 @@
 #include "qcheckbox.h"
 #include "qcombobox.h"
 #include "qdialog.h"
-#include "qlist.h"
+#include "qlabel.h"
+#include "qmap.h"
 #include "qobjectdefs.h"
 #include "qslider.h"
 #include "rovcameracommunication.h"
 #include "ui_camerasettings.h"
 #include <QObject>
 
-QT_BEGIN_NAMESPACE
 namespace Ui {
     class CameraSettings;
 }
-QT_END_NAMESPACE
 
-class cameraSettings : public QDialog {
+class CameraSettings : public QDialog {
     Q_OBJECT
   public:
-    explicit cameraSettings(QDialog *parent = nullptr);
+    explicit CameraSettings(QDialog *parent = nullptr);
+
+    ~CameraSettings();
 
   signals:
     void updateCameraSettings();
@@ -28,12 +29,21 @@ class cameraSettings : public QDialog {
   public slots:
     void recieveCameraSettings(QMap<QString, Setting>);
 
+  private slots:
+    void updateSetting(QString name, int val);
+    void updateValueLabel(QString name, int val);
+
   private:
-    Ui::CameraSettings              *ui;
-    QMap<QString, Setting>           settings;
-    QList<QSlider *>                 sliders;
-    QList<QComboBox *>               comboboxes;
-    QList<QCheckBox *>               checkboxes;
+    Ui::CameraSettings *ui;
+
+    QMap<QString, Setting> settings;
+
+    QMap<QString, QLabel *>    labels;
+    QMap<QString, QLabel *>    valueLabels;
+    QMap<QString, QSlider *>   sliders;
+    QMap<QString, QComboBox *> comboboxes;
+    QMap<QString, QCheckBox *> checkboxes;
+
     QList<QMetaObject::Connection> conns;
 };
 

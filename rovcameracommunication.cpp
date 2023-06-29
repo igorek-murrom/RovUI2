@@ -2,9 +2,12 @@
 
 RovCameraCommunication::RovCameraCommunication(QObject *parent)
     : QObject{parent}, socket(new Client(QUrl("ws://localhost:8080"))) {
-    connect(socket, SIGNAL(recieveReady(QJsonObject)), this, SLOT(processingMessage(QJsonObject)));
-    connect(this, SIGNAL(reportReady(QJsonObject)), this, SLOT(parseSettings(QJsonObject)));
-    connect(this, SIGNAL(outputReady(QJsonObject)), this, SLOT(displayOutput(QJsonObject)));
+    connect(socket, SIGNAL(reportReady(QJsonObject)), this,
+            SLOT(processingMessage(QJsonObject)));
+    connect(this, SIGNAL(reportReady(QJsonObject)), this,
+            SLOT(parseSettings(QJsonObject)));
+    connect(this, SIGNAL(outputReady(QJsonObject)), this,
+            SLOT(displayOutput(QJsonObject)));
 }
 
 void RovCameraCommunication::sendJSON(QJsonObject jsonObject) {
@@ -23,8 +26,16 @@ void RovCameraCommunication::processingMessage(QJsonObject jsonObject) {
     }
 }
 
-void RovCameraCommunication::sendPacket() {
+void RovCameraCommunication::sendSettings(QMap<QString, Setting> settingsMap) {
     QJsonObject jsonObject;
+    for (Setting setting : settingsMap) {
+        jsonObject.insert(setting.name, setting.currentValue);
+    }
+    sendJSON(jsonObject);
+}
+
+void RovCameraCommunication::sendPacket() {
+    QJsonObject jsonObject; 
     for (Setting setting : cameraSettings) {
         if (setting.currentValue < setting.maxValue and
             setting.currentValue > setting.minValue)
@@ -73,6 +84,8 @@ void RovCameraCommunication::parseSettings(QJsonObject settings) {
 }
 
 void RovCameraCommunication::displayOutput(QJsonObject message) {
-    QByteArray ba; ba.append(message["data"].toString());
-    qDebug() << "(type: " << message["log_type"].toString() << ") " << QByteArray::fromBase64(ba);
+    QByteArray ba;
+    ba.append(message["data"].toString());
+    qDebug() << "(type: " << message["log_type"].toString() << ") "
+             << QByteArray::fromBase64(ba);
 }

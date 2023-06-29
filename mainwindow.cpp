@@ -1,7 +1,9 @@
 #include "mainwindow.h"
+#include "camerasettings.h"
 #include "joystick.h"
 #include "joystickhandler.h"
 #include "qaction.h"
+#include "qdialog.h"
 #include "qnamespace.h"
 #include "qobjectdefs.h"
 #include "rovcameracapture.h"
@@ -20,7 +22,8 @@ MainWindow::MainWindow(QWidget *parent)
       m_datasplines(new RovDataSplines(this)),
       m_rovStatusLabel(new QLabel(this)),
       m_rovStatusIndicator(new LEDIndicator(this)),
-      m_rovCameraCommunication(new RovCameraCommunication(this)) {
+      m_rovCameraCommunication(new RovCameraCommunication(this)),
+      m_cameraSettings(new CameraSettings(new QDialog(this))) {
 
     ui->setupUi(this);
     setWindowTitle("RovUI2 v0.95");
@@ -154,8 +157,9 @@ void MainWindow::createConnections() {
 
     connect(ui->actionDigiCam_report, &QAction::triggered, this,
             [this] { m_rovCameraCommunication->echo(); });
-    connect(m_rovCameraCommunication.data(), &RovCameraCommunication::settingsReady, this, [this]{
-        
+    connect(m_rovCameraCommunication.data(), &RovCameraCommunication::cameraSettingsReady, this, [this](QMap<QString, Setting> settings) {
+        m_cameraSettings->recieveCameraSettings(settings);
+        m_cameraSettings->show();
     });
 
     // Show setup dialogs

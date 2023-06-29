@@ -2,10 +2,14 @@
 #include "qabstractbutton.h"
 #include "qcheckbox.h"
 #include "qcombobox.h"
+#include "qlabel.h"
+#include "qnamespace.h"
 #include "qobjectdefs.h"
 #include "qslider.h"
+#include "ui_camerasettings.h"
 
-cameraSettings::cameraSettings(QDialog *parent) : QDialog{parent} {
+CameraSettings::CameraSettings(QDialog *parent)
+    : QDialog{parent}, ui(new Ui::CameraSettings) {
     ui->setupUi(this);
     connect(ui->buttonBox->buttons()[0], &QAbstractButton::click, this,
             [this] { emit updateCameraSettings(); });
@@ -13,7 +17,9 @@ cameraSettings::cameraSettings(QDialog *parent) : QDialog{parent} {
             [this] { emit updateCameraSettings(); });
 }
 
-void cameraSettings::recieveCameraSettings(QMap<QString, Setting> map) {
+CameraSettings::~CameraSettings() { delete ui; }
+
+void CameraSettings::recieveCameraSettings(QMap<QString, Setting> map) {
     for (QMetaObject::Connection conn : conns)
         disconnect(conn);
     for (QSlider *slider : sliders)
@@ -22,20 +28,91 @@ void cameraSettings::recieveCameraSettings(QMap<QString, Setting> map) {
         delete combobox;
     for (QCheckBox *checkbox : checkboxes)
         delete checkbox;
+    for (QLabel *label : labels)
+        delete label;
+    for (QLabel *label : valueLabels)
+        delete label;
 
     for (QString k : map.keys()) {
         if (map[k].menu.isEmpty()) {
-            QSlider *slider = new QSlider;
+            QSlider *slider = new QSlider(Qt::Horizontal);
             slider->setMaximum(map[k].maxValue);
             slider->setMinimum(map[k].minValue);
+            slider->setSliderPosition(map[k].currentValue);
             slider->setSingleStep(1);
-            sliders.append(slider);
-            connect(slider, SIGNAL(sliderMoved(int position)), this, )
+            slider->setMinimumWidth(70);
+            sliders.insert(k, slider);
+            conns.append(connect(slider, &QSlider::sliderMoved, this,
+                                 [this, k](int val) {
+                                     updateSetting(k, val);
+                                     updateValueLabel(k, val);
+                                 }));
         } else {
-            QComboBox *combobox = new QComboBox;
-            for (auto menuItem : map[k].menu.keys()) {
+            QComboBox *combobox = new QComboBox(this);
+            for (QString menuItem : map[k].menu.keys()) {
                 combobox->addItem(menuItem, map[k].menu[menuItem]);
             }
+            comboboxes.insert(k, combobox);
+            conns.append(connect(
+                combobox, QOverload<int>::of(&QComboBox::currentIndexChanged),
+                this, [this, k](int val) { updateSetting(k, val); }));
         }
     }
+    int row = 0;
+    for (QString name : sliders.keys()) {
+        QLabel *label      = new QLabel(name);
+        QLabel *valueLabel = new QLabel("0");
+        valueLabel->setMinimumWidth(50);
+
+        labels.insert(name, label);
+        valueLabels.insert(name, valueLabel);
+
+        qDebug() << "adding " << name;
+        
+        ui->gridLayoutInner->addWidget(label, row, 0);
+        ui->gridLayoutInner->addWidget(sliders[name], row, 2);
+        ui->gridLayoutInner->addWidget(valueLabel, row, 1);
+
+        updateValueLabel(name, map[name].currentValue);
+        
+        row++;
+    }
+
+    for (QString name : comboboxes.keys()) {
+        QLabel *label = new QLabel(name);
+
+        labels.insert(name, label);
+        
+        qDebug() << "adding " << name;
+        
+        ui->gridLayoutInner->addWidget(label, row, 0);
+        ui->gridLayoutInner->addWidget(comboboxes[name], row, 2);
+        
+        row++;
+    }
+
+    for (QString name : checkboxes.keys()) {
+        QLabel *label = new QLabel(name);
+        
+        labels.insert(name, label);
+        
+        qDebug() << "adding " << name;
+        
+        ui->gridLayoutInner->addWidget(label, row, 0);
+        ui->gridLayoutInner->addWidget(valueLabels[name], row, 1);
+        ui->gridLayoutInner->addWidget(comboboxes[name], row, 2);
+        
+        row++;
+        updateValueLabel(name, map[name].currentValue);
+    }
+}
+
+void CameraSettings::updateSetting(QString name, int value) {
+    qDebug() << "Updating setting: " << name << " value: " << value;
+    settings[name].currentValue = value;
+}
+
+void CameraSettings::updateValueLabel(QString name, int value) {
+    qDebug() << "Updating label: " << name << " value: " << value;
+    valueLabels[name]->setText(QString::number(value));
 }
