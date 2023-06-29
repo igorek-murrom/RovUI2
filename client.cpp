@@ -9,7 +9,7 @@ Client::Client(const QUrl &url, QObject *parent) :
     m_timerConnect(new QTimer(this))
 {
     connect(&m_webSocket, &QWebSocket::connected, this, &Client::onConnected);
-    connect(&m_webSocket, &QWebSocket::disconnected, this, &Client::closeConnection);
+    connect(&m_webSocket, &QWebSocket::disconnected, this, &Client::closedConnect);
     connect(&m_webSocket, &QWebSocket::stateChanged, this, &Client::stateCheck);
     connect(m_timerConnect, SIGNAL(timeout()), this, SLOT(tryConnect()));
 
@@ -23,7 +23,7 @@ void Client::onConnected()
             this, &Client::onTextMessageReceived);
 }
 
-void Client::closeConnection() {
+void Client::closedConnect() {
     m_webSocket.close();
 }
 
@@ -41,11 +41,10 @@ void Client::onTextMessageReceived(QString message)
 {
     QJsonDocument doc = QJsonDocument::fromJson(message.toUtf8());
     QJsonObject object = doc.object();
-    if (object["_type"] == "v4l2_ctrls/report") {
-        emit reportReady(object);
-    }
+    emit recieveReady(object);
 }
 
 void Client::sendText(QString message) {
+    qDebug() << message;
     m_webSocket.sendTextMessage(message);
 }
