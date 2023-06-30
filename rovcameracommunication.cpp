@@ -35,6 +35,7 @@ void RovCameraCommunication::sendSettings(QMap<QString, Setting> settingsMap) {
         controls.insert(setting.name, setting.currentValue);
     }
     sendJSON(packet);
+    qDebug() << "sent settings";
 }
 
 //void RovCameraCommunication::sendPacket() {

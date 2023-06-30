@@ -11,10 +11,11 @@
 CameraSettings::CameraSettings(QDialog *parent)
     : QDialog{parent}, ui(new Ui::CameraSettings) {
     ui->setupUi(this);
-    connect(ui->buttonBox->buttons()[0], &QAbstractButton::click, this,
-            [this] { emit updateCameraSettings(); });
-    connect(ui->buttonBox->buttons()[1], &QAbstractButton::click, this,
-            [this] { emit updateCameraSettings(); });
+
+    connect(ui->buttonBox->buttons()[0], &QAbstractButton::clicked, this,
+            [this] { emit updateCameraSettings(settings); });
+    connect(ui->buttonBox->buttons()[2], &QAbstractButton::clicked, this,
+            [this] { emit updateCameraSettings(settings); });
 }
 
 CameraSettings::~CameraSettings() { delete ui; }
