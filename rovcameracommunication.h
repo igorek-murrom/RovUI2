@@ -45,11 +45,10 @@ signals:
     void cameraSettingsReady(QMap<QString, Setting>);
 
 public slots:
-    void sendSettings(QMap<QString, Setting> settingsMap);
-    void sendPacket();
     void echo();
     void startStream();
     void stopStream();
+    void sendSettings(QMap<QString, Setting> settingsMap);
 
 private slots:
     void processingMessage(QJsonObject jsonObject);

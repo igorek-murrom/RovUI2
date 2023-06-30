@@ -2,7 +2,7 @@
 
 RovCameraCommunication::RovCameraCommunication(QObject *parent)
     : QObject{parent}, socket(new Client(QUrl("ws://localhost:8080"))) {
-    connect(socket, SIGNAL(reportReady(QJsonObject)), this,
+    connect(socket, SIGNAL(recieveReady(QJsonObject)), this,
             SLOT(processingMessage(QJsonObject)));
     connect(this, SIGNAL(reportReady(QJsonObject)), this,
             SLOT(parseSettings(QJsonObject)));
@@ -27,22 +27,25 @@ void RovCameraCommunication::processingMessage(QJsonObject jsonObject) {
 }
 
 void RovCameraCommunication::sendSettings(QMap<QString, Setting> settingsMap) {
-    QJsonObject jsonObject;
+    QJsonObject packet;
+    packet.insert("_type", "v4l2_ctrls/set_controls");
+    packet.insert("device", "camera");
+    QJsonObject controls;
     for (Setting setting : settingsMap) {
-        jsonObject.insert(setting.name, setting.currentValue);
+        controls.insert(setting.name, setting.currentValue);
     }
-    sendJSON(jsonObject);
+    sendJSON(packet);
 }
 
-void RovCameraCommunication::sendPacket() {
-    QJsonObject jsonObject; 
-    for (Setting setting : cameraSettings) {
-        if (setting.currentValue < setting.maxValue and
-            setting.currentValue > setting.minValue)
-            jsonObject.insert(setting.name, setting.currentValue);
-    }
-    sendJSON(jsonObject);
-}
+//void RovCameraCommunication::sendPacket() {
+//    QJsonObject jsonObject;
+//    for (Setting setting : cameraSettings) {
+//        if (setting.currentValue < setting.maxValue and
+//            setting.currentValue > setting.minValue)
+//            jsonObject.insert(setting.name, setting.currentValue);
+//    }
+//    sendJSON(jsonObject);
+//}
 
 void RovCameraCommunication::echo() {
     QJsonObject jsonObject;
@@ -78,7 +81,7 @@ void RovCameraCommunication::parseSettings(QJsonObject settings) {
         for (auto menuName : menuKeys)
             cameraSettings[name].menu[menuName] =
                 menuSettings[menuName].toInt();
-        qDebug() << cameraSettings[name].toString().toStdString().c_str();
+//        qDebug() << cameraSettings[name].toString().toStdString().c_str();
     }
     emit cameraSettingsReady(cameraSettings);
 }

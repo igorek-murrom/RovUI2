@@ -18,13 +18,14 @@ public:
     explicit Client(const QUrl &url, QObject *parent = nullptr);
 
 signals:
-    void reportReady(QJsonObject obj);
+    void recieveReady(QJsonObject obj);
+
 public slots:
     void sendText(QString message);
 
 private slots:
     void onConnected();
-    void closeConnection();
+    void closedConnect();
     void tryConnect();
     void stateCheck(QAbstractSocket::SocketState state);
     void onTextMessageReceived(QString message);
