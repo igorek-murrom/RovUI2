@@ -1,7 +1,7 @@
 #include "rovcameracommunication.h"
 
 RovCameraCommunication::RovCameraCommunication(QObject *parent)
-    : QObject{parent}, socket(new Client(QUrl("ws://localhost:8080"))) {
+    : QObject{parent}, socket(new Client(QUrl("ws://10.3.141.79:5577"))) {
     connect(socket, SIGNAL(recieveReady(QJsonObject)), this,
             SLOT(processingMessage(QJsonObject)));
     connect(this, SIGNAL(reportReady(QJsonObject)), this,
@@ -19,6 +19,7 @@ void RovCameraCommunication::sendJSON(QJsonObject jsonObject) {
 
 void RovCameraCommunication::processingMessage(QJsonObject jsonObject) {
     if (jsonObject["_type"] == "v4l2_ctrls/report") {
+        qDebug() << "recieved report";
         emit reportReady(jsonObject);
     }
     if (jsonObject["_type"] == "gst_pipes/output") {
@@ -29,24 +30,29 @@ void RovCameraCommunication::processingMessage(QJsonObject jsonObject) {
 void RovCameraCommunication::sendSettings(QMap<QString, Setting> settingsMap) {
     QJsonObject packet;
     packet.insert("_type", "v4l2_ctrls/set_controls");
-    packet.insert("device", "camera");
+    packet.insert("device", "main_camera");
     QJsonObject controls;
-    for (Setting setting : settingsMap) {
-        controls.insert(setting.name, setting.currentValue);
+    for (QString settingName : settingsMap.keys()) {
+        // if (settingsMap[settingName].menu.empty()) {
+            qDebug() << "setting " << settingName << " to "
+                     << settingsMap[settingName].currentValue;
+            controls.insert(settingName, settingsMap[settingName].currentValue);
+
     }
+    packet.insert("controls", controls);
     sendJSON(packet);
     qDebug() << "sent settings";
 }
 
-//void RovCameraCommunication::sendPacket() {
-//    QJsonObject jsonObject;
-//    for (Setting setting : cameraSettings) {
-//        if (setting.currentValue < setting.maxValue and
-//            setting.currentValue > setting.minValue)
-//            jsonObject.insert(setting.name, setting.currentValue);
-//    }
-//    sendJSON(jsonObject);
-//}
+// void RovCameraCommunication::sendPacket() {
+//     QJsonObject jsonObject;
+//     for (Setting setting : cameraSettings) {
+//         if (setting.currentValue < setting.maxValue and
+//             setting.currentValue > setting.minValue)
+//             jsonObject.insert(setting.name, setting.currentValue);
+//     }
+//     sendJSON(jsonObject);
+// }
 
 void RovCameraCommunication::echo() {
     QJsonObject jsonObject;
@@ -67,9 +73,10 @@ void RovCameraCommunication::stopStream() {
 }
 
 void RovCameraCommunication::parseSettings(QJsonObject settings) {
-    QJsonObject objectCamera = settings["camera"].toObject();
+    QJsonObject objectCamera = settings["main_camera"].toObject();
     settings                 = objectCamera["controls"].toObject();
     QStringList keys         = settings.keys();
+    qDebug() << "keys: " << keys;
     for (QString name : keys) {
         QJsonObject setting = settings[name].toObject();
 
@@ -82,7 +89,7 @@ void RovCameraCommunication::parseSettings(QJsonObject settings) {
         for (auto menuName : menuKeys)
             cameraSettings[name].menu[menuName] =
                 menuSettings[menuName].toInt();
-//        qDebug() << cameraSettings[name].toString().toStdString().c_str();
+        qDebug() << cameraSettings[name].toString().toStdString().c_str();
     }
     emit cameraSettingsReady(cameraSettings);
 }

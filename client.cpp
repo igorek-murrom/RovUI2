@@ -45,6 +45,5 @@ void Client::onTextMessageReceived(QString message)
 }
 
 void Client::sendText(QString message) {
-    qDebug() << message;
     m_webSocket.sendTextMessage(message);
 }

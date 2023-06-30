@@ -162,7 +162,7 @@ void MainWindow::createConnections() {
         m_cameraSettings->show();
     });
 
-    connect(m_cameraSettings.data(), SIGNAL(updateCameraSettings(QMap<QString, Setting>)), m_rovCameraCommunication.data(), SLOT(sendSettings(QMap<QString, Setting>)));
+    connect(m_cameraSettings.data(), &CameraSettings::updateCameraSettings, m_rovCameraCommunication.data(), [this](QMap<QString, Setting> settingsMap ){ m_rovCameraCommunication->sendSettings(settingsMap); });
 
     // Show setup dialogs
     connect(ui->actionDisplay_thruster_setup_dialog, &QAction::triggered, this,

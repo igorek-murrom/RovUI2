@@ -2,6 +2,7 @@
 #include "qabstractbutton.h"
 #include "qcheckbox.h"
 #include "qcombobox.h"
+#include "qglobal.h"
 #include "qlabel.h"
 #include "qnamespace.h"
 #include "qobjectdefs.h"
@@ -56,7 +57,7 @@ void CameraSettings::recieveCameraSettings(QMap<QString, Setting> map) {
             comboboxes.insert(k, combobox);
             conns.append(connect(
                 combobox, QOverload<int>::of(&QComboBox::currentIndexChanged),
-                this, [this, k](int val) { updateSetting(k, val); }));
+                this, [this, k, combobox](int val) { updateSetting(k, combobox->itemData(val).toInt()); }));
         }
     }
     int row = 0;
