@@ -49,6 +49,7 @@ public slots:
     void startStream();
     void stopStream();
     void sendSettings(QMap<QString, Setting> settingsMap);
+    void updateServo(int pos);
 
 private slots:
     void processingMessage(QJsonObject jsonObject);
