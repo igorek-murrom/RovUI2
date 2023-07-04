@@ -44,15 +44,14 @@ void RovCameraCommunication::sendSettings(QMap<QString, Setting> settingsMap) {
     qDebug() << "sent settings";
 }
 
-// void RovCameraCommunication::sendPacket() {
-//     QJsonObject jsonObject;
-//     for (Setting setting : cameraSettings) {
-//         if (setting.currentValue < setting.maxValue and
-//             setting.currentValue > setting.minValue)
-//             jsonObject.insert(setting.name, setting.currentValue);
-//     }
-//     sendJSON(jsonObject);
-// }
+void RovCameraCommunication::updateServo(int pos) {
+    QJsonObject packet, ports;
+    packet.insert("_type", "servo_pwm/set_power");
+    ports.insert("rotary", pos);
+    packet.insert("ports", ports);
+    sendJSON(packet);
+    qDebug() << "update servo";
+}
 
 void RovCameraCommunication::echo() {
     QJsonObject jsonObject;
