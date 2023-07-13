@@ -17,6 +17,10 @@ CameraSettings::CameraSettings(QDialog *parent)
             [this] { emit updateCameraSettings(settings); });
     connect(ui->buttonBox->buttons()[2], &QAbstractButton::clicked, this,
             [this] { emit updateCameraSettings(settings); });
+    connect(ui->servoSlider, &QSlider::sliderMoved, this, [this](int pos) {
+        ui->servoPositionLabel->setText(QString::number(pos));
+        emit updateServo(pos);
+    });
 }
 
 CameraSettings::~CameraSettings() { delete ui; }
@@ -57,7 +61,9 @@ void CameraSettings::recieveCameraSettings(QMap<QString, Setting> map) {
             comboboxes.insert(k, combobox);
             conns.append(connect(
                 combobox, QOverload<int>::of(&QComboBox::currentIndexChanged),
-                this, [this, k, combobox](int val) { updateSetting(k, combobox->itemData(val).toInt()); }));
+                this, [this, k, combobox](int val) {
+                    updateSetting(k, combobox->itemData(val).toInt());
+                }));
         }
     }
     int row = 0;
@@ -69,14 +75,12 @@ void CameraSettings::recieveCameraSettings(QMap<QString, Setting> map) {
         labels.insert(name, label);
         valueLabels.insert(name, valueLabel);
 
-        qDebug() << "adding " << name;
-        
         ui->gridLayoutInner->addWidget(label, row, 0);
         ui->gridLayoutInner->addWidget(sliders[name], row, 2);
         ui->gridLayoutInner->addWidget(valueLabel, row, 1);
 
         updateValueLabel(name, map[name].currentValue);
-        
+
         row++;
     }
 
@@ -84,37 +88,31 @@ void CameraSettings::recieveCameraSettings(QMap<QString, Setting> map) {
         QLabel *label = new QLabel(name);
 
         labels.insert(name, label);
-        
-        qDebug() << "adding " << name;
-        
+
         ui->gridLayoutInner->addWidget(label, row, 0);
         ui->gridLayoutInner->addWidget(comboboxes[name], row, 2);
-        
+
         row++;
     }
 
     for (QString name : checkboxes.keys()) {
         QLabel *label = new QLabel(name);
-        
+
         labels.insert(name, label);
-        
-        qDebug() << "adding " << name;
-        
+
         ui->gridLayoutInner->addWidget(label, row, 0);
         ui->gridLayoutInner->addWidget(valueLabels[name], row, 1);
         ui->gridLayoutInner->addWidget(comboboxes[name], row, 2);
-        
+
         row++;
         updateValueLabel(name, map[name].currentValue);
     }
 }
 
 void CameraSettings::updateSetting(QString name, int value) {
-    qDebug() << "Updating setting: " << name << " value: " << value;
     settings[name].currentValue = value;
 }
 
 void CameraSettings::updateValueLabel(QString name, int value) {
-    qDebug() << "Updating label: " << name << " value: " << value;
     valueLabels[name]->setText(QString::number(value));
 }

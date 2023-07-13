@@ -2,6 +2,8 @@
 #include "helpers.h"
 #include "qdatetime.h"
 #include "qtimer.h"
+#include <cstddef>
+#include <cstring>
 
 inline float constrain(float val, float min, float max) {
     return val < min ? min : val > max ? max : val;
@@ -165,15 +167,23 @@ void RovDataParser::prepareControl(Joystick joy) {
 
         // TODO: directions and axes setup
         // Horizontal thrusters
-        m_control->thrusterPower[0] = constrain(x - y - w, -100, 100);
-        m_control->thrusterPower[1] = constrain(x + y + w, -100, 100);
-        m_control->thrusterPower[2] = constrain(x + y * .5 - w, -100, 100);
-        m_control->thrusterPower[3] = constrain(x - y * .5 + w, -100, 100);
+        m_control->thrusterPower[0] =
+            constrain(x + y + w + z + d + r, -100, 100);
+        m_control->thrusterPower[1] =
+            constrain(x + y + w + z + d + r, -100, 100);
+        m_control->thrusterPower[2] =
+            constrain(x + y + w + z + d + r, -100, 100);
+        m_control->thrusterPower[3] =
+            constrain(x + y + w + z + d + r, -100, 100);
         // Vertical thrusters
-        m_control->thrusterPower[4] = constrain(z + d + r, -100, 100);
-        m_control->thrusterPower[5] = constrain(z + d - r, -100, 100);
-        m_control->thrusterPower[6] = constrain(z - d + r, -100, 100);
-        m_control->thrusterPower[7] = constrain(z - d - r, -100, 100);
+        m_control->thrusterPower[4] =
+            constrain(x + y + w + z + d + r, -100, 100);
+        m_control->thrusterPower[5] =
+            constrain(x + y + w + z + d + r, -100, 100);
+        m_control->thrusterPower[6] =
+            constrain(x + y + w + z + d + r, -100, 100);
+        m_control->thrusterPower[7] =
+            constrain(x + y + w + z + d + r, -100, 100);
     }
     // Hats processing
     m_control->cameraRotationDelta[0] = joy.hats[1];
@@ -205,27 +215,35 @@ void RovDataParser::prepareControl(Joystick joy) {
 
 void RovDataParser::processTelemetry(QByteArray datagram) {
     RovTelemetry telemetry = RovTelemetry();
-    QDataStream  out(&datagram, QIODevice::ReadOnly);
+    char         buffer[datagram.size() + 1];
+    memcpy(buffer, datagram.data(), datagram.size());
+    size_t i = 0;
+
+    //    helpers::read_bytes(buffer, i, telemetry.version);
+    //    helpers::read_bytes(buffer, i, telemetry.depth);
+    //    helpers::read_bytes(buffer, i, telemetry.pitch);
+    //    helpers::read_bytes(buffer, i, telemetry.yaw);
+    //    helpers::read_bytes(buffer, i, telemetry.roll);
+    //    helpers::read_bytes(buffer, i, telemetry.current);
+    //    helpers::read_bytes(buffer, i, telemetry.voltage);
+    //    helpers::read_bytes(buffer, i, telemetry.cameraIndex);
+    //    helpers::read_bytes(buffer, i, telemetry.temp);
+
+    QDataStream out(&datagram, QIODevice::ReadOnly);
     out.setFloatingPointPrecision(QDataStream::SinglePrecision);
 
     qint8 header = 0x00;
     out >> header;
-    if (header == RovTelemetry::header) {
 
-        out >> telemetry.version;
-        out >> telemetry.depth;
-        out >> telemetry.pitch;
-        out >> telemetry.yaw;
-        out >> telemetry.roll;
-        out >> telemetry.current;
-        out >> telemetry.voltage;
-        out >> telemetry.cameraIndex;
-        out >> telemetry.temp;
-
-    } else {
-        qDebug() << "Wrong header (" << QString::number(header, 2) << " vs "
-                 << QString::number(RovTelemetry::header, 2) << "\n";
-    }
+    out >> telemetry.version;
+    out >> telemetry.depth;
+    out >> telemetry.pitch;
+    out >> telemetry.yaw;
+    out >> telemetry.roll;
+    out >> telemetry.current;
+    out >> telemetry.voltage;
+    out >> telemetry.cameraIndex;
+    out >> telemetry.temp;
 
     emit telemetryProcessed(telemetry);
 }

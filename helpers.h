@@ -40,6 +40,32 @@ namespace helpers {
     template <typename T, std::size_t N> std::size_t size(T (&)[N]) {
         return N;
     }
+        /**
+     * @brief Reads sizeof(data) bytes from msg to data
+     *
+     * @tparam T Type
+     * @param msg Input buffer
+     * @param i Reference to "counter" variable
+     * @param data Reference to the output variable
+     */
+    template <typename T>
+    void read_bytes(const char *msg, size_t &i, T &data) {
+        memcpy(&data, msg + i, sizeof(data));
+        i += sizeof(data);
+    }
+
+    /**
+     * @brief Writes sizeof(data) bytes from data to msg
+     *
+     * @tparam T Type
+     * @param msg Output buffer
+     * @param i Reference to "counter" variable
+     * @param data Reference to the input variable
+     */
+    template <typename T> void write_bytes(size_t *msg, size_t &i, T &data) {
+        memcpy(msg + i, &data, sizeof(data));
+        i += sizeof(data);
+    }
 } // namespace helpers
 
 #endif // HELPERS_H

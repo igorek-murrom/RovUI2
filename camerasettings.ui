@@ -14,6 +14,37 @@
    <string>Dialog</string>
   </property>
   <layout class="QGridLayout" name="gridLayout_2">
+   <item row="1" column="0">
+    <layout class="QHBoxLayout" name="servoLayout" stretch="0,0,0">
+     <item>
+      <widget class="QLabel" name="servoLabel">
+       <property name="text">
+        <string>Servo</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLabel" name="servoPositionLabel">
+       <property name="text">
+        <string>0</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QSlider" name="servoSlider">
+       <property name="minimum">
+        <number>-180</number>
+       </property>
+       <property name="maximum">
+        <number>180</number>
+       </property>
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </item>
    <item row="0" column="0">
     <widget class="QScrollArea" name="scrollArea">
      <property name="widgetResizable">
@@ -25,7 +56,7 @@
         <x>0</x>
         <y>0</y>
         <width>441</width>
-        <height>327</height>
+        <height>299</height>
        </rect>
       </property>
       <layout class="QGridLayout" name="gridLayout">
@@ -36,13 +67,16 @@
      </widget>
     </widget>
    </item>
-   <item row="1" column="0">
+   <item row="4" column="0">
     <widget class="QDialogButtonBox" name="buttonBox">
      <property name="orientation">
       <enum>Qt::Horizontal</enum>
      </property>
      <property name="standardButtons">
       <set>QDialogButtonBox::Apply|QDialogButtonBox::Cancel|QDialogButtonBox::Ok</set>
+     </property>
+     <property name="centerButtons">
+      <bool>false</bool>
      </property>
     </widget>
    </item>

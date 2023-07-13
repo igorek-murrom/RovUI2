@@ -2,14 +2,11 @@
 #define MAINWINDOW_H
 
 #include "camerasettings.h"
-#include "filetransmitter.h"
+#include "instrumentcluster.h"
 #include "joystickhandler.h"
 #include "joysticksetupdialog.h"
 #include "ledindicator.h"
-#include "math.h"
-#include "qlist.h"
 #include "qscopedpointer.h"
-#include "qthread.h"
 #include "qwidget.h"
 #include "rovcameracapture.h"
 #include "rovcameracommunication.h"
@@ -143,13 +140,6 @@ class MainWindow : public QMainWindow {
      * it allows user input, overriding previous value
      */
     void overrideRoll(bool ro);
-
-  private slots:
-    /**
-     * \brief Internal slot. Called to resize camera label
-     */
-    void resizeCameraLabel();
-
   signals:
 
     /**
@@ -250,8 +240,8 @@ class MainWindow : public QMainWindow {
     QScopedPointer<LEDIndicator> m_rovStatusIndicator;
 
     QScopedPointer<RovCameraCommunication> m_rovCameraCommunication;
-    QScopedPointer<CameraSettings> m_cameraSettings;
-
-
+    QScopedPointer<CameraSettings>         m_cameraSettings;
+    QScopedPointer<InstrumentWidget>       m_compassWidget;
+    QScopedPointer<InstrumentWidget>       m_gyroWidget;
 };
 #endif // MAINWINDOW_H

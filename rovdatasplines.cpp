@@ -2,7 +2,7 @@
 #include "ui_rovdatasplines.h"
 
 RovDataSplines::RovDataSplines(QWidget *parent)
-    : QDialog(parent), m_vChart(new ContinousDataSplineChart(0, 15, 16, 1)),
+    : QDialog(parent), m_vChart(new ContinousDataSplineChart(0, 30, 16, 1)),
       m_cChart(new ContinousDataSplineChart(0, 30, 11, 1)),
       ui(new Ui::RovDataSplines) {
     ui->setupUi(this);

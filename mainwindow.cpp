@@ -1,5 +1,6 @@
 #include "mainwindow.h"
 #include "camerasettings.h"
+#include "instrumentcluster.h"
 #include "joystick.h"
 #include "joystickhandler.h"
 #include "qaction.h"
@@ -23,12 +24,20 @@ MainWindow::MainWindow(QWidget *parent)
       m_rovStatusLabel(new QLabel(this)),
       m_rovStatusIndicator(new LEDIndicator(this)),
       m_rovCameraCommunication(new RovCameraCommunication(this)),
-      m_cameraSettings(new CameraSettings(new QDialog(this))) {
+      m_cameraSettings(new CameraSettings(new QDialog(this))),
+      m_compassWidget(new InstrumentWidget("Compass", this)),
+      m_gyroWidget(new InstrumentWidget("AttitudeIndicator", this)) {
 
     ui->setupUi(this);
     setWindowTitle("RovUI2 v0.95");
     ui->viewfinder->show();
     m_cameraCapture->setViewfinder(ui->viewfinder);
+    m_compassWidget->transaction();
+    m_compassWidget->updateView(0, 0, 0);
+    m_gyroWidget->transaction();
+    m_compassWidget->updateView(0, 0, 0);
+    ui->compassLayout->addWidget(m_compassWidget.data());
+    ui->compassLayout->addWidget(m_gyroWidget.data());
 
     setupStatusbar();
     updateStatusbarText("Initialization...");
@@ -45,31 +54,6 @@ MainWindow::MainWindow(QWidget *parent)
 }
 
 MainWindow::~MainWindow() { delete ui; }
-
-void MainWindow::resizeCameraLabel() {
-    //    int targetWidth  =
-    //    ui->camLabel->heightForWidth(ui->camLabel->width()); int targetHeight
-    //    = ui->camLabel->widthForHeight(ui->camLabel->height()); if
-    //    (targetHeight >
-    //        ui->centralwidget->height() -
-    // qreal rate            12) { // if wanted height is larger than the
-    // available height
-    //        targetHeight =
-    //            ui->camLabel->heightForWidth(ui->centralwidget->width() - 12);
-    //        targetWidth = ui->camLabel->widthForHeight(targetHeight);
-    //        ui->camLabel->setFixedSize(QSize(targetWidth, targetHeight));
-    //    }
-    //    if (targetWidth >
-    //        ui->centralwidget->width() -
-    //            12) { // if wanted width is larger than the available width
-    //        targetWidth =
-    //            ui->camLabel->widthForHeight(ui->centralwidget->height() -
-    //            12);
-    //        targetHeight = ui->camLabel->heightForWidth(targetWidth);
-    //        ui->camLabel->setFixedSize(QSize(targetWidth, targetHeight));
-    //    }
-    //    ui->camLabel->setFixedSize(QSize(targetWidth, targetHeight));
-}
 
 void MainWindow::updateStatusbar() {
     //    ui->camLabel->setPixmap(QPixmap::fromImage(img));
@@ -133,9 +117,6 @@ void MainWindow::updateTelemetry(RovTelemetry tele) {
     else
         ui->teleDepthLabel->setText(QString("[DIS]"));
     lastDepth = tele.depth;
-    ui->telePitchLabel->setText(QString::number(tele.pitch, 'f', 2) + " deg");
-    ui->teleYawLabel->setText(QString::number(tele.yaw, 'f', 2) + " deg");
-    ui->teleRollLabel->setText(QString::number(tele.roll, 'f', 2) + " deg");
     ui->teleTempLabel->setText(
         tele.depth < 3.4E+38 ? QString::number(tele.temp / 100, 'f', 2) + " °C"
                              : "[DIS]");
@@ -146,6 +127,8 @@ void MainWindow::updateTelemetry(RovTelemetry tele) {
     ui->teleCamSelLabel->setText(
         QString((tele.cameraIndex == 0 ? "Front" : "Rear")));
     lastTele = tele;
+    m_compassWidget->updateView(tele.yaw, tele.roll, tele.pitch);
+    m_gyroWidget->updateView(tele.yaw, tele.pitch, tele.roll);
 }
 
 void MainWindow::updateASF(float factor) { emit asfUpdated(factor); }
@@ -157,12 +140,21 @@ void MainWindow::createConnections() {
 
     connect(ui->actionDigiCam_report, &QAction::triggered, this,
             [this] { m_rovCameraCommunication->echo(); });
-    connect(m_rovCameraCommunication.data(), &RovCameraCommunication::cameraSettingsReady, this, [this](QMap<QString, Setting> settings) {
-        m_cameraSettings->recieveCameraSettings(settings);
-        m_cameraSettings->show();
-    });
+    connect(m_rovCameraCommunication.data(),
+            &RovCameraCommunication::cameraSettingsReady, this,
+            [this](QMap<QString, Setting> settings) {
+                m_cameraSettings->recieveCameraSettings(settings);
+                m_cameraSettings->show();
+            });
 
-    connect(m_cameraSettings.data(), &CameraSettings::updateCameraSettings, m_rovCameraCommunication.data(), [this](QMap<QString, Setting> settingsMap ){ m_rovCameraCommunication->sendSettings(settingsMap); });
+    connect(m_cameraSettings.data(), &CameraSettings::updateCameraSettings,
+            m_rovCameraCommunication.data(),
+            [this](QMap<QString, Setting> settingsMap) {
+                m_rovCameraCommunication->sendSettings(settingsMap);
+            });
+    connect(m_cameraSettings.data(), &CameraSettings::updateServo,
+            m_rovCameraCommunication.data(),
+            &RovCameraCommunication::updateServo);
 
     // Show setup dialogs
     connect(ui->actionDisplay_thruster_setup_dialog, &QAction::triggered, this,
@@ -227,7 +219,8 @@ void MainWindow::createConnections() {
 
     // Send RovControl to ROV
     connect(m_rovDataParser.data(), SIGNAL(controlReady(QByteArray)),
-            m_rovCommunication.data(), SLOT(write(QByteArray)));
+            m_rovCommunication.data(),
+            SLOT(write(QByteArray)));
 
     // Process recieved RovTelemetry from ROV
     connect(m_rovCommunication.data(), SIGNAL(telemetryReady(QByteArray)),

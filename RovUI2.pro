@@ -1,4 +1,4 @@
-QT       += core gui network multimedia multimediawidgets charts websockets
+QT       += core gui network multimedia multimediawidgets charts websockets svg
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -15,7 +15,7 @@ QMAKE_CXXFLAGS += -Wno-c++20-extensions -Wall
 SOURCES += \
     cameralabel.cpp \
     camerasettings.cpp \
-    filetransmitter.cpp \
+    instrumentcluster.cpp \
     joystickhandler.cpp \
     joysticksetupdialog.cpp \
     ledindicator.cpp \
@@ -32,8 +32,8 @@ SOURCES += \
 HEADERS += \
     cameralabel.h \
     camerasettings.h \
-    filetransmitter.h \
     helpers.h \
+    instrumentcluster.h \
     joystick.h \
     joystickhandler.h \
     joysticksetupdialog.h \

@@ -144,10 +144,6 @@ void JoystickSetupDialog::writeHatsSettings(int) {
         m_settings->setValue(m_joystick_name + QString("/joystickHatsHor/") +
                                  JoystickHelpers::hatsNames[i],
                              cb->isChecked());
-        qDebug() << "uhhhh "
-                 << m_joystick_name + QString("/joystickHatsHor/") +
-                        JoystickHelpers::hatsNames[i]
-                 << "=" << cb->isChecked();
         i++;
     }
     m_settings->sync();
@@ -230,8 +226,6 @@ void JoystickSetupDialog::updateUi(Joystick joystick) {
         break;
     case 1:
         for (uint i = 0; QCheckBox * chb : qAsConst(m_buttonsCheckBoxes)) {
-            //            qDebug() << i << BIT_CHECK(joystick.buttons, i) <<
-            //            QString::number(joystick.buttons, 2);
             chb->setCheckState(BIT_CHECK(joystick.buttons.rawData, i)
                                    ? Qt::CheckState::PartiallyChecked
                                    : Qt::CheckState::Unchecked);

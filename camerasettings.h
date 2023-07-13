@@ -25,6 +25,7 @@ class CameraSettings : public QDialog {
 
   signals:
     void updateCameraSettings(QMap<QString, Setting>);
+    void updateServo(int pos);
 
   public slots:
     void recieveCameraSettings(QMap<QString, Setting>);
