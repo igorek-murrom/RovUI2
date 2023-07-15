@@ -2,6 +2,7 @@
 #define ROVDATAPARSER_H
 
 #include "joystick.h"
+#include "qelapsedtimer.h"
 #include "qwidget.h"
 #include "rovdatatypes.h"
 #include <QDataStream>
@@ -9,6 +10,49 @@
 #include <QMutex>
 #include <QObject>
 #include <algorithm>
+
+/**
+ * @brief Floating point PD regulator implementation
+ *
+ */
+class FPPDRegulator {
+  public:
+    /**
+     * @brief Construct a new FPPDRegulator object
+     *
+     * @param coeffP Proportional coefficient
+     * @param coeffD Differential coefficient
+     */
+    FPPDRegulator(float coeffP, float coeffD)
+        : kP(coeffP), kD(coeffD), lastError(0.0f), lastTime(0){};
+    /**
+     * @brief Evaluate the regulator expression
+     *
+     * @param data Data
+     * @param target Target
+     * @return float Control signal
+     */
+    float eval(float data);
+    void setTarget(float target);
+    void  enable();
+    void  disable();
+
+  private:
+  bool enabled = false;
+    float kP;
+
+    float kD;
+
+    float lastError;
+    float target;
+
+    int      lastData;
+    uint32_t lastTime;
+
+    QElapsedTimer eTimer;
+};
+
+
 /**
  * \brief The RovDataParser class is responsible for packing control data in
  * QByteArrays and unpacking telemetry data from them.
@@ -130,6 +174,8 @@ class RovDataParser : public QWidget {
 
     void togglePump();
 
+    void invalidateImuCalibration();
+
   private:
     /**
      * \brief Thruster override values
@@ -181,6 +227,14 @@ class RovDataParser : public QWidget {
      * \brief Mutex for m_auxControl
      */
     QMutex m_auxControlMutex;
+
+    RovTelemetry m_tele;
+
+    FPPDRegulator depthReg;
+    FPPDRegulator yawReg;
+    FPPDRegulator rollReg;
+    FPPDRegulator pitchReg;
+
 };
 
 #endif // ROVDATAPARSER_H

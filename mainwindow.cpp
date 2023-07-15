@@ -9,6 +9,7 @@
 #include "qobjectdefs.h"
 #include "rovcameracapture.h"
 #include "rovcameracommunication.h"
+#include "rovdataparser.h"
 #include "ui_mainwindow2.h"
 #include <cstddef>
 
@@ -128,7 +129,7 @@ void MainWindow::updateTelemetry(RovTelemetry tele) {
         QString((tele.cameraIndex == 0 ? "Front" : "Rear")));
     lastTele = tele;
     m_compassWidget->updateView(tele.yaw, tele.roll, tele.pitch);
-    m_gyroWidget->updateView(tele.yaw, tele.pitch, tele.roll);
+    m_gyroWidget->updateView(tele.yaw, tele.roll, tele.pitch);
 }
 
 void MainWindow::updateASF(float factor) { emit asfUpdated(factor); }
@@ -161,6 +162,8 @@ void MainWindow::createConnections() {
             [this] { m_tsd->show(); });
     connect(ui->actionDisplay_joystick_setup_dialog, &QAction::triggered, this,
             [this] { m_jsd->show(); });
+    connect(ui->actionRecalibrate_IMU, &QAction::triggered,
+            m_rovDataParser.data(), &RovDataParser::invalidateImuCalibration);
 
     // Show graphs
     connect(ui->actionShow_graphs, &QAction::triggered, this,
@@ -219,8 +222,7 @@ void MainWindow::createConnections() {
 
     // Send RovControl to ROV
     connect(m_rovDataParser.data(), SIGNAL(controlReady(QByteArray)),
-            m_rovCommunication.data(),
-            SLOT(write(QByteArray)));
+            m_rovCommunication.data(), SLOT(write(QByteArray)));
 
     // Process recieved RovTelemetry from ROV
     connect(m_rovCommunication.data(), SIGNAL(telemetryReady(QByteArray)),

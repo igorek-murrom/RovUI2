@@ -71,31 +71,33 @@ struct RovAuxControl {
             /**
              * \brief Depth regulator flag
              */
-            int8_t eDepth : 1;
+            int8_t eDepth    : 1;
             /**
              * \brief Yaw regulator flag
              */
-            int8_t eYaw   : 1;
+            int8_t eYaw      : 1;
             /**
              * \brief Roll regulator flag
              */
-            int8_t eRoll  : 1;
+            int8_t eRoll     : 1;
             /**
              * \brief Pitch regulator flag
              */
-            int8_t ePitch : 1;
+            int8_t ePitch    : 1;
             /**
              * @brief Light toggle flag
              */
-            bool   eLight : 1;
+            bool   eLight    : 1;
             /**
              * @brief Pump toggle flag
              */
-            bool   ePump  : 1;
+            bool   ePump     : 1;
+            bool   imuInvCal : 1;
+
             /**
              * \brief Reserved
              */
-            bool   __res  : 2;
+            bool __res : 1;
         };
     } auxFlags;
     /**
