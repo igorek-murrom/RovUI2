@@ -165,25 +165,36 @@ void RovDataParser::prepareControl(Joystick joy) {
         qint8 r = joy.axes[5] * joy.runtimeASF[5] * joy.baseASF[5] *
                   joy.directions[5]; // roll
 
+        // enum thrusters {
+        //     lo_fr_le = 9,
+        //     lo_fr_ri = 3,
+        //     hi_fr_le = 4,
+        //     hi_fr_ri = 2,
+        //     lo_ba_le = 7,
+        //     lo_ba_ri = 5,
+        //     hi_ba_le = 8,
+        //     hi_ba_ri = 6,
+        // };
+
         // TODO: directions and axes setup
         // Horizontal thrusters
         m_control->thrusterPower[0] =
-            constrain(x + y + w + z + d + r, -100, 100);
+            constrain(-x + y + z - w - d + r, -100, 100); // lfl
         m_control->thrusterPower[1] =
-            constrain(x + y + w + z + d + r, -100, 100);
+            constrain(-x - y + z + w - d - r, -100, 100); // lfr
         m_control->thrusterPower[2] =
-            constrain(x + y + w + z + d + r, -100, 100);
+            constrain(-x + y - z - w + d - r, -100, 100); // hfl
         m_control->thrusterPower[3] =
-            constrain(x + y + w + z + d + r, -100, 100);
+            constrain(-x - y - z + w + d + r, -100, 100); // hfr
         // Vertical thrusters
         m_control->thrusterPower[4] =
-            constrain(x + y + w + z + d + r, -100, 100);
+            constrain(-x - y - z - w - d - r, -100, 100); // lbl
         m_control->thrusterPower[5] =
-            constrain(x + y + w + z + d + r, -100, 100);
+            constrain(-x + y - z + w - d + r, -100, 100); // lbr
         m_control->thrusterPower[6] =
-            constrain(x + y + w + z + d + r, -100, 100);
+            constrain(-x - y + z - w + d + r, -100, 100); // hbl
         m_control->thrusterPower[7] =
-            constrain(x + y + w + z + d + r, -100, 100);
+            constrain(-x + y + z + w + d - r, -100, 100); // hbr
     }
     // Hats processing
     m_control->cameraRotationDelta[0] = joy.hats[1];
