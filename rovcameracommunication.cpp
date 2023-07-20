@@ -1,13 +1,15 @@
 #include "rovcameracommunication.h"
 
 RovCameraCommunication::RovCameraCommunication(QObject *parent)
-    : QObject{parent}, socket(new Client(QUrl("ws://10.3.141.79:5577"))) {
+    : QObject{parent}, socket(new Client(QUrl("ws://192.168.1.6:5577"))) {
     connect(socket, SIGNAL(recieveReady(QJsonObject)), this,
             SLOT(processingMessage(QJsonObject)));
     connect(this, SIGNAL(reportReady(QJsonObject)), this,
             SLOT(parseSettings(QJsonObject)));
     connect(this, SIGNAL(outputReady(QJsonObject)), this,
             SLOT(displayOutput(QJsonObject)));
+    connect(this, SIGNAL(changeServoReady(int)), this,
+            SLOT(updateServo(int)));
 }
 
 void RovCameraCommunication::sendJSON(QJsonObject jsonObject) {
@@ -44,14 +46,27 @@ void RovCameraCommunication::sendSettings(QMap<QString, Setting> settingsMap) {
     qDebug() << "sent settings";
 }
 
+int constrain(int val, int min, int max) {
+    if (val < min) return min;
+    if (val > max) return max;
+    return val;
+}
+
 void RovCameraCommunication::updateServo(int pos) {
     QJsonObject packet, ports;
     packet.insert("_type", "servo_pwm/set_power");
     ports.insert("rotary", pos);
-    packet.insert("ports", ports);
+    packet.insert("powers", ports);
     sendJSON(packet);
     qDebug() << "update servo";
 }
+
+void RovCameraCommunication::changeServo(QByteArray ba) {
+    m_servoPosition += ba[13];
+    m_servoPosition = constrain(m_servoPosition, -180, 180);
+    emit changeServoReady(m_servoPosition);
+}
+
 
 void RovCameraCommunication::echo() {
     QJsonObject jsonObject;
