@@ -61,6 +61,7 @@ void RovUIMessageHandler(QtMsgType type, const QMessageLogContext &context,
 
 int main(int argc, char *argv[]) {
     qInstallMessageHandler(RovUIMessageHandler);
+    setenv("QT_QPA_PLATFORM","xcb",1);
 
     QApplication a(argc, argv);
 

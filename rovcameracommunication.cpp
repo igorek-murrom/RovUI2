@@ -46,6 +46,21 @@ void RovCameraCommunication::sendSettings(QMap<QString, Setting> settingsMap) {
     qDebug() << "sent settings";
 }
 
+void RovCameraCommunication::sendFormat(QString type, int width, int height, int fps) {
+    QJsonObject packet;
+    resolution = type + "/" + QString::number(width) + "x" + QString::number(height);
+    packet.insert("_type", "v4l2_ctrls/set_formats");
+    packet.insert("device", "main_camera");
+    QJsonObject formatPacket;
+    formatPacket.insert("fps", fps);
+    formatPacket.insert("type", type);
+    formatPacket.insert("width", width);
+    formatPacket.insert("height", height);
+    packet.insert("formats", formatPacket);
+    sendJSON(packet);
+    qDebug() << "sent format";
+}
+
 int constrain(int val, int min, int max) {
     if (val < min) return min;
     if (val > max) return max;
@@ -113,4 +128,8 @@ void RovCameraCommunication::displayOutput(QJsonObject message) {
     ba.append(message["data"].toString());
     qDebug() << "(type: " << message["log_type"].toString() << ") "
              << QByteArray::fromBase64(ba);
+}
+
+void RovCameraCommunication::stopSocket() {
+    socket->closedSocket();
 }

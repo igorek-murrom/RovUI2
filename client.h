@@ -16,6 +16,7 @@ class Client : public QObject
     Q_OBJECT
 public:
     explicit Client(const QUrl &url, QObject *parent = nullptr);
+    void closedSocket();
 
 signals:
     void recieveReady(QJsonObject obj);
@@ -34,6 +35,7 @@ private:
     QWebSocket m_webSocket;
     QUrl m_url;
     QTimer *m_timerConnect;
+    bool m_status = false;
 };
 
 #endif // CLIENT_H

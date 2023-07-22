@@ -19,12 +19,14 @@ Client::Client(const QUrl &url, QObject *parent) :
 
 void Client::onConnected()
 {
+    m_status = true;
     connect(&m_webSocket, &QWebSocket::textMessageReceived,
             this, &Client::onTextMessageReceived);
 }
 
 void Client::closedConnect() {
-    m_webSocket.close();
+    m_status = false;
+    closedSocket();
 }
 
 void Client::tryConnect() {
@@ -45,5 +47,9 @@ void Client::onTextMessageReceived(QString message)
 }
 
 void Client::sendText(QString message) {
-    m_webSocket.sendTextMessage(message);
+    if(m_status) m_webSocket.sendTextMessage(message);
+}
+
+void Client::closedSocket() {
+    m_webSocket.close();
 }

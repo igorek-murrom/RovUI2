@@ -53,6 +53,7 @@ public slots:
     void updateServo(int pos);
     void changeServo(int diff);
     void stopSocket();
+    void sendFormat(QString resolution, int fps);
 private slots:
     void processingMessage(QJsonObject jsonObject);
     void parseSettings(QJsonObject settings);
