@@ -47,16 +47,17 @@ void RovCameraCommunication::sendSettings(QMap<QString, Setting> settingsMap) {
 }
 
 void RovCameraCommunication::sendFormat(QString type, int width, int height, int fps) {
-    QJsonObject packet;
-    resolution = type + "/" + QString::number(width) + "x" + QString::number(height);
+    QJsonObject packet, formatPacket, formatSettings;
+    QString formatName = type + "/" + QString::number(width) + "x" + QString::number(height);
     packet.insert("_type", "v4l2_ctrls/set_formats");
     packet.insert("device", "main_camera");
-    QJsonObject formatPacket;
-    formatPacket.insert("fps", fps);
-    formatPacket.insert("type", type);
-    formatPacket.insert("width", width);
-    formatPacket.insert("height", height);
-    packet.insert("formats", formatPacket);
+
+    formatSettings.insert("fps", fps);
+    formatSettings.insert("type", type);
+    formatSettings.insert("width", width);
+    formatSettings.insert("height", height);
+
+    formatPacket.insert(formatName, formatSettings);
     sendJSON(packet);
     qDebug() << "sent format";
 }
