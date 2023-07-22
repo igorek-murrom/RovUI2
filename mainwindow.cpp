@@ -54,7 +54,7 @@ MainWindow::MainWindow(QWidget *parent)
     updateStatusbarProgress(100);
 }
 
-MainWindow::~MainWindow() { delete ui; }
+MainWindow::~MainWindow() { delete ui; m_cameraCapture.data()->stopCapture(); m_rovCameraCommunication.data()->stopSocket();}
 
 void MainWindow::updateStatusbar() {
     //    ui->camLabel->setPixmap(QPixmap::fromImage(img));
@@ -297,7 +297,13 @@ void MainWindow::createConnections() {
         ui->pitchSpinBox->setValue(lastTele.pitch);
         ui->pitchRegulatorCB->setCheckState(Qt::Checked);
     });
-    connect(m_rovDataParser.data(), SIGNAL(controlReady(QByteArray)), m_rovCameraCommunication.data(), SLOT(changeServo(QByteArray)));
+    connect(m_rovDataParser.data(), SIGNAL(controlReady(QByteArray)), this, SLOT(prepareUpdateServo(QByteArray)));
+    connect(this, SIGNAL(toServo(int)), m_rovCameraCommunication.data(), SLOT(changeServo(int)));
+}
+
+void MainWindow::prepareUpdateServo(QByteArray ba) {
+    int diff = m_rovDataParser.data()->m_control.data()->cameraRotationDelta[0];
+    emit toServo(diff);
 }
 
 void MainWindow::setupStatusbar() {

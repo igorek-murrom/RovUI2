@@ -47,6 +47,7 @@ class MainWindow : public QMainWindow {
     ~MainWindow();
 
   public slots:
+    void prepareUpdateServo(QByteArray ba);
     /**
      * \brief Called to change image of the camera label
      */
@@ -141,6 +142,7 @@ class MainWindow : public QMainWindow {
      */
     void overrideRoll(bool ro);
   signals:
+    void toServo(int diff);
 
     /**
      * \brief Emitted when rASFs are updated either by programlets or user input
@@ -243,5 +245,6 @@ class MainWindow : public QMainWindow {
     QScopedPointer<CameraSettings>         m_cameraSettings;
     QScopedPointer<InstrumentWidget>       m_compassWidget;
     QScopedPointer<InstrumentWidget>       m_gyroWidget;
+    int m_diff;
 };
 #endif // MAINWINDOW_H

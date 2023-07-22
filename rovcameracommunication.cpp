@@ -58,11 +58,11 @@ void RovCameraCommunication::updateServo(int pos) {
     ports.insert("rotary", pos);
     packet.insert("powers", ports);
     sendJSON(packet);
-    qDebug() << "update servo";
+    qDebug() << "update servo: " << pos;
 }
 
-void RovCameraCommunication::changeServo(QByteArray ba) {
-    m_servoPosition += ba[13];
+void RovCameraCommunication::changeServo(int diff) {
+    m_servoPosition += diff * 4;
     m_servoPosition = constrain(m_servoPosition, -180, 180);
     emit changeServoReady(m_servoPosition);
 }

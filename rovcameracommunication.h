@@ -45,14 +45,14 @@ signals:
     void outputReady(QJsonObject jsonObject);
     void cameraSettingsReady(QMap<QString, Setting>);
     void changeServoReady(int pos);
-
 public slots:
     void echo();
     void startStream();
     void stopStream();
     void sendSettings(QMap<QString, Setting> settingsMap);
     void updateServo(int pos);
-    void changeServo(QByteArray ba);
+    void changeServo(int diff);
+    void stopSocket();
 private slots:
     void processingMessage(QJsonObject jsonObject);
     void parseSettings(QJsonObject settings);
