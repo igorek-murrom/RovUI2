@@ -12,11 +12,23 @@ RovCameraCommunication::RovCameraCommunication(QObject *parent)
             SLOT(updateServo(int)));
 }
 
+int constrain(int val, int min, int max) {
+    if (val < min) return min;
+    if (val > max) return max;
+    return val;
+}
+
 void RovCameraCommunication::sendJSON(QJsonObject jsonObject) {
     QJsonDocument doc(jsonObject);
     QString       strJson(doc.toJson(QJsonDocument::Compact));
     QString       message = QString::fromUtf8(strJson.toUtf8().constData());
     socket->sendText(message);
+}
+
+void RovCameraCommunication::changeServo(int diff) {
+    m_servoPosition += diff * 4;
+    m_servoPosition = constrain(m_servoPosition, -100, 100);
+    emit changeServoReady(m_servoPosition);
 }
 
 void RovCameraCommunication::processingMessage(QJsonObject jsonObject) {
@@ -58,14 +70,9 @@ void RovCameraCommunication::sendFormat(QString type, int width, int height, int
     formatSettings.insert("height", height);
 
     formatPacket.insert(formatName, formatSettings);
+    packet.insert("formats", formatPacket);
     sendJSON(packet);
     qDebug() << "sent format";
-}
-
-int constrain(int val, int min, int max) {
-    if (val < min) return min;
-    if (val > max) return max;
-    return val;
 }
 
 void RovCameraCommunication::updateServo(int pos) {
@@ -74,15 +81,8 @@ void RovCameraCommunication::updateServo(int pos) {
     ports.insert("rotary", pos);
     packet.insert("powers", ports);
     sendJSON(packet);
-    qDebug() << "update servo: " << pos;
+//    qDebug() << "update servo: " << pos;
 }
-
-void RovCameraCommunication::changeServo(int diff) {
-    m_servoPosition += diff * 4;
-    m_servoPosition = constrain(m_servoPosition, -180, 180);
-    emit changeServoReady(m_servoPosition);
-}
-
 
 void RovCameraCommunication::echo() {
     QJsonObject jsonObject;

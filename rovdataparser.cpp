@@ -147,6 +147,7 @@ void RovDataParser::prepareControl(Joystick joy) {
         m_thrOvrMutex.unlock();
         m_thrOvrInvMutex.unlock();
     } else {
+        float correctW = 0.2 / joy.runtimeASF[3];
         float x = joy.axes[0] * joy.runtimeASF[0] * joy.baseASF[0] *
                   joy.directions[0] *
                   (m_control->camsel == 1 ? -1 : 1); // left-right
@@ -155,13 +156,12 @@ void RovDataParser::prepareControl(Joystick joy) {
                   (m_control->camsel == 1 ? -1 : 1); // forward-backward
         float z = joy.axes[2] * joy.runtimeASF[1] * joy.baseASF[2] *
                   joy.directions[2]; // up-down
-        float w = -0.3*(joy.axes[3] * joy.runtimeASF[3] * joy.baseASF[3] *
-                  joy.directions[3]);
+        float w = -1*(joy.axes[3] * joy.runtimeASF[3] * joy.baseASF[3] *
+                  joy.directions[3])*correctW;
         float d = joy.axes[4] * joy.runtimeASF[4] * joy.baseASF[4] *
                   joy.directions[4];
         float r = joy.axes[5] * joy.runtimeASF[5] * joy.baseASF[5] *
                   joy.directions[5];
-
         float dReg  = depthReg.eval(m_tele.depth);
         float yReg  = yawReg.eval(m_tele.yaw);
         float rReg  = yawReg.eval(m_tele.roll);
@@ -187,8 +187,8 @@ void RovDataParser::prepareControl(Joystick joy) {
 
         // TODO: directions and axes setup
         // Horizontal thrusters
-        int predel = 80;
-        int mpredel = -80;
+        int predel = 100;
+        int mpredel = -100;
         m_control->thrusterPower[0] =
             constrain(-x - y + z - w - d + r, mpredel, predel); // lfl
         m_control->thrusterPower[1] =
@@ -208,8 +208,10 @@ void RovDataParser::prepareControl(Joystick joy) {
             constrain(-x - y + z + w + d - r, mpredel, predel); // hbr   qqq
         QString a = "";
         for (int i = 0; i < 8; i++) {
+            a += QString::number(i);
+            a += ":";
             a += QString::number(m_control->thrusterPower[i]);
-            a += " ";
+            a += "     ";
         }
         qDebug() << a;
     }

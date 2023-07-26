@@ -32,14 +32,14 @@ void RovUIMessageHandler(QtMsgType type, const QMessageLogContext &context,
         fprintf(stdout, "Info: %s\n", localMsg.constData());
 #endif
         break;
-    case QtWarningMsg:
-#ifdef __QTDEBUG__
-        fprintf(stderr, "Warning: %s (%s:%u, %s)\n", localMsg.constData(), file,
-                context.line, function);
-#else
-        fprintf(stderr, "Warning: %s\n", localMsg.constData());
-#endif
-        break;
+//    case QtWarningMsg:
+//#ifdef __QTDEBUG__
+//        fprintf(stderr, "Warning: %s (%s:%u, %s)\n", localMsg.constData(), file,
+//                context.line, function);
+//#else
+//        fprintf(stderr, "Warning: %s\n", localMsg.constData());
+//#endif
+//        break;
     case QtCriticalMsg:
 #ifdef __QTDEBUG__
         fprintf(stderr, "Critical: %s (%s:%u, %s)\n", localMsg.constData(),
