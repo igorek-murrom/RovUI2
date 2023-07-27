@@ -147,20 +147,19 @@ void RovDataParser::prepareControl(Joystick joy) {
         m_thrOvrMutex.unlock();
         m_thrOvrInvMutex.unlock();
     } else {
-        float correctW = 0.2 / joy.runtimeASF[3];
-        float x = joy.axes[0] * joy.runtimeASF[0] * joy.baseASF[0] *
+        int x = joy.axes[0] * joy.runtimeASF[0] * joy.baseASF[0] *
                   joy.directions[0] *
                   (m_control->camsel == 1 ? -1 : 1); // left-right
-        float y = -1*joy.axes[1] * joy.runtimeASF[1] * joy.baseASF[1] *
+        int y = -1*joy.axes[1] * joy.runtimeASF[1] * joy.baseASF[1] *
                   joy.directions[1] *
                   (m_control->camsel == 1 ? -1 : 1); // forward-backward
-        float z = joy.axes[2] * joy.runtimeASF[1] * joy.baseASF[2] *
+        int z = joy.axes[2] * joy.runtimeASF[1] * joy.baseASF[2] *
                   joy.directions[2]; // up-down
-        float w = -1*(joy.axes[3] * joy.runtimeASF[3] * joy.baseASF[3] *
-                  joy.directions[3])*correctW;
-        float d = joy.axes[4] * joy.runtimeASF[4] * joy.baseASF[4] *
+        int w = -1*(joy.axes[3] * joy.runtimeASF[3] * joy.baseASF[3] *
+                  joy.directions[3])*0.2;
+        int d = joy.axes[4] * joy.runtimeASF[4] * joy.baseASF[4] *
                   joy.directions[4];
-        float r = joy.axes[5] * joy.runtimeASF[5] * joy.baseASF[5] *
+        int r = joy.axes[5] * joy.runtimeASF[5] * joy.baseASF[5] *
                   joy.directions[5];
         float dReg  = depthReg.eval(m_tele.depth);
         float yReg  = yawReg.eval(m_tele.yaw);
@@ -213,6 +212,7 @@ void RovDataParser::prepareControl(Joystick joy) {
             a += QString::number(m_control->thrusterPower[i]);
             a += "     ";
         }
+//        qDebug() << "x: " << x << "   y: " << y << "   z: " << z << "   w: " << w << "   d: " << d << "   r: " << r;
         qDebug() << a;
     }
     // Hats processing
