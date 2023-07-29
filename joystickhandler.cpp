@@ -158,7 +158,7 @@ void JoystickHandler::timerEvent(QTimerEvent *) {
         if (m_joystick.data()->buttons.ASFUltraSlow) {
             for (size_t i = 0; i < helpers::size(m_joystick.data()->runtimeASF);
                  i++)
-                m_joystick.data()->runtimeASF[i] = .25f;
+                m_joystick.data()->runtimeASF[i] = .20f;
         }
 
         emit joystickUpdated(Joystick(m_joystick.data()));

@@ -6,7 +6,12 @@
 #include <QDebug>
 #include <QMap>
 #include <QObject>
+#include <QByteArray>
 #include <client.h>
+#include <QFile>
+#include <QDateTime>
+#include <QIODevice>
+#include <QDir>
 struct Setting {
     int                maxValue;
     int                minValue;
@@ -43,14 +48,16 @@ signals:
     void reportReady(QJsonObject jsonObject);
     void outputReady(QJsonObject jsonObject);
     void cameraSettingsReady(QMap<QString, Setting>);
-
+    void changeServoReady(int pos);
 public slots:
     void echo();
     void startStream();
     void stopStream();
     void sendSettings(QMap<QString, Setting> settingsMap);
     void updateServo(int pos);
-
+    void changeServo(int diff);
+    void stopSocket();
+    void sendFormat(QString type, int width, int height, int fps);
 private slots:
     void processingMessage(QJsonObject jsonObject);
     void parseSettings(QJsonObject settings);
@@ -60,6 +67,9 @@ private:
     Client *socket;
     QMap<QString, Setting> cameraSettings;
     void sendJSON(QJsonObject jsonObject);
+    int m_servoPosition = 0;
+    QFile cameraLogs;
+    QDateTime dateTime;
 };
 
 #endif // ROVCAMERACOMMUNICATION_H

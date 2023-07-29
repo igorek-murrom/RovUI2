@@ -10,7 +10,6 @@
 #include <QMutex>
 #include <QObject>
 #include <algorithm>
-
 /**
  * @brief Floating point PD regulator implementation
  *
@@ -65,6 +64,8 @@ class RovDataParser : public QWidget {
      * \param parent Parent
      */
     explicit RovDataParser(QWidget *parent = nullptr);
+    QScopedPointer<RovControl> m_control;
+
 
   signals:
     /**
@@ -207,7 +208,6 @@ class RovDataParser : public QWidget {
     /**
      * \brief Internally-stored RovControl struct
      */
-    QScopedPointer<RovControl> m_control;
     /**
      * \brief Mutex for m_control
      */
