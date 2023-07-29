@@ -31,7 +31,7 @@ class FPPDRegulator {
      * @param target Target
      * @return float Control signal
      */
-    float eval(float data);
+    float eval(float data, bool yaw = false);
     void setTarget(float target);
     void  enable();
     void  disable();
@@ -234,6 +234,10 @@ class RovDataParser : public QWidget {
     FPPDRegulator yawReg;
     FPPDRegulator rollReg;
     FPPDRegulator pitchReg;
+    float depthEtalon;
+    float pitchEtalon;
+    float yawEtalon = 0;
+    float rollEtalon = 0;
 
 };
 

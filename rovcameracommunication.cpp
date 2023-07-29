@@ -11,7 +11,6 @@ RovCameraCommunication::RovCameraCommunication(QObject *parent)
     connect(this, SIGNAL(changeServoReady(int)), this,
             SLOT(updateServo(int)));
     cameraLogs.setFileName(QDir::homePath() + "/.config/CfRD/camera_logs.log");
-    cameraLogs.open(QIODevice::WriteOnly | QIODevice::Append);
 }
 
 int constrain(int val, int min, int max) {

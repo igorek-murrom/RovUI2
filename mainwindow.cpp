@@ -128,8 +128,8 @@ void MainWindow::updateTelemetry(RovTelemetry tele) {
     ui->teleCamSelLabel->setText(
         QString((tele.cameraIndex == 0 ? "Front" : "Rear")));
     lastTele = tele;
-    m_compassWidget->updateView(tele.yaw, -tele.roll, -tele.pitch);
-    m_gyroWidget->updateView(tele.yaw, -tele.roll, -tele.pitch);
+    m_compassWidget->updateView(-tele.yaw, -tele.roll, -tele.pitch);
+    m_gyroWidget->updateView(-tele.yaw, -tele.roll, -tele.pitch);
 }
 
 void MainWindow::updateASF(float factor) { emit asfUpdated(factor); }
