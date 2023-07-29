@@ -10,6 +10,8 @@ RovCameraCommunication::RovCameraCommunication(QObject *parent)
             SLOT(displayOutput(QJsonObject)));
     connect(this, SIGNAL(changeServoReady(int)), this,
             SLOT(updateServo(int)));
+    cameraLogs.setFileName(QDir::homePath() + "/.config/CfRD/camera_logs.log");
+    cameraLogs.open(QIODevice::WriteOnly | QIODevice::Append);
 }
 
 int constrain(int val, int min, int max) {
@@ -127,8 +129,13 @@ void RovCameraCommunication::parseSettings(QJsonObject settings) {
 void RovCameraCommunication::displayOutput(QJsonObject message) {
     QByteArray ba;
     ba.append(message["data"].toString());
-    qDebug() << "(type: " << message["log_type"].toString() << ") "
-             << QByteArray::fromBase64(ba);
+    cameraLogs.open(QIODevice::WriteOnly | QIODevice::Append);
+    QTextStream logs(&cameraLogs);
+//    qDebug() << "(type: " << message["log_type"].toString() << ") "
+//             << QByteArray::fromBase64(ba);
+    logs << "[" << dateTime.currentDateTime().toString() << "]  " << "(type: " << message["log_type"].toString() << ") "
+         << QByteArray::fromBase64(ba);
+//    cameraLogs.close();
 }
 
 void RovCameraCommunication::stopSocket() {

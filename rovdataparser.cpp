@@ -147,16 +147,17 @@ void RovDataParser::prepareControl(Joystick joy) {
         m_thrOvrMutex.unlock();
         m_thrOvrInvMutex.unlock();
     } else {
+        float cur = 0.2 / joy.runtimeASF[3];
         int x = joy.axes[0] * joy.runtimeASF[0] * joy.baseASF[0] *
                   joy.directions[0] *
                   (m_control->camsel == 1 ? -1 : 1); // left-right
-        int y = -1*joy.axes[1] * joy.runtimeASF[1] * joy.baseASF[1] *
+        int y = -1 * joy.axes[1] * joy.runtimeASF[1] * joy.baseASF[1] *
                   joy.directions[1] *
                   (m_control->camsel == 1 ? -1 : 1); // forward-backward
-        int z = joy.axes[2] * joy.runtimeASF[1] * joy.baseASF[2] *
+        int z = joy.axes[2] * joy.runtimeASF[2] * joy.baseASF[2] *
                   joy.directions[2]; // up-down
         int w = -1*(joy.axes[3] * joy.runtimeASF[3] * joy.baseASF[3] *
-                  joy.directions[3])*0.2;
+                  joy.directions[3]) * 0.35;
         int d = joy.axes[4] * joy.runtimeASF[4] * joy.baseASF[4] *
                   joy.directions[4];
         int r = joy.axes[5] * joy.runtimeASF[5] * joy.baseASF[5] *
@@ -165,10 +166,11 @@ void RovDataParser::prepareControl(Joystick joy) {
         float yReg  = yawReg.eval(m_tele.yaw);
         float rReg  = yawReg.eval(m_tele.roll);
         float pReg  = yawReg.eval(m_tele.pitch);
-        z          += dReg;
+        z          += dReg * -1;
         w          += yReg;
         r          += rReg;
         d          += pReg;
+//        if (joy.runtimeASF[3] < 0.3) w *= 2;
 //        qDebug() << "fd: " << dReg;
 //         qDebug() << "dReg: " << dReg << ", yReg: " << yReg << ", rReg: " << rReg
 //                  << ", pReg: " << pReg << "\n";
@@ -188,23 +190,41 @@ void RovDataParser::prepareControl(Joystick joy) {
         // Horizontal thrusters
         int predel = 100;
         int mpredel = -100;
+//        m_control->thrusterPower[0] =
+//            constrain(-x + y + z - w - d + r, mpredel, predel); // lfl
+//        m_control->thrusterPower[1] =
+//            constrain(-x - y + z + w - d - r, mpredel, predel); // lfr qqq
+//        m_control->thrusterPower[2] =
+//            constrain(-x - y - z - w + d - r, mpredel, predel); // hfl
+//        m_control->thrusterPower[3] =
+//            constrain(-x + y - z + w + d + r, mpredel, predel); // hfr
+//        // Vertical thrusters
+//        m_control->thrusterPower[4] =
+//            constrain(-x + y - z - w - d - r, mpredel, predel);// lbl   qqq
+//        m_control->thrusterPower[5] =
+//            constrain(-x - y - z + w - d + r, mpredel, predel); // lbr
+//        m_control->thrusterPower[6] =
+//            constrain(-x + y + z - w + d + r, mpredel, predel); // hbl
+//        m_control->thrusterPower[7] =
+//            constrain(-x - y + z + w + d - r, mpredel, predel); // hbr   qqq
         m_control->thrusterPower[0] =
-            constrain(-x - y + z - w - d + r, mpredel, predel); // lfl
+            constrain(-x - y + z - w - d + r, -100, 100); // lfl
         m_control->thrusterPower[1] =
-            constrain(-x + y + z + w - d - r, mpredel, predel); // lfr
+            constrain(-x + y + z + w - d - r, -100, 100); // lfr
         m_control->thrusterPower[2] =
-            constrain(-x - y - z - w + d - r, mpredel, predel); // hfl
+            constrain(-x - y - z - w + d - r, -100, 100); // hfl
         m_control->thrusterPower[3] =
-            constrain(-x + y - z + w + d + r, mpredel, predel); // hfr
+            constrain(-x + y - z + w + d + r, -100, 100); // hfr
         // Vertical thrusters
         m_control->thrusterPower[4] =
-            constrain(-x + y - z - w - d - r, mpredel, predel);// lbl   qqq
+            constrain(-x + y - z - w - d - r, -100, 100); // lbl
         m_control->thrusterPower[5] =
-            constrain(-x - y - z + w - d + r, mpredel, predel); // lbr
+            constrain(-x - y - z + w - d + r, -100, 100); // lbr
         m_control->thrusterPower[6] =
-            constrain(-x + y + z - w + d + r, mpredel, predel); // hbl
+            constrain(-x + y + z - w + d + r, -100, 100); // hbl
         m_control->thrusterPower[7] =
-            constrain(-x - y + z + w + d - r, mpredel, predel); // hbr   qqq
+            constrain(-x - y + z + w + d - r, -100, 100); // hbr
+
         QString a = "";
         for (int i = 0; i < 8; i++) {
             a += QString::number(i);
@@ -212,7 +232,9 @@ void RovDataParser::prepareControl(Joystick joy) {
             a += QString::number(m_control->thrusterPower[i]);
             a += "     ";
         }
+//        qDebug() << dReg << "   z:  " << z;
 //        qDebug() << "x: " << x << "   y: " << y << "   z: " << z << "   w: " << w << "   d: " << d << "   r: " << r;
+//        qDebug() << "w: " << w <<"    ";
         qDebug() << a;
     }
     // Hats processing

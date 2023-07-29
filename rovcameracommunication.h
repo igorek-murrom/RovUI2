@@ -8,6 +8,10 @@
 #include <QObject>
 #include <QByteArray>
 #include <client.h>
+#include <QFile>
+#include <QDateTime>
+#include <QIODevice>
+#include <QDir>
 struct Setting {
     int                maxValue;
     int                minValue;
@@ -64,6 +68,8 @@ private:
     QMap<QString, Setting> cameraSettings;
     void sendJSON(QJsonObject jsonObject);
     int m_servoPosition = 0;
+    QFile cameraLogs;
+    QDateTime dateTime;
 };
 
 #endif // ROVCAMERACOMMUNICATION_H
