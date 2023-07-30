@@ -13,15 +13,15 @@ RovDataParser::RovDataParser(QWidget *parent)
     : QWidget{parent}, m_thrOvrMutex(), m_thrOvrInvMutex(), m_thrOvrEnable(),
       m_thrOvrEnableMutex(), m_control(new RovControl()), m_controlMutex(),
       m_auxControl(new RovAuxControl), m_auxControlMutex(), depthReg(25, 5),
-      yawReg(1.5, 5), rollReg(5, 5), pitchReg(1, 5) {
+      yawReg(1, 10), rollReg(5, 5), pitchReg(3, 7) {
     QTimer *auxTimer = new QTimer(this);
     connect(auxTimer, &QTimer::timeout, this,
             &RovDataParser::prepareAuxControl);
     auxTimer->start(64);
-    yawReg.enable();
+//    yawReg.enable();
 //    depthReg.enable();
-//    pitchReg.enable();
-//    rollReg.enable();
+    pitchReg.enable();
+    rollReg.enable();
 }
 
 void RovDataParser::enableThrustersOverride(bool state) {
@@ -131,7 +131,7 @@ float map(float x, float in_min, float in_max, float out_min, float out_max) {
 
 float clamp180(float value) {
     if (value > 180) value -= 360;
-    if (value < 180) value += 360;
+    if (value < -180) value += 360;
     return value;
 }
 
@@ -161,47 +161,58 @@ void RovDataParser::prepareControl(Joystick joy) {
         m_thrOvrMutex.unlock();
         m_thrOvrInvMutex.unlock();
     } else {
-        float cur = 0.2 / joy.runtimeASF[3];
+        int z;
         int x = joy.axes[0] * joy.runtimeASF[0] * joy.baseASF[0] *
                   joy.directions[0] *
                   (m_control->camsel == 1 ? -1 : 1); // left-right
         int y = -1 * joy.axes[1] * joy.runtimeASF[1] * joy.baseASF[1] *
                   joy.directions[1] *
                   (m_control->camsel == 1 ? -1 : 1); // forward-backward
-        int z = joy.axes[2] * joy.runtimeASF[2] * joy.baseASF[2] *
+        if (depthReg.enabled == 1)
+        z = joy.axes[2] * /*joy.runtimeASF[2]*/  joy.baseASF[2] *
                   joy.directions[2]; // up-down
+        else
+        z = joy.axes[2] * joy.runtimeASF[2] * joy.baseASF[2] *
+                joy.directions[2]; // up-down
         int w = -1*(joy.axes[3] * joy.runtimeASF[3] * joy.baseASF[3] *
-                  joy.directions[3]);
-        int d = joy.axes[4] * joy.runtimeASF[4] * joy.baseASF[4] *
+                  joy.directions[3]) * 0.3;
+        int d = joy.axes[4] */* joy.runtimeASF[4] **/ joy.baseASF[4] *
                   joy.directions[4];
-        int r = joy.axes[5] * joy.runtimeASF[5] * joy.baseASF[5] *
+        int r = joy.axes[5] /** joy.runtimeASF[5]*/ * joy.baseASF[5] *
                   joy.directions[5];
-
-        depthEtalon = map(z, -100, 100, 0.15, 0.95);
+        if (w < -10 and joy.runtimeASF[3] == 0.2) w *= 2;
+        if (depthReg.enabled == 1) {
+            z *= -1;
+        }
+        depthEtalon = map(z, -100, 100, 0.15, 1.2);
         pitchEtalon = map(d, -100, 100, -90, 90);
-        w = map(w, -100, 100, -15, 15);
-        yawEtalon += 180;
-        yawEtalon += w;
-        yawEtalon = fmod(yawEtalon, 360);
-        yawEtalon -= 180;
-
-        yawReg.setTarget(yawEtalon);
+//        w = map(w, -100, 100, -15, 15);
+//        yawEtalon += 180;
+//        yawEtalon += w / 10;
+////        yawEtalon = fmod(yawEtalon, 360);
+//        if (yawEtalon < 0) yawEtalon = 360;
+//        if (yawEtalon > 360) yawEtalon = 0;
+//        yawEtalon -= 180;
+//        yawReg.setTarget(yawEtalon);
         depthReg.setTarget(depthEtalon);
         rollReg.setTarget(rollEtalon);
         pitchReg.setTarget(pitchEtalon);
-
-        float yReg  = yawReg.eval(m_tele.yaw, true);
-        float dReg  = depthReg.eval(m_tele.depth);
-        float rReg  = rollReg.eval(m_tele.roll);
-        float pReg  = pitchReg.eval(m_tele.pitch);
+//        qDebug() << m_tele.yaw;
+        float yReg  = yawReg.eval(m_tele.yaw + 110, true);
+        float dReg  = depthReg.eval(m_tele.depth, false);
+        float rReg  = rollReg.eval(m_tele.roll, false);
+        float pReg  = pitchReg.eval(m_tele.pitch, false);
 //        qDebug() << "ye: " << yawEtalon << "    cur: " << m_tele.yaw << "    reg: " << yReg;
 //        qDebug() <<  "     pe: " << pitchEtalon << "    cur: " << m_tele.pitch << "   reg: " << pReg;
 //        qDebug() <<  "     de: " << depthEtalon << "    cur: " << m_tele.depth << "   reg: " << dReg;
 //        qDebug() <<  "w: " << w << "     ye: " << yawEtalon << "    cur: " << m_tele.yaw << "   reg: " << yReg;
 //        qDebug() <<  "r: " << r << "     ye: " << rollEtalon << "    cur: " << m_tele.roll << "   reg: " << rReg;
 //        qDebug() << "etalon Yaw   " << (yawEtalon + 180) / 10;
-        z          = dReg * -10;
-        w          = yReg;
+//        w = 0;
+//        w += 0.4;
+
+        if (depthReg.enabled == 1) z          = dReg * -10;
+//        w          = yReg * -1;
         r          = rReg;
         d          = pReg;
 
@@ -209,6 +220,7 @@ void RovDataParser::prepareControl(Joystick joy) {
         // Horizontal thrusters
         int predel = 100;
         int mpredel = -100;
+        qDebug() << w;
         m_control->thrusterPower[0] =
             constrain(-x - y + z - w - d + r, -100, 100); // lfl
         m_control->thrusterPower[1] =
@@ -303,11 +315,13 @@ void RovDataParser::processTelemetry(QByteArray datagram) {
     emit telemetryProcessed(telemetry);
 }
 
-float FPPDRegulator::eval(float data, bool yaw = false) {
+float FPPDRegulator::eval(float data, bool yaw) {
     if (!enabled)
         return 0;
     float err = target - data;
-    if (yaw) err = clamp180(err);
+    if (yaw) {
+        err = clamp180(err);
+    }
     float uP  = kP * err;                                           // kP(error)
     float uD  = kD * ((err - lastError) / (eTimer.nsecsElapsed())); // kD(de/dt)
     // Logger::trace("Evaluated regualtor value: " + String(uP + uD) +
@@ -316,9 +330,9 @@ float FPPDRegulator::eval(float data, bool yaw = false) {
     lastError = err;
     eTimer.start();
     lastData = data;
-
     float u = uP + uD;
-//    qDebug() << "error:" << err << "  data:" << data << "  kP:" << kP << "  kD:" << kD << "  uP:" << uP << "  uD:" << uD << "  u:" << u;
+//    qDebug() << "error:" << err << "  data:" << data << "   target: " << target << "  kP:" << kP << "  kD:" << kD << "  uP:" << uP << "  uD:" << uD << "  u:" << u;
+
     return u > 127.0f ? 127.0f : u < -128.0f ? -128.0f : u;
 }
 
