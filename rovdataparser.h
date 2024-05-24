@@ -22,8 +22,8 @@ class FPPDRegulator {
      * @param coeffP Proportional coefficient
      * @param coeffD Differential coefficient
      */
-    FPPDRegulator(float coeffP, float coeffD)
-        : kP(coeffP), kD(coeffD), lastError(0.0f), lastTime(0){};
+    FPPDRegulator(float coeffP, float coeffD, float coeffI)
+        : kP(coeffP), kD(coeffD), kI(coeffI), lastError(0.0f), lastTime(0){};
     /**
      * @brief Evaluate the regulator expression
      *
@@ -31,16 +31,16 @@ class FPPDRegulator {
      * @param target Target
      * @return float Control signal
      */
-    float eval(float data, bool yaw);
+    float eval(float data);
     void setTarget(float target);
     void  enable();
     void  disable();
     bool enabled = false;
-
+    float uP = 0, uD = 0, uI = 0;
 
   private:
     float kP;
-
+    float kI;
     float kD;
 
     float lastError;

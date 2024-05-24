@@ -12,16 +12,16 @@ inline float constrain(float val, float min, float max) {
 RovDataParser::RovDataParser(QWidget *parent)
     : QWidget{parent}, m_thrOvrMutex(), m_thrOvrInvMutex(), m_thrOvrEnable(),
       m_thrOvrEnableMutex(), m_control(new RovControl()), m_controlMutex(),
-      m_auxControl(new RovAuxControl), m_auxControlMutex(), depthReg(25, 5),
-      yawReg(1, 10), rollReg(5, 5), pitchReg(3, 7) {
+      m_auxControl(new RovAuxControl), m_auxControlMutex(), depthReg(25, 5, 0),
+      yawReg(1, 10, 0), rollReg(5, 5, 0), pitchReg(3, 7, 0) {
     QTimer *auxTimer = new QTimer(this);
     connect(auxTimer, &QTimer::timeout, this,
             &RovDataParser::prepareAuxControl);
     auxTimer->start(64);
 //    yawReg.enable();
 //    depthReg.enable();
-    pitchReg.enable();
-    rollReg.enable();
+//    pitchReg.enable();
+//    rollReg.enable();
 }
 
 void RovDataParser::enableThrustersOverride(bool state) {
@@ -135,6 +135,122 @@ float clamp180(float value) {
     return value;
 }
 
+// void RovDataParser::prepareControl(Joystick joy) {
+//     m_controlMutex.lock();
+//     // Buttons processing
+//     m_control->manipulatorOpenClose =
+//         (joy.buttons.ManipOpen - joy.buttons.ManipClose) * 100;
+//     m_control->manipulatorRotate =
+//         (joy.buttons.ManipCCW - joy.buttons.ManipCW) * 100;
+//     if (m_prevCamSelState == 0 && joy.buttons.CameraSelect != 0)
+//         m_control->camsel = !m_control->camsel;
+//     m_prevCamSelState = joy.buttons.CameraSelect;
+
+//            // Thrusters processing
+//     if (ui->overrideControl->checkState() == Qt::Checked) {
+//         int i = -1;
+
+//         m_control->thrusterPower[i++] = ui->thrusterSpinbox1->value();
+//         m_control->thrusterPower[i++] = ui->thrusterSpinbox2->value();
+//         m_control->thrusterPower[i++] = ui->thrusterSpinbox3->value();
+//         m_control->thrusterPower[i++] = ui->thrusterSpinbox4->value();
+//         m_control->thrusterPower[i++] = ui->thrusterSpinbox5->value();
+//         m_control->thrusterPower[i++] = ui->thrusterSpinbox6->value();
+//         m_control->thrusterPower[i++] = ui->thrusterSpinbox7->value();
+//         m_control->thrusterPower[i++] = ui->thrusterSpinbox8->value();
+//     } else {
+//         float x = joy.axes[0] * joy.runtimeASF[0] * joy.baseASF[0] *
+//                   joy.directions[0] *
+//                   (m_control->camsel == 1 ? -1 : 1); // left-right
+//         float y = joy.axes[1] * joy.runtimeASF[1] * joy.baseASF[1] *
+//                   joy.directions[1] *
+//                   (m_control->camsel == 1 ? -1 : 1); // forward-backward
+//         float z = joy.axes[2] * joy.runtimeASF[1] * joy.baseASF[2] *
+//                   joy.directions[2]; // up-down
+//         float w = -1 * (joy.axes[3] * joy.runtimeASF[3] * joy.baseASF[3] *
+//                         joy.directions[3]);
+//         float d = joy.axes[4] * joy.runtimeASF[4] * joy.baseASF[4] *
+//                   joy.directions[4];
+//         float r = joy.axes[5] * joy.runtimeASF[5] * joy.baseASF[5] *
+//                   joy.directions[5];
+
+//         float dReg  = depthReg.eval(m_tele.depth);
+//         float yReg  = yawReg.eval(m_tele.yaw);
+//         float rReg  = rollReg.eval(m_tele.roll);
+//         float pReg  = pitchReg.eval(m_tele.pitch);
+//         z          += dReg;
+//         w          += yReg;
+//         r          += rReg;
+//         d          += pReg;
+
+//                // qDebug() << "dReg: " << dReg << ", yReg: " << yReg << ", rReg: " <<
+//                // rReg
+//                //          << ", pReg: " << pReg << "\n";
+
+//                // TODO: directions and axes setup
+//                // Horizontal thrusters
+//         m_control->thrusterPower[0] =
+//             constrain(-x - y + z - w - d + r, -100, 100); // lfl
+//         m_control->thrusterPower[1] =
+//             constrain(-x + y + z + w - d - r, -100, 100); // lfr
+//         m_control->thrusterPower[2] =
+//             constrain(-x - y - z - w + d - r, -100, 100); // hfl
+//         m_control->thrusterPower[3] =
+//             constrain(-x + y - z + w + d + r, -100, 100); // hfr
+//         // Vertical thrusters
+//         m_control->thrusterPower[4] =
+//             constrain(-x + y - z - w - d - r, -100, 100); // lbl
+//         m_control->thrusterPower[5] =
+//             constrain(-x - y - z + w - d + r, -100, 100); // lbr
+//         m_control->thrusterPower[6] =
+//             constrain(-x + y + z - w + d + r, -100, 100); // hbl
+//         m_control->thrusterPower[7] =
+//             constrain(-x - y + z + w + d - r, -100, 100); // hbr
+
+//         ui->thrusterSpinbox1->setValue(m_control->thrusterPower[0]);
+//         ui->thrusterSpinbox2->setValue(m_control->thrusterPower[1]);
+//         ui->thrusterSpinbox3->setValue(m_control->thrusterPower[2]);
+//         ui->thrusterSpinbox4->setValue(m_control->thrusterPower[3]);
+//         ui->thrusterSpinbox5->setValue(m_control->thrusterPower[4]);
+//         ui->thrusterSpinbox6->setValue(m_control->thrusterPower[5]);
+//         ui->thrusterSpinbox7->setValue(m_control->thrusterPower[6]);
+//         ui->thrusterSpinbox8->setValue(m_control->thrusterPower[7]);
+//         ui->progressBarX->setValue(x);
+//         ui->progressBarY->setValue(y);
+//         ui->progressBarZ->setValue(z);
+//         ui->progressBarW->setValue(w);
+//         ui->progressBarD->setValue(d);
+//         ui->progressBarR->setValue(r);
+//     }
+//     // Hats processing
+//     m_control->cameraRotationDelta[0] = joy.hats[1];
+//     m_control->cameraRotationDelta[1] = -joy.hats[0];
+
+//     QByteArray ba;
+
+//     QDataStream in(&ba, QIODevice::WriteOnly);
+//     in.setFloatingPointPrecision(QDataStream::SinglePrecision);
+
+//            // begin v1
+//     in << m_control->header;
+//     in << m_control->version;
+//     //    in << m_datagram->auxFlags;
+//     for (int i = 0; i < 10; i++) {
+//         qint8 t = m_control->thrusterPower[i];
+//         in << t;
+//     }
+//     in << m_control->manipulatorOpenClose;
+//     in << m_control->manipulatorRotate;
+//     for (qint8 c : m_control->cameraRotationDelta) {
+//         in << c;
+//     }
+
+//     in << m_control->camsel;
+//     m_controlMutex.unlock();
+//     emit controlReady(QByteArray(ba));
+// }
+
+
 void RovDataParser::prepareControl(Joystick joy) {
     m_thrOvrEnableMutex.lock();
     bool state = m_thrOvrEnable;
@@ -180,36 +296,20 @@ void RovDataParser::prepareControl(Joystick joy) {
                   joy.directions[4];
         int r = joy.axes[5] /** joy.runtimeASF[5]*/ * joy.baseASF[5] *
                   joy.directions[5];
-        if (w < -10 and joy.runtimeASF[3] == 0.2) w *= 2;
-        if (depthReg.enabled == 1) {
-            z *= -1;
-        }
+        // if (w < -10 and joy.runtimeASF[3] == 0.2) w *= 2;
+
+        // if (depthReg.enabled == 1) {
+        //     z *= -1;
+        // }
         depthEtalon = map(z, -100, 100, 0.15, 1.2);
         pitchEtalon = map(d, -100, 100, -90, 90);
-//        w = map(w, -100, 100, -15, 15);
-//        yawEtalon += 180;
-//        yawEtalon += w / 10;
-////        yawEtalon = fmod(yawEtalon, 360);
-//        if (yawEtalon < 0) yawEtalon = 360;
-//        if (yawEtalon > 360) yawEtalon = 0;
-//        yawEtalon -= 180;
-//        yawReg.setTarget(yawEtalon);
         depthReg.setTarget(depthEtalon);
         rollReg.setTarget(rollEtalon);
         pitchReg.setTarget(pitchEtalon);
-//        qDebug() << m_tele.yaw;
-        float yReg  = yawReg.eval(m_tele.yaw + 110, true);
-        float dReg  = depthReg.eval(m_tele.depth, false);
-        float rReg  = rollReg.eval(m_tele.roll, false);
-        float pReg  = pitchReg.eval(m_tele.pitch, false);
-//        qDebug() << "ye: " << yawEtalon << "    cur: " << m_tele.yaw << "    reg: " << yReg;
-//        qDebug() <<  "     pe: " << pitchEtalon << "    cur: " << m_tele.pitch << "   reg: " << pReg;
-//        qDebug() <<  "     de: " << depthEtalon << "    cur: " << m_tele.depth << "   reg: " << dReg;
-//        qDebug() <<  "w: " << w << "     ye: " << yawEtalon << "    cur: " << m_tele.yaw << "   reg: " << yReg;
-//        qDebug() <<  "r: " << r << "     ye: " << rollEtalon << "    cur: " << m_tele.roll << "   reg: " << rReg;
-//        qDebug() << "etalon Yaw   " << (yawEtalon + 180) / 10;
-//        w = 0;
-//        w += 0.4;
+        float yReg  = yawReg.eval(m_tele.yaw + 110);
+        float dReg  = depthReg.eval(m_tele.depth);
+        float rReg  = rollReg.eval(m_tele.roll);
+        float pReg  = pitchReg.eval(m_tele.pitch);
 
         if (depthReg.enabled == 1) z          = dReg * -10;
 //        w          = yReg * -1;
@@ -238,18 +338,12 @@ void RovDataParser::prepareControl(Joystick joy) {
             constrain(-x + y + z - w + d + r, -100, 100); // hbl
         m_control->thrusterPower[7] =
             constrain(-x - y + z + w + d - r, -100, 100); // hbr
-
         QString a = "";
-        for (int i = 0; i < 8; i++) {
+        for (auto i : m_control->thrusterPower) {
             a += QString::number(i);
-            a += ":";
-            a += QString::number(m_control->thrusterPower[i]);
-            a += "     ";
+            a += " ";
         }
-//        qDebug() << dReg << "   z:  " << z;
-//        qDebug() << "x: " << x << "   y: " << y << "   z: " << z << "   w: " << w << "   d: " << d << "   r: " << r << "             " << a;
-//        qDebug() << "w: " << w <<"    ";
-//        qDebug() << a;
+        qDebug() << a;
     }
     // Hats processing
     m_control->cameraRotationDelta[0] = joy.hats[1];
@@ -315,15 +409,16 @@ void RovDataParser::processTelemetry(QByteArray datagram) {
     emit telemetryProcessed(telemetry);
 }
 
-float FPPDRegulator::eval(float data, bool yaw) {
+float FPPDRegulator::eval(float data) {
     if (!enabled)
         return 0;
     float err = target - data;
-    if (yaw) {
-        err = clamp180(err);
-    }
-    float uP  = kP * err;                                           // kP(error)
-    float uD  = kD * ((err - lastError) / (eTimer.nsecsElapsed())); // kD(de/dt)
+    uP  = kP * err;                                           // kP(error)
+    uD  = kD * ((err - lastError) / (eTimer.nsecsElapsed())); // kD(de/dt)
+
+    if (abs(err) < 1) uI = 0;
+    else uI += kI * err;
+
     // Logger::trace("Evaluated regualtor value: " + String(uP + uD) +
     //               " (uP: " + String(uP) + ", uD: " + String(uD) +
     //               ", offset: " + String(offset, 10) + ") \n\r");
