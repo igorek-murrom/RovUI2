@@ -97,6 +97,12 @@ class RovDataSplines : public QDialog {
      */
     void addCurrentSample(QPointF sample);
 
+
+    void addYawSample(QPointF sample);
+    void addDepthSample(QPointF sample);
+    void addRollSample(QPointF sample);
+    void addPitchSample(QPointF sample);
+
   private:
     /**
      * \brief Voltage chart
@@ -107,6 +113,11 @@ class RovDataSplines : public QDialog {
      * \brief Current chart
      */
     QScopedPointer<ContinousDataSplineChart> m_cChart;
+
+    QScopedPointer<ContinousDataSplineChart> m_yChart;
+    QScopedPointer<ContinousDataSplineChart> m_dChart;
+    QScopedPointer<ContinousDataSplineChart> m_pChart;
+    QScopedPointer<ContinousDataSplineChart> m_rChart;
 
     /**
      * \brief maxVSamples

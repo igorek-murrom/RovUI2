@@ -37,11 +37,7 @@
       </attribute>
       <layout class="QGridLayout" name="gridLayout">
        <item row="0" column="0">
-        <widget class="QChartView" name="voltageChartView">
-         <property name="renderHints">
-          <set>QPainter::Antialiasing|QPainter::HighQualityAntialiasing|QPainter::TextAntialiasing</set>
-         </property>
-        </widget>
+        <widget class="QChartView" name="voltageChartView"/>
        </item>
       </layout>
      </widget>
@@ -57,11 +53,7 @@
       </attribute>
       <layout class="QGridLayout" name="gridLayout_3">
        <item row="0" column="0">
-        <widget class="QChartView" name="currentChartView">
-         <property name="renderHints">
-          <set>QPainter::Antialiasing|QPainter::HighQualityAntialiasing|QPainter::TextAntialiasing</set>
-         </property>
-        </widget>
+        <widget class="QChartView" name="currentChartView"/>
        </item>
       </layout>
      </widget>

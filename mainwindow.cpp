@@ -64,6 +64,11 @@ void MainWindow::updateStatusbar() {
 void MainWindow::updateDatasplines(RovTelemetry tele) {
     m_datasplines.data()->addVoltageSample(QPointF(m_vSamples++, tele.voltage));
     m_datasplines.data()->addCurrentSample(QPointF(m_aSamples++, tele.current));
+
+    m_datasplines.data()->addYawSample(QPointF(m_ySamples++, tele.yaw));
+    m_datasplines.data()->addDepthSample(QPointF(m_dSamples++, tele.depth));
+    m_datasplines.data()->addPitchSample(QPointF(m_pSamples++, tele.pitch));
+    m_datasplines.data()->addRollSample(QPointF(m_rSamples++, tele.roll));
 }
 
 void MainWindow::updateStatusbarText(QString status) {
