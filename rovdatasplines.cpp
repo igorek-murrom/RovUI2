@@ -46,7 +46,6 @@ void RovDataSplines::addDepthSample(QPointF sample) {
 
 void RovDataSplines::addPitchSample(QPointF sample) {
     m_pChart->addSample(sample);
-    m_pChart->add
 }
 
 void RovDataSplines::addRollSample(QPointF sample) {
