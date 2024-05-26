@@ -299,9 +299,10 @@ float FPPDRegulator::eval(float data) {
     float err = target - data;
     uP  = kP * err;                                           // kP(error)
     uD  = kD * ((err - lastError) / (eTimer.nsecsElapsed())); // kD(de/dt)
+    uI += kI * err * eTimer.nsecsElapsed();
 
-    if (abs(err) < 1) uI = 0;
-    else uI += kI * err * eTimer.nsecsElapsed();
+    // if (abs(err) < 1) uI = 0;
+    // else
 
     // Logger::trace("Evaluated regualtor value: " + String(uP + uD) +
     //               " (uP: " + String(uP) + ", uD: " + String(uD) +
