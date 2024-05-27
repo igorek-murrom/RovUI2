@@ -17,7 +17,7 @@
 #include <regex>
 
 RovCameraCapture::RovCameraCapture(QWidget *parent)
-    : QWidget(parent), m_camera(new QCamera("10.3.141.79:5000")),
+    : QWidget(parent), m_camera(new QCamera("127.0.0.1:5000")),
       m_recorder(new QMediaRecorder(m_camera.data())),
       m_cameraCapture(new QCameraImageCapture(m_camera.data())),
       m_mediaPlayer(new QMediaPlayer(this)), m_record() {
@@ -66,7 +66,7 @@ RovCameraCapture::RovCameraCapture(QWidget *parent)
 void RovCameraCapture::setViewfinder(QVideoWidget *vf) {
     qDebug() << "Adding ViewFinder " << vf;
     m_mediaPlayer->setVideoOutput(vf);
-    m_mediaPlayer->setMedia(QUrl("gst-pipeline: udpsrc multicast-iface=enp3s0f4u1u2u1 address=239.255.1.2 port=5000 ! application/x-rtp,media=video,payload=26,clock-rate=90000,encoding-name=JPEG,framerate=30/1 ! queue ! rtpjpegdepay ! jpegparse ! jpegdec ! timeoverlay ! videoconvert ! xvimagesink name=\"qtvideosink\""));
+    m_mediaPlayer->setMedia(QUrl("gst-pipeline: udpsrc address=192.168.1.4 port=5000 ! application/x-rtp,media=video,payload=26,clock-rate=90000,encoding-name=JPEG,framerate=30/1 ! queue ! rtpjpegdepay ! jpegparse ! jpegdec ! timeoverlay ! videoconvert ! xvimagesink name=\"qtvideosink\""));
 }
 
 void RovCameraCapture::startRecord() {
