@@ -235,10 +235,10 @@ class RovDataParser : public QWidget {
     FPPDRegulator yawReg;
     FPPDRegulator rollReg;
     FPPDRegulator pitchReg;
-    float depthEtalon;
-    float pitchEtalon;
+    bool isFirstParsing = true;
+    float depthEtalon = 0;
     float yawEtalon = 0;
-    float rollEtalon = 2.5;
+    float rollEtalon = 0, pitchEtalon = 0;
 
 };
 

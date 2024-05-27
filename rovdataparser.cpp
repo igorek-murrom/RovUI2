@@ -180,48 +180,29 @@ void RovDataParser::prepareControl(Joystick joy) {
                   joy.directions[4];
         int r = joy.axes[5] /** joy.runtimeASF[5]*/ * joy.baseASF[5] *
                   joy.directions[5];
-        // if (w < -10 and joy.runtimeASF[3] == 0.2) w *= 2;
 
-        // if (depthReg.enabled == 1) {
-        //     z *= -1;
-        // }
-        depthEtalon = map(z, -100, 100, 0.15, 1.2);
-        pitchEtalon = map(d, -100, 100, -90, 90);
-        depthReg.setTarget(depthEtalon);
         rollReg.setTarget(rollEtalon);
         pitchReg.setTarget(pitchEtalon);
-        float yReg  = yawReg.eval(m_tele.yaw + 110);
-        float dReg  = depthReg.eval(m_tele.depth);
-        float rReg  = rollReg.eval(m_tele.roll);
-        float pReg  = pitchReg.eval(m_tele.pitch);
+        if (abs(r) < 2) r += rollReg.eval(m_tele.roll);
+        if (abs(d) < 2) d += pitchReg.eval(m_tele.pitch);
 
-        if (depthReg.enabled == 1) z          = dReg * -10;
-//        w          = yReg * -1;
-        r          = rReg;
-        d          = pReg;
+        // depthEtalon = constrain(depthEtalon += z / 1000.0, -1, 5);
+        // depthReg.setTarget(depthEtalon);
+        // z = depthReg.eval(m_tele.depth);
 
-        // TODO: directions and axes setup
-        // Horizontal thrusters
-        int predel = 100;
-        int mpredel = -100;
         qDebug() << w;
-        m_control->thrusterPower[0] =
-            constrain(-x - y + z - w - d + r, -100, 100); // lfl
-        m_control->thrusterPower[1] =
-            constrain(-x + y + z + w - d - r, -100, 100); // lfr
-        m_control->thrusterPower[2] =
-            constrain(-x - y - z - w + d - r, -100, 100); // hfl
-        m_control->thrusterPower[3] =
-            constrain(-x + y - z + w + d + r, -100, 100); // hfr
-        // Vertical thrusters
-        m_control->thrusterPower[4] =
-            constrain(-x + y - z - w - d - r, -100, 100); // lbl
-        m_control->thrusterPower[5] =
-            constrain(-x - y - z + w - d + r, -100, 100); // lbr
-        m_control->thrusterPower[6] =
-            constrain(-x + y + z - w + d + r, -100, 100); // hbl
-        m_control->thrusterPower[7] =
-            constrain(-x - y + z + w + d - r, -100, 100); // hbr
+
+
+        m_control->thrusterPower[2] = constrain(z + r - d, -100, 100);
+        m_control->thrusterPower[3] = constrain(z + r + d, -100, 100);
+        m_control->thrusterPower[5] = constrain(z - r + d, -100, 100);
+        m_control->thrusterPower[6] = constrain(-z + r + d, -100, 100);
+
+        m_control->thrusterPower[0] = constrain(x + y + w, -100, 100);
+        m_control->thrusterPower[1] = constrain(-x + y +  w, -100, 100);
+        m_control->thrusterPower[4] = constrain(x - y + w, -100, 100);
+        m_control->thrusterPower[7] = constrain(x + y - w, -100, 100);
+
         QString a = "";
         for (auto i : m_control->thrusterPower) {
             a += QString::number(i);
@@ -290,6 +271,12 @@ void RovDataParser::processTelemetry(QByteArray datagram) {
     out >> telemetry.temp;
 
     m_tele = telemetry;
+
+    if (isFirstParsing) {
+        depthEtalon = m_tele.depth;
+        isFirstParsing = false;
+    }
+
     emit telemetryProcessed(telemetry);
 }
 
