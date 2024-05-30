@@ -78,7 +78,7 @@ void RovCameraCapture::startRecord() {
     recordFile->remove();
     delete recordFile;
     m_recorder->setOutputLocation(generatedName);
-    qDebug() << m_recorder->errorString();
+    // qDebug() << m_recorder->errorString();
     qDebug() << "Generated file name: " << generatedName;
     m_recorder->record();
 }
@@ -87,16 +87,16 @@ void RovCameraCapture::pauseRecord() { m_recorder->pause(); }
 
 void RovCameraCapture::stopRecord() {
     m_recorder->stop();
-    qDebug() << m_recorder->state();
-    qDebug() << m_recorder->status();
-    qDebug() << m_recorder->errorString();
-    qDebug() << m_recorder->state();
-    qDebug() << "recordingReady file name: "
-             << m_recorder->outputLocation().toString();
+    // qDebug() << m_recorder->state();
+    // qDebug() << m_recorder->status();
+    // qDebug() << m_recorder->errorString();
+    // qDebug() << m_recorder->state();
+    // qDebug() << "recordingReady file name: "
+    //          << m_recorder->outputLocation().toString();
     QFileInfo check_file(m_recorder->outputLocation().toString());
 
-    qDebug() << "waiting for record to appear @ "
-             << m_recorder->outputLocation().toString();
+    // qDebug() << "waiting for record to appear @ "
+             // << m_recorder->outputLocation().toString();
     // while (!check_file.exists()) {
     //     QCoreApplication::processEvents(QEventLoop::AllEvents, 100);
     // }

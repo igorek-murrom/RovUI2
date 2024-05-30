@@ -34,7 +34,7 @@ void RovDataParser::setThrustersOverride(QList<qint8> override) {
     m_thrOvrMutex.lock();
     for (int i = 0; i < override.size(); i++) {
 
-        qDebug() << override[i];
+        // qDebug() << override[i];
         this->m_thrOvr[i] = override.at(i);
     }
     m_thrOvrMutex.unlock();
@@ -52,7 +52,7 @@ void RovDataParser::setAuxFlags(qint8 val) {
     m_auxControlMutex.unlock();
 }
 
-void RovDataParser::setDepth(double val) { depthReg.setTarget(val); }
+void RovDataParser::setDepth(double val) { /*depthReg.setTarget(val);*/ }
 
 void RovDataParser::setDepthStatus(int status) {
     if (status != 0)
@@ -61,7 +61,7 @@ void RovDataParser::setDepthStatus(int status) {
         depthReg.disable();
 }
 
-void RovDataParser::setYaw(double val) { yawReg.setTarget(val); }
+void RovDataParser::setYaw(double val) { /*yawReg.setTarget(val);*/ }
 
 void RovDataParser::setYawStatus(int status) {
     if (status != 0)
@@ -70,7 +70,7 @@ void RovDataParser::setYawStatus(int status) {
         yawReg.disable();
 }
 
-void RovDataParser::setRoll(double val) { rollReg.setTarget(val); }
+void RovDataParser::setRoll(double val) { /*rollReg.setTarget(val);*/ }
 
 void RovDataParser::setRollStatus(int status) {
     if (status != 0)
@@ -79,7 +79,7 @@ void RovDataParser::setRollStatus(int status) {
         rollReg.disable();
 }
 
-void RovDataParser::setPitch(double val) { pitchReg.setTarget(val); }
+void RovDataParser::setPitch(double val) { /*pitchReg.setTarget(val);*/ }
 
 void RovDataParser::setPitchStatus(int status) {
     if (status != 0)
@@ -190,7 +190,7 @@ void RovDataParser::prepareControl(Joystick joy) {
         // depthReg.setTarget(depthEtalon);
         // z = depthReg.eval(m_tele.depth);
 
-        qDebug() << w;
+        // qDebug() << w;
 
 
         m_control->thrusterPower[2] = constrain(z + r - d, -100, 100);
@@ -208,7 +208,7 @@ void RovDataParser::prepareControl(Joystick joy) {
             a += QString::number(i);
             a += " ";
         }
-        qDebug() << a;
+        // qDebug() << a;
     }
     // Hats processing
     m_control->cameraRotationDelta[0] = joy.hats[1];
@@ -228,6 +228,7 @@ void RovDataParser::prepareControl(Joystick joy) {
         in << t;
     }
     in << m_control->manipulatorOpenClose;
+
     in << m_control->manipulatorRotate;
     for (qint8 c : m_control->cameraRotationDelta) {
         in << c;
@@ -280,21 +281,17 @@ void RovDataParser::processTelemetry(QByteArray datagram) {
     emit telemetryProcessed(telemetry);
 }
 
-float FPPDRegulator::eval(float data) {
-    if (!enabled)
-        return 0;
-    float err = target - data;
-    uP  = kP * err;                                           // kP(error)
-    uD  = kD * ((err - lastError) / (eTimer.nsecsElapsed())); // kD(de/dt)
-    uI += kI * err * eTimer.nsecsElapsed();
+float FPPDRegulator::eval(float data, bool isYaw) {
+    if (!enabled) return 0;
 
-    // if (abs(err) < 1) uI = 0;
-    // else
+    error = target - data;
+    if (isYaw) error = (((int)error + 360) % 360) - 180;
 
-    // Logger::trace("Evaluated regualtor value: " + String(uP + uD) +
-    //               " (uP: " + String(uP) + ", uD: " + String(uD) +
-    //               ", offset: " + String(offset, 10) + ") \n\r");
-    lastError = err;
+    uP  = kP * error;                                           // kP(error)
+    uD  = kD * ((error - lastError) / (eTimer.nsecsElapsed())); // kD(de/dt)
+    uI += kI * error * eTimer.nsecsElapsed();
+
+    lastError = error;
     eTimer.start();
     lastData = data;
     float u = uP + uD;

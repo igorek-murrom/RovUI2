@@ -31,7 +31,7 @@ class FPPDRegulator {
      * @param target Target
      * @return float Control signal
      */
-    float eval(float data);
+    float eval(float data, bool isYaw = false);
     void setTarget(float target);
     void  enable();
     void  disable();
@@ -39,10 +39,10 @@ class FPPDRegulator {
     float uP = 0, uD = 0, uI = 0;
 
   private:
-    float kP;
-    float kI;
-    float kD;
-
+    float kP = 0;
+    float kI = 0;
+    float kD = 0;
+    float error = 0;
     float lastError;
     float target;
 
