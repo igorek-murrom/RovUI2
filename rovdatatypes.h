@@ -1,7 +1,6 @@
 #ifndef ROVDATATYPES_H
 #define ROVDATATYPES_H
 
-#include "qfloat16.h"
 #include <QtGlobal>
 
 /**

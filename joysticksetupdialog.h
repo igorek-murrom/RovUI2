@@ -1,7 +1,6 @@
 #ifndef JOYSTICKSETUPDIALOG_H
 #define JOYSTICKSETUPDIALOG_H
 
-#include "helpers.h"
 #include "joystick.h"
 #include <QCheckBox>
 #include <QComboBox>

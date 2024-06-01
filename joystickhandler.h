@@ -1,7 +1,6 @@
 #ifndef JOYSTICKHANDLER_H
 #define JOYSTICKHANDLER_H
 
-#include "helpers.h"
 #include "joystick.h"
 #include "qmutex.h"
 #include <QDebug>

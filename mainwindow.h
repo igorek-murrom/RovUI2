@@ -17,7 +17,6 @@
 #include <QDebug>
 #include <QMainWindow>
 #include <QString>
-#include <chrono>
 
 QT_BEGIN_NAMESPACE
 namespace Ui {
@@ -159,15 +158,7 @@ class MainWindow : public QMainWindow {
      */
     void setupStatusbar();
 
-    /**
-     * \brief Helper variable for feeding into m_datasplines
-     */
-    quint64 m_vSamples = 0;
-
-    /**
-     * \brief Helper variable for feeding into m_datasplines
-     */
-    quint64 m_aSamples = 0;
+    quint64 m_vSamples = 0, m_aSamples = 0, m_ySamples = 0, m_dSamples = 0, m_pSamples = 0, m_rSamples = 0;
 
     /**
      * @brief Helper variable for UI/UX

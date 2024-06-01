@@ -10,7 +10,6 @@
 #include <QDebug>
 #include <QMutex>
 #include <QObject>
-#include <algorithm>
 #define DEFAULT_kP 3
 #define DEFAULT_kI 0.01
 #define DEFAULT_kD 5

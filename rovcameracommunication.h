@@ -2,7 +2,6 @@
 #define ROVCAMERACOMMUNICATION_H
 
 #include "qglobal.h"
-#include "qpair.h"
 #include <QDebug>
 #include <QMap>
 #include <QObject>

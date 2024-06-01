@@ -1,7 +1,6 @@
 #ifndef ROVCOMMUNICATION_H
 #define ROVCOMMUNICATION_H
 
-#include "rovdatatypes.h"
 #include <QObject>
 #include <QtNetwork>
 
