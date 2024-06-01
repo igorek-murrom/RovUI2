@@ -9,7 +9,6 @@
 #include <QDebug>
 #include <QMutex>
 #include <QObject>
-#include <algorithm>
 /**
  * @brief Floating point PD regulator implementation
  *

@@ -78,6 +78,7 @@ void RovCameraCommunication::sendFormat(QString type, int width, int height, int
 
 void RovCameraCommunication::updateServo(int pos) {
     QJsonObject packet, ports;
+    // qDebug() << pos;
     packet.insert("_type", "servo_pwm/set_power");
     ports.insert("rotary", pos);
     packet.insert("powers", ports);

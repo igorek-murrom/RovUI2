@@ -53,7 +53,8 @@ FORMS += \
     joysticksetupdialog.ui \
     mainwindow2.ui \
     rovdatasplines.ui \
-    thrustersetupdialog.ui
+    thrustersetupdialog.ui \
+    dataparser.ui
 
 RESOURCES += \
     resources.qrc
