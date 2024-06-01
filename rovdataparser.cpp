@@ -15,7 +15,10 @@
 inline float constrain(float val, float min, float max) {
     return val < min ? min : val > max ? max : val;
 }
-
+inline float wFunction(float value) {
+    int sign = value < 0 ? -1: 1;
+    return sign * ((0.099 * abs(value)) * (0.099 * abs(value)) + 2);
+}
 RovDataParser::RovDataParser(QWidget *parent)
     : QDialog{parent}, ui(new Ui::DataParser), m_control(new RovControl()),
       m_controlMutex(), overrideTelemetryUpdate(new QTimer(this)),
@@ -167,6 +170,8 @@ void RovDataParser::prepareControl(Joystick joy) {
                   joy.directions[4];
         float r = joy.axes[5] * joy.runtimeASF[5] * joy.baseASF[5] *
                   joy.directions[5];
+
+        w = wFunction(w);
 
         float dReg  = depthReg.eval(m_tele.depth);
         float yReg  = yawReg.eval(m_tele.yaw);

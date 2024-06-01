@@ -196,31 +196,6 @@ void MainWindow::createConnections() {
     // Settings update requests
     connect(m_jsd.data(), SIGNAL(settingsUpdated()), m_joystickHandler.data(),
             SLOT(updateSettings()));
-
-    // Regulators:
-    // Depth
-    connect(ui->depthSpinBox, SIGNAL(valueChanged(double)),
-            m_rovDataParser.data(), SLOT(setDepth(double)));
-    connect(ui->depthRegulatorCB, SIGNAL(stateChanged(int)),
-            m_rovDataParser.data(), SLOT(setDepthStatus(int)));
-
-    // Yaw
-    connect(ui->yawSpinBox, SIGNAL(valueChanged(double)),
-            m_rovDataParser.data(), SLOT(setYaw(double)));
-    connect(ui->yawRegulatorCB, SIGNAL(stateChanged(int)),
-            m_rovDataParser.data(), SLOT(setYawStatus(int)));
-
-    // Roll
-    connect(ui->rollSpinBox, SIGNAL(valueChanged(double)),
-            m_rovDataParser.data(), SLOT(setRoll(double)));
-    connect(ui->rollRegulatorCB, SIGNAL(stateChanged(int)),
-            m_rovDataParser.data(), SLOT(setRollStatus(int)));
-    // Pitch
-    connect(ui->pitchSpinBox, SIGNAL(valueChanged(double)),
-            m_rovDataParser.data(), SLOT(setPitch(double)));
-    connect(ui->pitchRegulatorCB, SIGNAL(stateChanged(int)),
-            m_rovDataParser.data(), SLOT(setPitchStatus(int)));
-
     // DataParser:
     // Send AuxControl to ROV
     connect(m_rovDataParser.data(), SIGNAL(auxControlReady(QByteArray)),
@@ -257,6 +232,10 @@ void MainWindow::createConnections() {
             [this] { m_cameraCapture.data()->stopCapture(); });
     // Regulators:
     // Depth
+    connect(ui->depthSpinBox, SIGNAL(valueChanged(double)),
+            m_rovDataParser.data(), SLOT(setDepth(double)));
+    connect(ui->depthRegulatorCB, SIGNAL(stateChanged(int)),
+            m_rovDataParser.data(), SLOT(setDepthStatus(int)));
     connect(ui->actionDepthOff, &QAction::triggered, this, [this](bool) {
         ui->depthRegulatorCB->setCheckState(Qt::Unchecked);
     });
@@ -267,6 +246,10 @@ void MainWindow::createConnections() {
         ui->depthRegulatorCB->setCheckState(Qt::Checked);
     });
     // Yaw
+    connect(ui->yawSpinBox, SIGNAL(valueChanged(double)),
+            m_rovDataParser.data(), SLOT(setYaw(double)));
+    connect(ui->yawRegulatorCB, SIGNAL(stateChanged(int)),
+            m_rovDataParser.data(), SLOT(setYawStatus(int)));
     connect(ui->actionYawOff, &QAction::triggered, this,
             [this](bool) { ui->yawRegulatorCB->setCheckState(Qt::Unchecked); });
     connect(ui->actionYawOn, &QAction::triggered, this,
@@ -276,6 +259,10 @@ void MainWindow::createConnections() {
         ui->yawRegulatorCB->setCheckState(Qt::Checked);
     });
     // Roll
+    connect(ui->rollSpinBox, SIGNAL(valueChanged(double)),
+            m_rovDataParser.data(), SLOT(setRoll(double)));
+    connect(ui->rollRegulatorCB, SIGNAL(stateChanged(int)),
+            m_rovDataParser.data(), SLOT(setRollStatus(int)));
     connect(ui->actionRollOff, &QAction::triggered, this, [this](bool) {
         ui->rollRegulatorCB->setCheckState(Qt::Unchecked);
     });
@@ -286,6 +273,10 @@ void MainWindow::createConnections() {
         ui->rollRegulatorCB->setCheckState(Qt::Checked);
     });
     // Pitch
+    connect(ui->pitchSpinBox, SIGNAL(valueChanged(double)),
+            m_rovDataParser.data(), SLOT(setPitch(double)));
+    connect(ui->pitchRegulatorCB, SIGNAL(stateChanged(int)),
+            m_rovDataParser.data(), SLOT(setPitchStatus(int)));
     connect(ui->actionPitchOff, &QAction::triggered, this, [this](bool) {
         ui->pitchRegulatorCB->setCheckState(Qt::Unchecked);
     });

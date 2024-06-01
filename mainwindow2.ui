@@ -33,7 +33,7 @@
      <x>0</x>
      <y>0</y>
      <width>1600</width>
-     <height>29</height>
+     <height>23</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuCamera">
@@ -46,7 +46,7 @@
    </widget>
    <widget class="QMenu" name="menuThrusters">
     <property name="title">
-     <string>Thrusters</string>
+     <string>Rov data</string>
     </property>
     <addaction name="actionDisplay_thruster_setup_dialog"/>
    </widget>
