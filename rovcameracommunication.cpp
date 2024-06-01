@@ -1,7 +1,7 @@
 #include "rovcameracommunication.h"
 
 RovCameraCommunication::RovCameraCommunication(QObject *parent)
-    : QObject{parent}, socket(new Client(QUrl("ws://10.3.141.79:5577"))) {
+    : QObject{parent}, socket(new Client(QUrl("ws://192.168.1.6:5577"))) {
     connect(socket, SIGNAL(recieveReady(QJsonObject)), this,
             SLOT(processingMessage(QJsonObject)));
     connect(this, SIGNAL(reportReady(QJsonObject)), this,
@@ -50,7 +50,7 @@ void RovCameraCommunication::updateServo(int pos) {
     ports.insert("rotary", pos);
     packet.insert("ports", ports);
     sendJSON(packet);
-    qDebug() << "update servo";
+    // qDebug() << "update servo";
 }
 
 void RovCameraCommunication::echo() {

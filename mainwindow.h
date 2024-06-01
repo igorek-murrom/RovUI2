@@ -14,7 +14,6 @@
 #include "rovdataparser.h"
 #include "rovdatasplines.h"
 #include "rovdatatypes.h"
-#include "thrustersetupdialog.h"
 #include <QDebug>
 #include <QMainWindow>
 #include <QString>
@@ -192,12 +191,6 @@ class MainWindow : public QMainWindow {
      * \see RovCameraCapture
      */
     QScopedPointer<RovCameraCapture> m_cameraCapture;
-
-    /**
-     * \brief Thruster setup dialog object
-     * \see ThrusterSetupDialog
-     */
-    QScopedPointer<ThrusterSetupDialog> m_tsd;
 
     /**
      * \brief Joystick handler object

@@ -25,7 +25,6 @@ SOURCES += \
     rovcommunication.cpp \
     rovdataparser.cpp \
     rovdatasplines.cpp \
-    thrustersetupdialog.cpp \
     rovcameracommunication.cpp \
     client.cpp
 
@@ -44,7 +43,6 @@ HEADERS += \
     rovdataparser.h \
     rovdatasplines.h \
     rovdatatypes.h \
-    thrustersetupdialog.h \
     rovcameracommunication.h \
     client.h
 
@@ -53,7 +51,7 @@ FORMS += \
     joysticksetupdialog.ui \
     mainwindow2.ui \
     rovdatasplines.ui \
-    thrustersetupdialog.ui
+    dataparser.ui
 
 RESOURCES += \
     resources.qrc
