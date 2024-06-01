@@ -44,11 +44,11 @@
     <addaction name="actionEnd_camera_capture"/>
     <addaction name="actionDigiCam_report"/>
    </widget>
-   <widget class="QMenu" name="menuThrusters">
+   <widget class="QMenu" name="menuRovData">
     <property name="title">
      <string>Rov data</string>
     </property>
-    <addaction name="actionDisplay_thruster_setup_dialog"/>
+    <addaction name="actionDisplay_rov_data_dialog"/>
    </widget>
    <widget class="QMenu" name="menuJoystick">
     <property name="title">
@@ -113,7 +113,7 @@
     <addaction name="menuPitchReg"/>
    </widget>
    <addaction name="menuCamera"/>
-   <addaction name="menuThrusters"/>
+   <addaction name="menuRovData"/>
    <addaction name="menuJoystick"/>
    <addaction name="menuData_graphs"/>
    <addaction name="menuAdditional_functions"/>
@@ -431,9 +431,9 @@
     <string>Shift+C</string>
    </property>
   </action>
-  <action name="actionDisplay_thruster_setup_dialog">
+  <action name="actionDisplay_rov_data_dialog">
    <property name="text">
-    <string>Display thruster setup dialog</string>
+    <string>Display rov data dialog</string>
    </property>
   </action>
   <action name="actionDisplay_joystick_setup_dialog">

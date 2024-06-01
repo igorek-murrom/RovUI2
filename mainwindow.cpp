@@ -164,7 +164,7 @@ void MainWindow::createConnections() {
     // Show setup dialogs
     connect(ui->actionDisplay_joystick_setup_dialog, &QAction::triggered, this,
             [this] { m_jsd->show(); });
-    connect(ui->actionDisplay_thruster_setup_dialog, &QAction::triggered, this,
+    connect(ui->actionDisplay_rov_data_dialog, &QAction::triggered, this,
             [this] { m_rovDataParser->show(); });
 
     // Recalibrate IMU
