@@ -89,7 +89,7 @@ class RovDataParser : public QDialog {
      */
     void auxControlReady(QByteArray ba);
 
-    void servoDigitReady(int position);
+    void servoDigitReady(int pos);
 
   public slots:
 

@@ -2,10 +2,16 @@
 #define ROVCAMERACOMMUNICATION_H
 
 #include "qglobal.h"
+#include "qpair.h"
 #include <QDebug>
 #include <QMap>
 #include <QObject>
+#include <QByteArray>
 #include <client.h>
+#include <QFile>
+#include <QDateTime>
+#include <QIODevice>
+#include <QDir>
 struct Setting {
     int                maxValue;
     int                minValue;
@@ -38,27 +44,30 @@ class RovCameraCommunication : public QObject {
     explicit RovCameraCommunication(QObject *parent = nullptr);
     QMap<QString, Setting> getSettings();
 
-signals:
+  signals:
     void reportReady(QJsonObject jsonObject);
     void outputReady(QJsonObject jsonObject);
     void cameraSettingsReady(QMap<QString, Setting>);
-
-public slots:
+    void changeServoReady(int pos);
+  public slots:
     void echo();
     void startStream();
     void stopStream();
     void sendSettings(QMap<QString, Setting> settingsMap);
     void updateServo(int pos);
-
-private slots:
+    void stopSocket();
+    void sendFormat(QString type, int width, int height, int fps);
+  private slots:
     void processingMessage(QJsonObject jsonObject);
     void parseSettings(QJsonObject settings);
     void displayOutput(QJsonObject message);
 
-private:
+  private:
     Client *socket;
     QMap<QString, Setting> cameraSettings;
     void sendJSON(QJsonObject jsonObject);
+    QFile cameraLogs;
+    QDateTime dateTime;
 };
 
 #endif // ROVCAMERACOMMUNICATION_H

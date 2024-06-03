@@ -16,8 +16,8 @@ inline float constrain(float val, float min, float max) {
     return val < min ? min : val > max ? max : val;
 }
 inline float wFunction(float value) {
-    int sign = value < 0 ? -1: 1;
-    return sign * ((0.099 * abs(value)) * (0.099 * abs(value)) + 2);
+    int sign = value < 0 ? 1: -1;
+    return sign * 0.01 * value * value;
 }
 RovDataParser::RovDataParser(QWidget *parent)
     : QDialog{parent}, ui(new Ui::DataParser), m_control(new RovControl()),
@@ -115,6 +115,7 @@ void RovDataParser::invalidateImuCalibration() {
 void RovDataParser::prepareUpdateServo() {
     m_digitServoPos += 4 * m_control.data()->cameraRotationDelta[0];
     m_digitServoPos = constrain(m_digitServoPos, -100, 100);
+    // qDebug() << m_digitServoPos;
     emit servoDigitReady(m_digitServoPos);
 }
 
@@ -156,20 +157,29 @@ void RovDataParser::prepareControl(Joystick joy) {
         m_control->thrusterPower[6] = ui->thrusterSpinbox7->value();
         m_control->thrusterPower[7] = ui->thrusterSpinbox8->value();
     } else {
+        float mainASF = ((joy.axes[6] / 100.0) + 1) / 2;
         float x = joy.axes[0] * joy.runtimeASF[0] * joy.baseASF[0] *
                   joy.directions[0] *
-                  (m_control->camsel == 1 ? -1 : 1); // left-right
+                  (m_control->camsel == 1 ? -1 : 1) * mainASF;
         float y = joy.axes[1] * joy.runtimeASF[1] * joy.baseASF[1] *
                   joy.directions[1] *
-                  (m_control->camsel == 1 ? -1 : 1); // forward-backward
+                  (m_control->camsel == 1 ? -1 : 1)  * mainASF; // forward-backward
         float z = joy.axes[2] * joy.runtimeASF[1] * joy.baseASF[2] *
-                  joy.directions[2]; // up-down
+                  joy.directions[2]  * mainASF; // up-down
         float w = -1 * (joy.axes[3] * joy.runtimeASF[3] * joy.baseASF[3] *
-                        joy.directions[3]);
+                        joy.directions[3]) * mainASF;
         float d = joy.axes[4] * joy.runtimeASF[4] * joy.baseASF[4] *
-                  joy.directions[4];
+                  joy.directions[4] * mainASF;
         float r = joy.axes[5] * joy.runtimeASF[5] * joy.baseASF[5] *
-                  joy.directions[5];
+                  joy.directions[5] * mainASF;
+
+        QString a = "";
+        for (auto i : joy.axes) {
+            a += QString::number(i) + " ";
+        }
+        // qDebug() << mainASF;
+        // qDebug() << a;
+        // qDebug() << joy.axes[6] << joy.axes[7] << joy.axes[8];
 
         w = wFunction(w);
 
@@ -227,13 +237,16 @@ void RovDataParser::prepareControl(Joystick joy) {
         in << t;
     }
     in << m_control->manipulatorOpenClose;
+
     in << m_control->manipulatorRotate;
+
     for (qint8 c : m_control->cameraRotationDelta) {
         in << c;
     }
-
+    // qDebug() << m_control->manipulatorOpenClose << m_control->manipulatorRotate;
     in << m_control->camsel;
     m_controlMutex.unlock();
+
     emit controlReady(QByteArray(ba));
 }
 

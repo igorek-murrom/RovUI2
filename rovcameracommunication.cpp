@@ -8,6 +8,7 @@ RovCameraCommunication::RovCameraCommunication(QObject *parent)
             SLOT(parseSettings(QJsonObject)));
     connect(this, SIGNAL(outputReady(QJsonObject)), this,
             SLOT(displayOutput(QJsonObject)));
+    cameraLogs.setFileName(QDir::homePath() + "/.config/CfRD/camera_logs.log");
 }
 
 void RovCameraCommunication::sendJSON(QJsonObject jsonObject) {
@@ -34,9 +35,9 @@ void RovCameraCommunication::sendSettings(QMap<QString, Setting> settingsMap) {
     QJsonObject controls;
     for (QString settingName : settingsMap.keys()) {
         // if (settingsMap[settingName].menu.empty()) {
-            qDebug() << "setting " << settingName << " to "
-                     << settingsMap[settingName].currentValue;
-            controls.insert(settingName, settingsMap[settingName].currentValue);
+        qDebug() << "setting " << settingName << " to "
+                 << settingsMap[settingName].currentValue;
+        controls.insert(settingName, settingsMap[settingName].currentValue);
 
     }
     packet.insert("controls", controls);
@@ -44,13 +45,31 @@ void RovCameraCommunication::sendSettings(QMap<QString, Setting> settingsMap) {
     qDebug() << "sent settings";
 }
 
+void RovCameraCommunication::sendFormat(QString type, int width, int height, int fps) {
+    QJsonObject packet, formatPacket, formatSettings;
+    QString formatName = type + "/" + QString::number(width) + "x" + QString::number(height);
+    packet.insert("_type", "v4l2_ctrls/set_formats");
+    packet.insert("device", "main_camera");
+
+    formatSettings.insert("fps", fps);
+    formatSettings.insert("type", type);
+    formatSettings.insert("width", width);
+    formatSettings.insert("height", height);
+
+    formatPacket.insert(formatName, formatSettings);
+    packet.insert("formats", formatPacket);
+    sendJSON(packet);
+    qDebug() << "sent format";
+}
+
 void RovCameraCommunication::updateServo(int pos) {
     QJsonObject packet, ports;
+    // qDebug() << pos;
     packet.insert("_type", "servo_pwm/set_power");
     ports.insert("rotary", pos);
-    packet.insert("ports", ports);
+    packet.insert("powers", ports);
     sendJSON(packet);
-    // qDebug() << "update servo";
+    //    qDebug() << "update servo: " << pos;
 }
 
 void RovCameraCommunication::echo() {
@@ -96,6 +115,15 @@ void RovCameraCommunication::parseSettings(QJsonObject settings) {
 void RovCameraCommunication::displayOutput(QJsonObject message) {
     QByteArray ba;
     ba.append(message["data"].toString());
-    qDebug() << "(type: " << message["log_type"].toString() << ") "
-             << QByteArray::fromBase64(ba);
+    cameraLogs.open(QIODevice::WriteOnly | QIODevice::Append);
+    QTextStream logs(&cameraLogs);
+    //    qDebug() << "(type: " << message["log_type"].toString() << ") "
+    //             << QByteArray::fromBase64(ba);
+    logs << "[" << dateTime.currentDateTime().toString() << "]  " << "(type: " << message["log_type"].toString() << ") "
+         << QByteArray::fromBase64(ba);
+    //    cameraLogs.close();
+}
+
+void RovCameraCommunication::stopSocket() {
+    socket->closedConnect();
 }

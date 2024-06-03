@@ -15,6 +15,7 @@ JoystickSetupDialog::JoystickSetupDialog(QWidget *parent)
     m_axesComboBoxes.append(ui->wAxisComboBox);
     m_axesComboBoxes.append(ui->dAxisComboBox);
     m_axesComboBoxes.append(ui->rAxisComboBox);
+    m_axesComboBoxes.append(ui->sAxisComboBox);
 
     m_axesProgressBars.append(ui->xAxisProgressBar);
     m_axesProgressBars.append(ui->yAxisProgressBar);
@@ -22,7 +23,7 @@ JoystickSetupDialog::JoystickSetupDialog(QWidget *parent)
     m_axesProgressBars.append(ui->wAxisProgressBar);
     m_axesProgressBars.append(ui->dAxisProgressBar);
     m_axesProgressBars.append(ui->rAxisProgressBar);
-
+    m_axesProgressBars.append(ui->sAxisProgressBar);
     // welp ._.
     m_buttonsComboBoxes.append(ui->button1CB);
     m_buttonsComboBoxes.append(ui->button2CB);

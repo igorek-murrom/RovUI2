@@ -22,10 +22,10 @@ signals:
 
 public slots:
     void sendText(QString message);
+    void closedConnect();
 
 private slots:
     void onConnected();
-    void closedConnect();
     void tryConnect();
     void stateCheck(QAbstractSocket::SocketState state);
     void onTextMessageReceived(QString message);

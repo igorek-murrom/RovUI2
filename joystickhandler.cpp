@@ -20,7 +20,7 @@ JoystickHandler::JoystickHandler(QObject *parent)
 
 void JoystickHandler::updateSettings() {
     m_settings.data()->sync();
-    for (int i = 0; i < 6; i++) // init axes from settings
+    for (int i = 0; i < 7; i++) // init axes from settings
         m_joystick.data()->axes_id[i] =
             m_settings
                 ->value(QString(SDL_JoystickName(m_sdlJoystick)) +
@@ -58,8 +58,8 @@ void JoystickHandler::updateJoystick() {
     emit joystickChanged(Joystick(m_joystick.data()));
 }
 
-void JoystickHandler::updateASFs(int asf[6]) {
-    for (int i = 0; i < 8; ++i) {
+void JoystickHandler::updateASFs(int asf[7]) {
+    for (int i = 0; i < 7; ++i) {
         m_joystick->runtimeASF[i] = asf[i];
     }
 }

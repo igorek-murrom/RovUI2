@@ -13,7 +13,7 @@ namespace JoystickHelpers {
      * \brief Map of the axes' indices and their names
      * \image html rovAxes.png
      */
-    enum axes { AxisX = 0, AxisY, AxisZ, AxisW, AxisD, AxisR };
+    enum axes { AxisX = 0, AxisY, AxisZ, AxisW, AxisD, AxisR, AxisS };
 
     /**
      * \brief The buttons enum is used to ease access to buttons in Joystick
@@ -56,8 +56,8 @@ namespace JoystickHelpers {
      * \var axesNames
      * \brief test
      */
-    static QString axesNames[6] = {"AxisX", "AxisY", "AxisZ",
-                                   "AxisW", "AxisD", "AxisR"};
+    static QString axesNames[7] = {"AxisX", "AxisY", "AxisZ",
+                                   "AxisW", "AxisD", "AxisR", "AxisS"};
 
     static QString buttonsNames[16] = {
         "ManipOpen", "ManipClose", "ManipCW",  "ManipCCW",
@@ -68,6 +68,15 @@ namespace JoystickHelpers {
     static QString hatsNames[4] = {"CamServoFront", "CamServoRear", "Hat3",
                                    "Hat4"};
 } // namespace JoystickHelpers
+
+
+struct Axis {
+    float axe;
+    float baseASF;
+    float runtimeASF;
+};
+
+
 
 /**
  * \brief The Joystick struct is used to help ordering of the data got from the
@@ -81,19 +90,19 @@ struct Joystick {
      * \brief Axes data from the joystick
      * \see JoystickNames::axes
      */
-    float axes[6];
+    float axes[7];
 
     /**
      * \brief Previous axes data from the joystick
      * \see axesNames_map
      */
-    float axes_last[6];
+    float axes_last[7];
 
     /**
      * \brief Mapping of the axes according to JoystickNames::axes to the
      * joystick axes \see axesNames_map
      */
-    int8_t axes_id[6];
+    int8_t axes_id[7];
 
     /**
      * \brief runtimeASF - runtime Axes Scale Factors
@@ -102,7 +111,7 @@ struct Joystick {
      * which then is used to calculate thrusters' power \see baseASF \see
      * JoystickNames::axes
      */
-    float runtimeASF[6];
+    float runtimeASF[7];
 
     /**
      * \brief baseASF - base Axes Scale Factors
@@ -111,13 +120,13 @@ struct Joystick {
      * which then is used to calculate thrusters' power \see runtimeASF \see
      * JoystickNames::axes
      */
-    float baseASF[6];
+    float baseASF[7];
 
     /**
      * \brief Directions of the axes, used to change direction of the
      * corresponding axis
      */
-    int8_t directions[6];
+    int8_t directions[7];
 
     /**
      * \var buttons
@@ -203,7 +212,7 @@ struct Joystick {
      * \brief Default constructor
      */
     Joystick() {
-        for (int i = 0; i < 6; i++) {
+        for (int i = 0; i < 7; i++) {
             this->axes[i]       = 0;
             this->axes_last[i]  = 0;
             this->axes_id[i]    = 0;
@@ -211,6 +220,7 @@ struct Joystick {
             this->baseASF[i]    = 1;
             this->directions[i] = 1;
         }
+        this->axes[7] = -100;
         this->buttons.rawData = 0;
         for (int i = 0; i < 16; i++) {
             buttons_id[i] = 0;
@@ -230,7 +240,7 @@ struct Joystick {
      * \param j Joystick
      */
     Joystick(Joystick *j) {
-        for (int i = 0; i < 6; i++) {
+        for (int i = 0; i < 7; i++) {
             this->axes[i]       = j->axes[i];
             this->axes_last[i]  = j->axes_last[i];
             this->axes_id[i]    = j->axes_id[i];

@@ -51,7 +51,7 @@ class JoystickHandler : public QObject {
      * \brief Called to update ASFs
      * \param asf Array of ASFs according to JoystickNames::axes
      */
-    void updateASFs(int asf[6]);
+    void updateASFs(int asf[7]);
   private slots:
     /**
      * \brief "main loop" of handler

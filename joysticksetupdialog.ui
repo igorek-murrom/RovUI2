@@ -3,7 +3,7 @@
  <class>JoystickSetupDialog</class>
  <widget class="QDialog" name="JoystickSetupDialog">
   <property name="windowModality">
-   <enum>Qt::NonModal</enum>
+   <enum>Qt::WindowModality::NonModal</enum>
   </property>
   <property name="geometry">
    <rect>
@@ -44,7 +44,7 @@
       </sizepolicy>
      </property>
      <property name="currentIndex">
-      <number>1</number>
+      <number>0</number>
      </property>
      <widget class="QWidget" name="axesTab">
       <property name="sizePolicy">
@@ -60,10 +60,10 @@
        <item>
         <widget class="QScrollArea" name="axesScrollArea">
          <property name="frameShape">
-          <enum>QFrame::NoFrame</enum>
+          <enum>QFrame::Shape::NoFrame</enum>
          </property>
          <property name="frameShadow">
-          <enum>QFrame::Plain</enum>
+          <enum>QFrame::Shadow::Plain</enum>
          </property>
          <property name="widgetResizable">
           <bool>true</bool>
@@ -73,8 +73,8 @@
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>518</width>
-            <height>510</height>
+            <width>499</width>
+            <height>524</height>
            </rect>
           </property>
           <layout class="QVBoxLayout" name="verticalLayout">
@@ -282,6 +282,34 @@
              </item>
             </layout>
            </item>
+           <item>
+            <layout class="QHBoxLayout" name="sAxisLayout" stretch="0,0">
+             <item>
+              <widget class="QLabel" name="sAxisLabel">
+               <property name="text">
+                <string>S Axis</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <layout class="QVBoxLayout" name="sAxisSubLayout">
+               <item>
+                <widget class="QComboBox" name="sAxisComboBox"/>
+               </item>
+               <item>
+                <widget class="QProgressBar" name="sAxisProgressBar">
+                 <property name="value">
+                  <number>24</number>
+                 </property>
+                 <property name="format">
+                  <string>%v</string>
+                 </property>
+                </widget>
+               </item>
+              </layout>
+             </item>
+            </layout>
+           </item>
           </layout>
          </widget>
         </widget>
@@ -308,22 +336,22 @@
           </sizepolicy>
          </property>
          <property name="frameShape">
-          <enum>QFrame::NoFrame</enum>
+          <enum>QFrame::Shape::NoFrame</enum>
          </property>
          <property name="frameShadow">
-          <enum>QFrame::Plain</enum>
+          <enum>QFrame::Shadow::Plain</enum>
          </property>
          <property name="lineWidth">
           <number>0</number>
          </property>
          <property name="verticalScrollBarPolicy">
-          <enum>Qt::ScrollBarAsNeeded</enum>
+          <enum>Qt::ScrollBarPolicy::ScrollBarAsNeeded</enum>
          </property>
          <property name="horizontalScrollBarPolicy">
-          <enum>Qt::ScrollBarAsNeeded</enum>
+          <enum>Qt::ScrollBarPolicy::ScrollBarAsNeeded</enum>
          </property>
          <property name="sizeAdjustPolicy">
-          <enum>QAbstractScrollArea::AdjustToContents</enum>
+          <enum>QAbstractScrollArea::SizeAdjustPolicy::AdjustToContents</enum>
          </property>
          <property name="widgetResizable">
           <bool>true</bool>
@@ -761,8 +789,8 @@
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>514</width>
-            <height>506</height>
+            <width>520</width>
+            <height>511</height>
            </rect>
           </property>
           <layout class="QVBoxLayout" name="verticalLayout_2">
