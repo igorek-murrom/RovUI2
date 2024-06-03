@@ -222,7 +222,7 @@ void JoystickSetupDialog::updateUi(Joystick joystick) {
     switch (ui->tabWidget->currentIndex()) {
     case 0:
         for (uint i = 0; QProgressBar * pb : qAsConst(m_axesProgressBars)) {
-            pb->setValue(joystick.axes[i]);
+            pb->setValue(joystick.axis[i].axe);
             i++;
         }
         break;

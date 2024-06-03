@@ -157,29 +157,14 @@ void RovDataParser::prepareControl(Joystick joy) {
         m_control->thrusterPower[6] = ui->thrusterSpinbox7->value();
         m_control->thrusterPower[7] = ui->thrusterSpinbox8->value();
     } else {
-        float mainASF = ((joy.axes[6] / 100.0) + 1) / 2;
-        float x = joy.axes[0] * joy.runtimeASF[0] * joy.baseASF[0] *
-                  joy.directions[0] *
-                  (m_control->camsel == 1 ? -1 : 1) * mainASF;
-        float y = joy.axes[1] * joy.runtimeASF[1] * joy.baseASF[1] *
-                  joy.directions[1] *
-                  (m_control->camsel == 1 ? -1 : 1)  * mainASF; // forward-backward
-        float z = joy.axes[2] * joy.runtimeASF[1] * joy.baseASF[2] *
-                  joy.directions[2]  * mainASF; // up-down
-        float w = -1 * (joy.axes[3] * joy.runtimeASF[3] * joy.baseASF[3] *
-                        joy.directions[3]) * mainASF;
-        float d = joy.axes[4] * joy.runtimeASF[4] * joy.baseASF[4] *
-                  joy.directions[4] * mainASF;
-        float r = joy.axes[5] * joy.runtimeASF[5] * joy.baseASF[5] *
-                  joy.directions[5] * mainASF;
+        float mainASF = ((joy.axis[6].axe / 100.0) + 1) / 2;
 
-        QString a = "";
-        for (auto i : joy.axes) {
-            a += QString::number(i) + " ";
-        }
-        // qDebug() << mainASF;
-        // qDebug() << a;
-        // qDebug() << joy.axes[6] << joy.axes[7] << joy.axes[8];
+        float x = joy.axis[0].axe * joy.axis[0].runtimeASF * joy.axis[0].baseASF * joy.axis[0].direction * mainASF * (m_control->camsel == 1 ? -1 : 1);
+        float y = joy.axis[1].axe * joy.axis[1].runtimeASF * joy.axis[1].baseASF * joy.axis[1].direction * mainASF * (m_control->camsel == 1 ? -1 : 1);
+        float z = joy.axis[2].axe * joy.axis[2].runtimeASF * joy.axis[2].baseASF * joy.axis[2].direction * mainASF;
+        float w = joy.axis[3].axe * joy.axis[3].runtimeASF * joy.axis[3].baseASF * joy.axis[3].direction * mainASF;
+        float d = joy.axis[4].axe * joy.axis[4].runtimeASF * joy.axis[4].baseASF * joy.axis[4].direction * mainASF;
+        float r = joy.axis[5].axe * joy.axis[5].runtimeASF * joy.axis[5].baseASF * joy.axis[5].direction * mainASF;
 
         w = wFunction(w);
 
@@ -199,10 +184,10 @@ void RovDataParser::prepareControl(Joystick joy) {
         m_control->thrusterPower[6] = constrain(-z + r + d, -100, 100);
 
         // horizontal
-        m_control->thrusterPower[0] = constrain(x + y + w, -100, 100);
-        m_control->thrusterPower[1] = constrain(-x + y +  w, -100, 100);
-        m_control->thrusterPower[4] = constrain(x - y + w, -100, 100);
-        m_control->thrusterPower[7] = constrain(x + y - w, -100, 100);
+        m_control->thrusterPower[0] = constrain(x + y - w, -100, 100);
+        m_control->thrusterPower[1] = constrain(-x + y -  w, -100, 100);
+        m_control->thrusterPower[4] = constrain(x - y - w, -100, 100);
+        m_control->thrusterPower[7] = constrain(x + y + w, -100, 100);
 
         ui->thrusterSpinbox1->setValue(m_control->thrusterPower[0]);
         ui->thrusterSpinbox2->setValue(m_control->thrusterPower[1]);

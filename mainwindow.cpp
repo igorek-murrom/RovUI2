@@ -190,7 +190,7 @@ void MainWindow::createConnections() {
     // UI ASF
     connect(m_joystickHandler.data(), &JoystickHandler::joystickUpdated, this,
             [this](Joystick joy) {
-                ui->asfLabel->setText(QString::number(joy.runtimeASF[0]));
+                ui->asfLabel->setText(QString::number(joy.axis[0].runtimeASF));
             });
 
     // Settings update requests

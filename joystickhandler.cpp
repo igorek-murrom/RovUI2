@@ -21,7 +21,7 @@ JoystickHandler::JoystickHandler(QObject *parent)
 void JoystickHandler::updateSettings() {
     m_settings.data()->sync();
     for (int i = 0; i < 7; i++) // init axes from settings
-        m_joystick.data()->axes_id[i] =
+        m_joystick.data()->axis[i].id =
             m_settings
                 ->value(QString(SDL_JoystickName(m_sdlJoystick)) +
                         QString("/joystickAxes/") +
@@ -60,7 +60,7 @@ void JoystickHandler::updateJoystick() {
 
 void JoystickHandler::updateASFs(int asf[7]) {
     for (int i = 0; i < 7; ++i) {
-        m_joystick->runtimeASF[i] = asf[i];
+        m_joystick->axis[i].runtimeASF = asf[i];
     }
 }
 
@@ -94,71 +94,53 @@ void JoystickHandler::timerEvent(QTimerEvent *) {
         updateSettings();
     } else {
 
-        for (size_t i = 0; i < helpers::size(m_joystick.data()->axes);
-             i++) { // joystick input smoothing 3x
-            if (m_joystick.data()->axes_id[i] >= 0) {
-                float currentAxisVal = SDL_JoystickGetAxis(
-                    m_sdlJoystick, m_joystick.data()->axes_id[i]);
-                float lastAxisVal    = m_joystick.data()->axes[i];
-                float secLastAxisVal = m_joystick.data()->axes_last[i];
+        for (size_t i = 0; i < helpers::size(m_joystick.data()->axis); i++) { // joystick input smoothing 3x
+            if (m_joystick.data()->axis[i].id >= 0) {
+                float currentAxisVal = SDL_JoystickGetAxis(m_sdlJoystick, m_joystick.data()->axis[i].id);
+                float lastAxisVal    = m_joystick.data()->axis[i].axe;
+                float secLastAxisVal = m_joystick.data()->axis[i].axe_last;
 
-                m_joystick.data()->axes[i] =
-                    (map(currentAxisVal, -32768, 32767, -101, 101) +
-                     lastAxisVal + secLastAxisVal) /
-                    3;
-                m_joystick.data()->axes_last[i] = lastAxisVal;
+                m_joystick.data()->axis[i].axe = (map(currentAxisVal, -32768, 32767, -101, 101) + lastAxisVal + secLastAxisVal) / 3;
+                m_joystick.data()->axis[i].axe_last = lastAxisVal;
             } else {
-                m_joystick.data()->axes[i]      = 0;
-                m_joystick.data()->axes_last[i] = 0;
+                m_joystick.data()->axis[i].axe      = 0;
+                m_joystick.data()->axis[i].axe_last = 0;
             }
         }
 
-        for (size_t i = 0; i < sizeof(m_joystick.data()->buttons) * 8;
-             i++) { // write buttons into the variable according to
-                    // buttonsNames
-            if (SDL_JoystickGetButton(m_sdlJoystick,
-                                      m_joystick.data()->buttons_id[i]))
+        for (size_t i = 0; i < sizeof(m_joystick.data()->buttons) * 8; i++) { // write buttons into the variable according to buttonsNames
+            if (SDL_JoystickGetButton(m_sdlJoystick, m_joystick.data()->buttons_id[i]))
                 BIT_SET(m_joystick.data()->buttons.rawData, i);
             else
                 BIT_CLEAR(m_joystick.data()->buttons.rawData, i);
         }
 
-        for (size_t i = 0; i < helpers::size(m_joystick.data()->hats);
-             i++) { // write hats
+        for (size_t i = 0; i < helpers::size(m_joystick.data()->hats); i++) { // write hats
 
-            int hat = SDL_JoystickGetHat(m_sdlJoystick,
-                                         m_joystick.data()->hats_id[i]);
+            int hat = SDL_JoystickGetHat(m_sdlJoystick,m_joystick.data()->hats_id[i]);
             if (m_joystick.data()->hats_hor[i]) { // left -> -1, centered -> 0,
                                                   // right -> 1, else -> 0
-                m_joystick.data()->hats[i] = (hat & SDL_HAT_LEFT)    ? -1
-                                             : (hat & SDL_HAT_RIGHT) ? 1
-                                                                     : 0;
+                m_joystick.data()->hats[i] = (hat & SDL_HAT_LEFT)    ? -1 : (hat & SDL_HAT_RIGHT) ? 1 : 0;
             } else { // down -> -1, centered -> 0, up -> 1, else -> 0
-                m_joystick.data()->hats[i] = (hat & SDL_HAT_DOWN) ? -1
-                                             : (hat & SDL_HAT_UP) ? 1
-                                                                  : 0;
+                m_joystick.data()->hats[i] = (hat & SDL_HAT_DOWN) ? -1 : (hat & SDL_HAT_UP) ? 1 : 0;
             }
         }
 
         if (m_joystick.data()->buttons.ASFFast) {
-            for (size_t i = 0; i < helpers::size(m_joystick.data()->runtimeASF);
-                 i++)
-                m_joystick.data()->runtimeASF[i] = 1.0f;
+            for (size_t i = 0; i < helpers::size(m_joystick.data()->axis); i++)
+                m_joystick.data()->axis[i].runtimeASF = 1.0f;
         }
         if (m_joystick.data()->buttons.ASFMedium) {
-            for (size_t i = 0; i < helpers::size(m_joystick.data()->runtimeASF);
-                 i++)
-                m_joystick.data()->runtimeASF[i] = .75f;
+            for (size_t i = 0; i < helpers::size(m_joystick.data()->axis); i++)
+                m_joystick.data()->axis[i].runtimeASF = .75f;
         }
         if (m_joystick.data()->buttons.ASFSlow) {
-            for (size_t i = 0; i < helpers::size(m_joystick.data()->runtimeASF);
-                 i++)
-                m_joystick.data()->runtimeASF[i] = .5f;
+            for (size_t i = 0; i < helpers::size(m_joystick.data()->axis); i++)
+                m_joystick.data()->axis[i].runtimeASF = .5f;
         }
         if (m_joystick.data()->buttons.ASFUltraSlow) {
-            for (size_t i = 0; i < helpers::size(m_joystick.data()->runtimeASF);
-                 i++)
-                m_joystick.data()->runtimeASF[i] = .25f;
+            for (size_t i = 0; i < helpers::size(m_joystick.data()->axis); i++)
+                m_joystick.data()->axis[i].runtimeASF = .25f;
         }
 
         emit joystickUpdated(Joystick(m_joystick.data()));

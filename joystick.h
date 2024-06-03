@@ -13,7 +13,7 @@ namespace JoystickHelpers {
      * \brief Map of the axes' indices and their names
      * \image html rovAxes.png
      */
-    enum axes { AxisX = 0, AxisY, AxisZ, AxisW, AxisD, AxisR, AxisS };
+    enum axes { AxisX, AxisY, AxisZ, AxisW, AxisD, AxisR, AxisS };
 
     /**
      * \brief The buttons enum is used to ease access to buttons in Joystick
@@ -34,7 +34,7 @@ namespace JoystickHelpers {
      * \see Joystick
      */
     enum buttons {
-        ManipOpen = 0,
+        ManipOpen,
         ManipClose,
         ManipCW,
         ManipCCW,
@@ -70,10 +70,13 @@ namespace JoystickHelpers {
 } // namespace JoystickHelpers
 
 
-struct Axis {
+struct Axe {
     float axe;
+    float axe_last;
+    float id;
     float baseASF;
     float runtimeASF;
+    int8_t direction;
 };
 
 
@@ -86,47 +89,7 @@ struct Axis {
  */
 struct Joystick {
 
-    /**
-     * \brief Axes data from the joystick
-     * \see JoystickNames::axes
-     */
-    float axes[7];
-
-    /**
-     * \brief Previous axes data from the joystick
-     * \see axesNames_map
-     */
-    float axes_last[7];
-
-    /**
-     * \brief Mapping of the axes according to JoystickNames::axes to the
-     * joystick axes \see axesNames_map
-     */
-    int8_t axes_id[7];
-
-    /**
-     * \brief runtimeASF - runtime Axes Scale Factors
-     *
-     * Axes' data is multiplied by corresponding ASFs to get final axis value
-     * which then is used to calculate thrusters' power \see baseASF \see
-     * JoystickNames::axes
-     */
-    float runtimeASF[7];
-
-    /**
-     * \brief baseASF - base Axes Scale Factors
-     *
-     * Axes' data is multiplied by corresponding ASFs to get final axis value
-     * which then is used to calculate thrusters' power \see runtimeASF \see
-     * JoystickNames::axes
-     */
-    float baseASF[7];
-
-    /**
-     * \brief Directions of the axes, used to change direction of the
-     * corresponding axis
-     */
-    int8_t directions[7];
+    Axe axis[7];
 
     /**
      * \var buttons
@@ -213,14 +176,15 @@ struct Joystick {
      */
     Joystick() {
         for (int i = 0; i < 7; i++) {
-            this->axes[i]       = 0;
-            this->axes_last[i]  = 0;
-            this->axes_id[i]    = 0;
-            this->runtimeASF[i] = 1;
-            this->baseASF[i]    = 1;
-            this->directions[i] = 1;
+            this->axis[i].axe = 0;
+            this->axis[i].axe_last = 0;
+            this->axis[i].id = 0;
+            this->axis[i].runtimeASF = 1;
+            this->axis[i].baseASF = 1;
+            this->axis[i].direction = 1;
         }
-        this->axes[7] = -100;
+        this->axis[6].axe = -100;
+
         this->buttons.rawData = 0;
         for (int i = 0; i < 16; i++) {
             buttons_id[i] = 0;
@@ -241,13 +205,14 @@ struct Joystick {
      */
     Joystick(Joystick *j) {
         for (int i = 0; i < 7; i++) {
-            this->axes[i]       = j->axes[i];
-            this->axes_last[i]  = j->axes_last[i];
-            this->axes_id[i]    = j->axes_id[i];
-            this->runtimeASF[i] = j->runtimeASF[i];
-            this->baseASF[i]    = j->baseASF[i];
-            this->directions[i] = j->directions[i];
+            this->axis[i].axe = j->axis[i].axe;
+            this->axis[i].axe_last = j->axis[i].axe_last;
+            this->axis[i].id = j->axis[i].id;
+            this->axis[i].runtimeASF = j->axis[i].runtimeASF;
+            this->axis[i].baseASF = j->axis[i].baseASF;
+            this->axis[i].direction = j->axis[i].direction;
         }
+
         for (int i = 0; i < 4; ++i) {
             this->hats[i]    = j->hats[i];
             this->hats_id[i] = j->hats_id[i];
