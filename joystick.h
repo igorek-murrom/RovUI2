@@ -183,8 +183,6 @@ struct Joystick {
             this->axis[i].baseASF = 1;
             this->axis[i].direction = 1;
         }
-        this->axis[6].axe = -100;
-
         this->buttons.rawData = 0;
         for (int i = 0; i < 16; i++) {
             buttons_id[i] = 0;

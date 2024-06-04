@@ -157,14 +157,14 @@ void RovDataParser::prepareControl(Joystick joy) {
         m_control->thrusterPower[6] = ui->thrusterSpinbox7->value();
         m_control->thrusterPower[7] = ui->thrusterSpinbox8->value();
     } else {
-        float mainASF = ((joy.axis[6].axe / 100.0) + 1) / 2;
-
+        float mainASF = constrain(((joy.axis[6].axe / 100.0) + 1) / 2, 0, 1);
+        // float mainASF = 1;
         float x = joy.axis[0].axe * joy.axis[0].runtimeASF * joy.axis[0].baseASF * joy.axis[0].direction * mainASF * (m_control->camsel == 1 ? -1 : 1);
         float y = joy.axis[1].axe * joy.axis[1].runtimeASF * joy.axis[1].baseASF * joy.axis[1].direction * mainASF * (m_control->camsel == 1 ? -1 : 1);
         float z = joy.axis[2].axe * joy.axis[2].runtimeASF * joy.axis[2].baseASF * joy.axis[2].direction * mainASF;
         float w = joy.axis[3].axe * joy.axis[3].runtimeASF * joy.axis[3].baseASF * joy.axis[3].direction * mainASF;
-        float d = joy.axis[4].axe * joy.axis[4].runtimeASF * joy.axis[4].baseASF * joy.axis[4].direction * mainASF;
-        float r = joy.axis[5].axe * joy.axis[5].runtimeASF * joy.axis[5].baseASF * joy.axis[5].direction * mainASF;
+        float d = (joy.axis[4].axe - 6) * joy.axis[4].runtimeASF * joy.axis[4].baseASF * joy.axis[4].direction * mainASF;
+        float r = (joy.axis[5].axe - 6) * joy.axis[5].runtimeASF * joy.axis[5].baseASF * joy.axis[5].direction * mainASF;
 
         w = wFunction(w);
 
