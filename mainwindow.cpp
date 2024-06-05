@@ -142,7 +142,7 @@ void MainWindow::createConnections() {
     // Camera capture
     //     connect(m_cameraCapture.data(), SIGNAL(imgProcessed(QImage)), this,
     //             SLOT(updateCameraLabel()));
-
+    connect(ui->actionChange_Video, &QAction::triggered, m_cameraCapture.data(), [this]{m_cameraCapture.data()->m_index_camera = !m_cameraCapture.data()->m_index_camera; m_cameraCapture.data()->setSource(); m_cameraCapture.data()->startCapture();});
     connect(ui->actionDigiCam_report, &QAction::triggered, this,
             [this] { m_rovCameraCommunication->echo(); });
     connect(m_rovCameraCommunication.data(),

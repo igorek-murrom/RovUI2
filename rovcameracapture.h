@@ -51,6 +51,7 @@ class RovCameraCapture : public QWidget {
     QString getRecordInfo();
 
     void setViewfinder(QVideoWidget *viewfinder);
+    bool m_index_camera = 1;
 
   signals:
     /**
@@ -68,6 +69,8 @@ class RovCameraCapture : public QWidget {
      * \brief Starts video capture from the specified index
      */
     void startCapture();
+
+    void setSource();
 
     /**
      * \brief Stops capture and closes the stream

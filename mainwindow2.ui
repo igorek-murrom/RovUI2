@@ -8,7 +8,7 @@
     <x>0</x>
     <y>0</y>
     <width>1600</width>
-    <height>991</height>
+    <height>1040</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -33,7 +33,7 @@
      <x>0</x>
      <y>0</y>
      <width>1600</width>
-     <height>23</height>
+     <height>30</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuCamera">
@@ -46,19 +46,19 @@
    </widget>
    <widget class="QMenu" name="menuRovData">
     <property name="title">
-     <string>Rov data</string>
+     <string>Ro&amp;v data</string>
     </property>
     <addaction name="actionDisplay_rov_data_dialog"/>
    </widget>
    <widget class="QMenu" name="menuJoystick">
     <property name="title">
-     <string>Joystick</string>
+     <string>&amp;Joystick</string>
     </property>
     <addaction name="actionDisplay_joystick_setup_dialog"/>
    </widget>
    <widget class="QMenu" name="menuData_graphs">
     <property name="title">
-     <string>Data graphs</string>
+     <string>Data grap&amp;hs</string>
     </property>
     <addaction name="actionShow_graphs"/>
     <addaction name="actionHide_graphs"/>
@@ -70,6 +70,7 @@
     <addaction name="actionPump_off_on"/>
     <addaction name="actionLight_on_off"/>
     <addaction name="actionRecalibrate_IMU"/>
+    <addaction name="actionChange_Video"/>
    </widget>
    <widget class="QMenu" name="menuRegulators">
     <property name="title">
@@ -77,7 +78,7 @@
     </property>
     <widget class="QMenu" name="menuDepthReg">
      <property name="title">
-      <string>Depth</string>
+      <string>&amp;Depth</string>
      </property>
      <addaction name="actionDepthOff"/>
      <addaction name="actionDepthOn"/>
@@ -85,7 +86,7 @@
     </widget>
     <widget class="QMenu" name="menuYawReg">
      <property name="title">
-      <string>Yaw</string>
+      <string>&amp;Yaw</string>
      </property>
      <addaction name="actionYawOff"/>
      <addaction name="actionYawOn"/>
@@ -93,7 +94,7 @@
     </widget>
     <widget class="QMenu" name="menuRollReg">
      <property name="title">
-      <string>Roll</string>
+      <string>&amp;Roll</string>
      </property>
      <addaction name="actionRollOff"/>
      <addaction name="actionRollOn"/>
@@ -101,7 +102,7 @@
     </widget>
     <widget class="QMenu" name="menuPitchReg">
      <property name="title">
-      <string>Pitch</string>
+      <string>&amp;Pitch</string>
      </property>
      <addaction name="actionPitchOff"/>
      <addaction name="actionPitchOn"/>
@@ -140,7 +141,7 @@
     </size>
    </property>
    <property name="windowTitle">
-    <string>Telemetry</string>
+    <string>&amp;Telemetry</string>
    </property>
    <attribute name="dockWidgetArea">
     <number>1</number>
@@ -415,9 +416,25 @@
     </layout>
    </widget>
   </widget>
+  <widget class="QDockWidget" name="recordWidget">
+   <attribute name="dockWidgetArea">
+    <number>1</number>
+   </attribute>
+   <widget class="QWidget" name="recordDockWidgetContents">
+    <layout class="QVBoxLayout" name="verticalLayout_2">
+     <item>
+      <widget class="QPushButton" name="recordButton">
+       <property name="text">
+        <string>Recording</string>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </widget>
+  </widget>
   <action name="actionBegin_camera_capture">
    <property name="text">
-    <string>Begin camera capture</string>
+    <string>&amp;Begin camera capture</string>
    </property>
    <property name="shortcut">
     <string>C</string>
@@ -425,7 +442,7 @@
   </action>
   <action name="actionEnd_camera_capture">
    <property name="text">
-    <string>End camera capture</string>
+    <string>&amp;End camera capture</string>
    </property>
    <property name="shortcut">
     <string>Shift+C</string>
@@ -433,17 +450,17 @@
   </action>
   <action name="actionDisplay_rov_data_dialog">
    <property name="text">
-    <string>Display rov data dialog</string>
+    <string>&amp;Display rov data dialog</string>
    </property>
   </action>
   <action name="actionDisplay_joystick_setup_dialog">
    <property name="text">
-    <string>Display joystick setup dialog[WIP]</string>
+    <string>&amp;Display joystick setup dialog[WIP]</string>
    </property>
   </action>
   <action name="actionShow_graphs">
    <property name="text">
-    <string>Show graphs</string>
+    <string>&amp;Show graphs</string>
    </property>
    <property name="shortcut">
     <string>G</string>
@@ -451,7 +468,7 @@
   </action>
   <action name="actionHide_graphs">
    <property name="text">
-    <string>Hide graphs</string>
+    <string>&amp;Hide graphs</string>
    </property>
    <property name="shortcut">
     <string>Shift+G</string>
@@ -464,7 +481,7 @@
   </action>
   <action name="actionPump_off_on">
    <property name="text">
-    <string>Pump on/off</string>
+    <string>&amp;Pump on/off</string>
    </property>
    <property name="shortcut">
     <string>U</string>
@@ -472,7 +489,7 @@
   </action>
   <action name="actionDepthOff">
    <property name="text">
-    <string>Off</string>
+    <string>&amp;Off</string>
    </property>
    <property name="shortcut">
     <string>Shift+D</string>
@@ -480,7 +497,7 @@
   </action>
   <action name="actionDepthOn">
    <property name="text">
-    <string>On</string>
+    <string>O&amp;n</string>
    </property>
    <property name="shortcut">
     <string>D</string>
@@ -488,7 +505,7 @@
   </action>
   <action name="actionDepthOnWC">
    <property name="text">
-    <string>On with current value</string>
+    <string>On &amp;with current value</string>
    </property>
    <property name="shortcut">
     <string>Alt+D</string>
@@ -496,7 +513,7 @@
   </action>
   <action name="actionYawOff">
    <property name="text">
-    <string>Off</string>
+    <string>&amp;Off</string>
    </property>
    <property name="shortcut">
     <string>Shift+Y</string>
@@ -504,7 +521,7 @@
   </action>
   <action name="actionYawOn">
    <property name="text">
-    <string>On</string>
+    <string>O&amp;n</string>
    </property>
    <property name="shortcut">
     <string>Y</string>
@@ -512,7 +529,7 @@
   </action>
   <action name="actionYawOnWC">
    <property name="text">
-    <string>On with current</string>
+    <string>On &amp;with current</string>
    </property>
    <property name="shortcut">
     <string>Alt+Y</string>
@@ -520,7 +537,7 @@
   </action>
   <action name="actionRollOff">
    <property name="text">
-    <string>Off</string>
+    <string>&amp;Off</string>
    </property>
    <property name="shortcut">
     <string>Shift+R</string>
@@ -528,7 +545,7 @@
   </action>
   <action name="actionRollOn">
    <property name="text">
-    <string>On</string>
+    <string>O&amp;n</string>
    </property>
    <property name="shortcut">
     <string>R</string>
@@ -536,7 +553,7 @@
   </action>
   <action name="actionRollOnWC">
    <property name="text">
-    <string>On with current</string>
+    <string>On &amp;with current</string>
    </property>
    <property name="shortcut">
     <string>Alt+R</string>
@@ -544,7 +561,7 @@
   </action>
   <action name="actionPitchOff">
    <property name="text">
-    <string>Off</string>
+    <string>&amp;Off</string>
    </property>
    <property name="shortcut">
     <string>Shift+P</string>
@@ -552,7 +569,7 @@
   </action>
   <action name="actionPitchOn">
    <property name="text">
-    <string>On</string>
+    <string>O&amp;n</string>
    </property>
    <property name="shortcut">
     <string>P</string>
@@ -560,7 +577,7 @@
   </action>
   <action name="actionPitchOnWC">
    <property name="text">
-    <string>On with current</string>
+    <string>On &amp;with current</string>
    </property>
    <property name="shortcut">
     <string>Alt+P</string>
@@ -568,7 +585,7 @@
   </action>
   <action name="actionLight_on_off">
    <property name="text">
-    <string>Light on/off</string>
+    <string>&amp;Light on/off</string>
    </property>
    <property name="shortcut">
     <string>L</string>
@@ -576,12 +593,20 @@
   </action>
   <action name="actionDigiCam_report">
    <property name="text">
-    <string>DigiCam report</string>
+    <string>&amp;DigiCam report</string>
    </property>
   </action>
   <action name="actionRecalibrate_IMU">
    <property name="text">
-    <string>Recalibrate IMU</string>
+    <string>&amp;Recalibrate IMU</string>
+   </property>
+  </action>
+  <action name="actionChange_Video">
+   <property name="text">
+    <string>&amp;Change Video</string>
+   </property>
+   <property name="shortcut">
+    <string>Q</string>
    </property>
   </action>
  </widget>

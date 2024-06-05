@@ -58,7 +58,15 @@ RovCameraCapture::RovCameraCapture(QWidget *parent)
 void RovCameraCapture::setViewfinder(QVideoWidget *vf) {
     qDebug() << "Adding ViewFinder " << vf;
     m_mediaPlayer->setVideoOutput(vf);
-    m_mediaPlayer->setMedia(QUrl("gst-pipeline: udpsrc address=192.168.1.4 port=5000 ! application/x-rtp,media=video,payload=26,clock-rate=90000,encoding-name=JPEG,framerate=30/1 ! queue ! rtpjpegdepay ! jpegparse ! jpegdec ! timeoverlay ! videoconvert ! xvimagesink name=\"qtvideosink\""));
+    this->setSource();
+}
+
+void RovCameraCapture::setSource() {
+    QUrl source;
+    // m_mediaPlayer->stop();
+    if (m_index_camera) source = "gst-pipeline: v4l2src device=/dev/video2 ! decodebin ! videoconvert ! videoscale ! video/x-raw,format=RGB ! queue ! videoconvert ! xvimagesink name=\"qtvideosink\"";
+    else source = "gst-pipeline: udpsrc address=192.168.1.4 port=5000 ! application/x-rtp,media=video,payload=26,clock-rate=90000,encoding-name=JPEG,framerate=30/1 ! queue ! rtpjpegdepay ! jpegparse ! jpegdec ! timeoverlay ! videoconvert ! xvimagesink name=\"qtvideosink\"";
+    m_mediaPlayer->setMedia(source);
 }
 
 void RovCameraCapture::startRecord() {
