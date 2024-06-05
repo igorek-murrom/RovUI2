@@ -44,7 +44,7 @@
       </sizepolicy>
      </property>
      <property name="currentIndex">
-      <number>0</number>
+      <number>1</number>
      </property>
      <widget class="QWidget" name="axesTab">
       <property name="sizePolicy">
@@ -599,7 +599,7 @@
              <item>
               <widget class="QLabel" name="button10L">
                <property name="text">
-                <string>Button 10</string>
+                <string>Add Button</string>
                </property>
               </widget>
              </item>

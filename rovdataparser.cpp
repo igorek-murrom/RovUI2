@@ -166,8 +166,13 @@ void RovDataParser::prepareControl(Joystick joy) {
         float d = (joy.axis[4].axe - 6) * joy.axis[4].runtimeASF * joy.axis[4].baseASF * joy.axis[4].direction * mainASF;
         float r = (joy.axis[5].axe - 6) * joy.axis[5].runtimeASF * joy.axis[5].baseASF * joy.axis[5].direction * mainASF;
 
-        w = wFunction(w);
+        if (!-joy.buttons.AddButton) {
+            z *= 0.25;
+            if (abs(z) < 6) z = 0;
+        }
 
+        w = wFunction(w);
+        // qDebug() << -joy.buttons.AddButton;
         float dReg  = depthReg.eval(m_tele.depth);
         float yReg  = yawReg.eval(m_tele.yaw);
         float rReg  = rollReg.eval(m_tele.roll);
