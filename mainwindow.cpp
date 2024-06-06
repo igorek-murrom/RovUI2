@@ -57,7 +57,7 @@ MainWindow::~MainWindow() { delete ui; }
 
 void MainWindow::updateStatusbar() {
     //    ui->camLabel->setPixmap(QPixmap::fromImage(img));
-    updateStatusbarText(m_cameraCapture->getRecordInfo());
+    // updateStatusbarText(m_cameraCapture->getRecordInfo());
 }
 
 void MainWindow::updateDatasplines(RovTelemetry tele) {
@@ -147,12 +147,20 @@ void MainWindow::createConnections() {
         m_rovDataParser.data()->m_control.data()->camsel = m_cameraCapture.data()->m_index_camera;
         m_cameraCapture.data()->setSource();
         m_cameraCapture.data()->startCapture();
+        if (record_flag) {
+            updateRecordStatus();
+            m_cameraCapture.data()->stopRecord();
+        }
     });
     connect(m_rovDataParser.data(), &RovDataParser::controlReady, this, [this] {
         if (m_cameraCapture.data()->m_index_camera != m_rovDataParser.data()->m_control.data()->camsel) {
             m_cameraCapture.data()->m_index_camera = m_rovDataParser.data()->m_control.data()->camsel;
             m_cameraCapture.data()->setSource();
             m_cameraCapture.data()->startCapture();
+            if (record_flag) {
+                updateRecordStatus();
+                m_cameraCapture.data()->stopRecord();
+            }
         }
     });
     connect(ui->actionDigiCam_report, &QAction::triggered, this,
@@ -312,8 +320,9 @@ void MainWindow::setupStatusbar() {
     ui->statusbar->addPermanentWidget(m_rovStatusIndicator.data());
 }
 void MainWindow::updateRecordStatus() {
-    record_flag = !record_flag;
+    if (!m_cameraCapture.data()->isRun()) return;
 
+    record_flag = !record_flag;
     QColor colour;
     if (record_flag) colour = Qt::green;
     else colour = Qt::white;

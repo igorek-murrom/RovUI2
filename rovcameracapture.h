@@ -20,7 +20,7 @@
 #include <QWidget>
 #include <QMediaPlayer>
 #include <cstdint>
-
+#include <QDir>
 class Surface : public QAbstractVideoSurface
 {
 public:
@@ -83,7 +83,7 @@ class RovCameraCapture : public QWidget {
 
     void stopRecord();
 
-    void screenshot();
+    bool isRun();
 
   private slots:
   private:
@@ -96,14 +96,6 @@ class RovCameraCapture : public QWidget {
 
     bool screenshotNeeded;
 
-    /**
-     * \brief OpenCV video capture
-     */
-    QScopedPointer<QCamera> m_camera;
-
-    QScopedPointer<QMediaRecorder> m_recorder;
-
-    QScopedPointer<QCameraImageCapture> m_cameraCapture;
     QScopedPointer<QMediaPlayer> m_mediaPlayer;
 
 
@@ -112,11 +104,14 @@ class RovCameraCapture : public QWidget {
      */
     QTimer *m_displayTimer;
 
-    QList<QImage> m_record;
-
     int32_t m_recordSize = 0;
 
     int32_t m_recordLength = 0;
+
+    QUrl m_source;
+    QString m_videopath;
+    QDir* video_path;
+    QString video_folder;
 };
 
 #endif // ROVCAMERACAPTURE_H
