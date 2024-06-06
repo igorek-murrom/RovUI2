@@ -18,15 +18,17 @@
 
 RovCameraCapture::RovCameraCapture(QWidget *parent)
     : QWidget(parent), m_camera(new QCamera("127.0.0.1:5000")),
-      m_recorder(new QMediaRecorder(m_camera.data())),
       m_cameraCapture(new QCameraImageCapture(m_camera.data())),
-      m_mediaPlayer(new QMediaPlayer(this)), m_record() {
+      m_mediaPlayer(new QMediaPlayer(this)), m_record(), m_recorder(new QMediaRecorder(m_camera.data()))
+{
 
-    QVideoEncoderSettings videoSettings = m_recorder->videoSettings();
-    videoSettings.setQuality(QMultimedia::VeryHighQuality);
-    videoSettings.setCodec("video/x-h264");
-    m_recorder->setContainerFormat("video/x-matroska-3d");
-    m_recorder->setVideoSettings(videoSettings);
+    // QVideoEncoderSettings videoSettings = m_recorder->videoSettings();
+    // videoSettings.setQuality(QMultimedia::VeryHighQuality);
+    // videoSettings.setCodec("video/x-h264");
+    // m_recorder->setContainerFormat("video/x-matroska-3d");
+    // m_recorder->setVideoSettings(videoSettings);
+
+    // m_recorder.data()->setQuali
 
     QImageEncoderSettings imageSettings = m_cameraCapture->encodingSettings();
     imageSettings.setCodec("image/jpeg");
@@ -64,22 +66,16 @@ void RovCameraCapture::setViewfinder(QVideoWidget *vf) {
 void RovCameraCapture::setSource() {
     QUrl source;
     // m_mediaPlayer->stop();
-    if (m_index_camera) source = "gst-pipeline: v4l2src device=/dev/video2 ! decodebin ! videoconvert ! videoscale ! video/x-raw,format=RGB ! queue ! videoconvert ! xvimagesink name=\"qtvideosink\"";
+    // if (m_index_camera) source = "v4l2:///dev/video0";
+    if (m_index_camera) source = "gst-pipeline: v4l2src device=/dev/video2 ! decodebin ! videoconvert ! videoscale ! video/x-raw,format=RGB,media=video ! queue ! videoconvert ! xvimagesink name=\"qtvideosink\" sync=false";
     else source = "gst-pipeline: udpsrc address=192.168.1.4 port=5000 ! application/x-rtp,media=video,payload=26,clock-rate=90000,encoding-name=JPEG,framerate=30/1 ! queue ! rtpjpegdepay ! jpegparse ! jpegdec ! timeoverlay ! videoconvert ! xvimagesink name=\"qtvideosink\"";
     m_mediaPlayer->setMedia(source);
 }
 
 void RovCameraCapture::startRecord() {
-    m_camera->setCaptureMode(QCamera::CaptureMode(QCamera::CaptureVideo));
-    QTemporaryFile *recordFile = new QTemporaryFile("/tmp/record-XXXXXX.mkv");
-    recordFile->open();
-    recordFile->close();
-    QString generatedName = recordFile->fileName();
-    recordFile->remove();
-    delete recordFile;
-    m_recorder->setOutputLocation(generatedName);
+    qDebug() << m_recorder->setOutputLocation(QUrl::fromLocalFile("file:///home/igor/Videos/t.mp4"));
     qDebug() << m_recorder->errorString();
-    qDebug() << "Generated file name: " << generatedName;
+    // qDebug() << "Generated file name: " << generatedName;
     m_recorder->record();
 }
 

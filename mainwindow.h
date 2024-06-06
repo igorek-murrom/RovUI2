@@ -33,6 +33,8 @@ class MainWindow : public QMainWindow {
     Q_OBJECT
 
   public:
+    bool record_flag = false;
+
     /**
      * \brief Default constructor
      * \param parent Parent
@@ -45,6 +47,8 @@ class MainWindow : public QMainWindow {
     ~MainWindow();
 
   public slots:
+    void updateRecordStatus();
+
     /**
      * \brief Called to change image of the camera label
      */
@@ -146,6 +150,9 @@ class MainWindow : public QMainWindow {
      * \todo maybe set individual ASFs and akchually implement this
      */
     void asfUpdated(float thrustFactor);
+
+    void startRecord();
+    void stopRecord();
 
   private:
     /**

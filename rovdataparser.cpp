@@ -23,10 +23,10 @@ RovDataParser::RovDataParser(QWidget *parent)
     : QDialog{parent}, ui(new Ui::DataParser), m_control(new RovControl()),
       m_controlMutex(), overrideTelemetryUpdate(new QTimer(this)),
       m_auxControl(new RovAuxControl), m_auxControlMutex(),
-      depthReg(DEFAULT_kP, DEFAULT_kI, DEFAULT_kD),
-      yawReg(DEFAULT_kP, DEFAULT_kI, DEFAULT_kD),
-      rollReg(DEFAULT_kP, DEFAULT_kI, DEFAULT_kD),
-      pitchReg(DEFAULT_kP, DEFAULT_kI, DEFAULT_kD) {
+      depthReg(60, 0, 0),
+      yawReg(0, 0, 0),
+      rollReg(0, 0, 0),
+      pitchReg(0, 0, 0) {
     ui->setupUi(this);
 
     QTimer *auxTimer = new QTimer(this);
@@ -113,7 +113,7 @@ void RovDataParser::invalidateImuCalibration() {
 }
 
 void RovDataParser::prepareUpdateServo() {
-    m_digitServoPos += 4 * m_control.data()->cameraRotationDelta[0];
+    m_digitServoPos += 3 * m_control.data()->cameraRotationDelta[0];
     m_digitServoPos = constrain(m_digitServoPos, -100, 100);
     // qDebug() << m_digitServoPos;
     emit servoDigitReady(m_digitServoPos);
@@ -171,8 +171,7 @@ void RovDataParser::prepareControl(Joystick joy) {
             if (abs(z) < 6) z = 0;
         }
 
-        w = wFunction(w);
-        // qDebug() << -joy.buttons.AddButton;
+        w = wFunction(w) * 0.5;
         float dReg  = depthReg.eval(m_tele.depth);
         float yReg  = yawReg.eval(m_tele.yaw);
         float rReg  = rollReg.eval(m_tele.roll);
@@ -189,10 +188,10 @@ void RovDataParser::prepareControl(Joystick joy) {
         m_control->thrusterPower[6] = constrain(-z + r + d, -100, 100);
 
         // horizontal
-        m_control->thrusterPower[0] = constrain(x + y - w, -100, 100);
-        m_control->thrusterPower[1] = constrain(-x + y -  w, -100, 100);
-        m_control->thrusterPower[4] = constrain(x - y - w, -100, 100);
-        m_control->thrusterPower[7] = constrain(x + y + w, -100, 100);
+        m_control->thrusterPower[0] = constrain(-x + y - w, -100, 100);
+        m_control->thrusterPower[1] = constrain(-x - y +  w, -100, 100);
+        m_control->thrusterPower[4] = constrain(x + y + w, -100, 100);
+        m_control->thrusterPower[7] = constrain(x - y - w, -100, 100);
 
         ui->thrusterSpinbox1->setValue(m_control->thrusterPower[0]);
         ui->thrusterSpinbox2->setValue(m_control->thrusterPower[1]);

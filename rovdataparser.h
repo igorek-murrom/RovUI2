@@ -65,6 +65,11 @@ class RovDataParser : public QDialog {
     Q_OBJECT
   public:
     /**
+     * \brief Internally-stored RovControl struct
+     */
+    QScopedPointer<RovControl> m_control;
+
+    /**
      * \brief Default constructor
      * \param parent Parent
      */
@@ -173,11 +178,6 @@ class RovDataParser : public QDialog {
      * \brief UI
      */
     Ui::DataParser *ui;
-
-    /**
-     * \brief Internally-stored RovControl struct
-     */
-    QScopedPointer<RovControl> m_control;
     /**
      * \brief Mutex for m_control
      */

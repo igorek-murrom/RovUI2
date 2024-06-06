@@ -51,7 +51,7 @@ class RovCameraCapture : public QWidget {
     QString getRecordInfo();
 
     void setViewfinder(QVideoWidget *viewfinder);
-    bool m_index_camera = 1;
+    bool m_index_camera = 0;
 
   signals:
     /**
