@@ -1,117 +1,54 @@
 #ifndef ROVCAMERACAPTURE_H
 #define ROVCAMERACAPTURE_H
 
-#include "qscopedpointer.h"
-#include "qvideowidget.h"
+#include <QApplication>
 #include <QCamera>
 #include <QCameraImageCapture>
 #include <QCameraInfo>
 #include <QCameraViewfinder>
 #include <QCameraViewfinderSettings>
 #include <QDebug>
-#include <QImage>
-#include <QLabel>
-#include <QMediaRecorder>
-#include <QScopedPointer>
-#include <QTemporaryFile>
-#include <QAbstractVideoSurface>
-#include <QTimer>
-#include <QVariant>
-#include <QWidget>
+#include <QFileInfo>
 #include <QMediaPlayer>
-#include <cstdint>
+#include <QMediaRecorder>
+#include <QMultimedia>
+#include <QScopedPointer>
+#include <QUrl>
+#include <QVideoWidget>
+#include <QDateTime>
 #include <QDir>
-class Surface : public QAbstractVideoSurface
-{
-public:
-    Surface(QObject *p) : QAbstractVideoSurface(p) { }
-    QList<QVideoFrame::PixelFormat> supportedPixelFormats(QAbstractVideoBuffer::HandleType) const override
-    {
-        // Make sure that the driver supports this pixel format.
-        return QList<QVideoFrame::PixelFormat>() << QVideoFrame::Format_YUYV;
-    }
+#include <gst/gst.h>
+#include <gst/video/videooverlay.h>
 
-    // Video frames are handled here.
-    bool present(const QVideoFrame &) override { return true; }
-};
-
-
-/**
- * \brief The RovCameraCapture class
- */
 class RovCameraCapture : public QWidget {
     Q_OBJECT
+
   public:
-    /**
-     * \brief Default consrtuctor
-     * \param parent Parent
-     */
-    RovCameraCapture(QWidget *parent);
+    RovCameraCapture(QWidget *parent = nullptr);
+    ~RovCameraCapture();
 
-    QString getRecordInfo();
-
-    void setViewfinder(QVideoWidget *viewfinder);
-    bool m_index_camera = 0;
-
-  signals:
-    /**
-     * \brief Emitted on processed image change
-     * \param image Processed image
-     */
-    void imgProcessed(QImage image);
-
-    void screenshotReady(QString imagePath);
-
-    void recordingReady(QString recordPath);
+    void setViewfinder(QVideoWidget *vf);
+    bool isRun();
+    void setSource();
+    void startCapture();
+    void stopCapture();
+    bool m_index_camera = true;
 
   public slots:
-    /**
-     * \brief Starts video capture from the specified index
-     */
-    void startCapture();
-
-    void setSource();
-
-    /**
-     * \brief Stops capture and closes the stream
-     */
-    void stopCapture();
-
     void startRecord();
-
-    void pauseRecord();
-
     void stopRecord();
 
-    bool isRun();
-
-  private slots:
   private:
-    /**
-     * \brief Set to true when capture is set to video mode
-     */
-    bool updateNeeded = true;
-
-    bool recording;
-
-    bool screenshotNeeded;
-
-    QScopedPointer<QMediaPlayer> m_mediaPlayer;
-
-
-    /**
-     * \brief Runs processCamera() every 16.6 msecs
-     */
-    QTimer *m_displayTimer;
-
-    int32_t m_recordSize = 0;
-
-    int32_t m_recordLength = 0;
-
-    QUrl m_source;
+    static gboolean bus_callback(GstBus *bus, GstMessage *message, gpointer data);
+    void setPipeline(QString source, bool recording=false);
+    GstElement *pipeline;
+    GstElement *filesink;
+    GstElement *videosink;
+    QString m_source;
     QString m_videopath;
-    QDir* video_path;
+    QDir *video_path;
     QString video_folder;
+    WId m_windowId;
 };
 
 #endif // ROVCAMERACAPTURE_H

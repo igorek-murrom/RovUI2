@@ -53,7 +53,10 @@ MainWindow::MainWindow(QWidget *parent)
     updateStatusbarProgress(100);
 }
 
-MainWindow::~MainWindow() { delete ui; }
+MainWindow::~MainWindow() {
+    m_cameraCapture.data()->stopCapture();
+    delete ui;
+}
 
 void MainWindow::updateStatusbar() {
     //    ui->camLabel->setPixmap(QPixmap::fromImage(img));
@@ -139,9 +142,11 @@ void MainWindow::updateTelemetry(RovTelemetry tele) {
 void MainWindow::updateASF(float factor) { emit asfUpdated(factor); }
 
 void MainWindow::createConnections() {
-    // Camera capture
-    //     connect(m_cameraCapture.data(), SIGNAL(imgProcessed(QImage)), this,
-    //             SLOT(updateCameraLabel()));
+    // Camera
+    connect(ui->actionBegin_camera_capture, &QAction::triggered, this,
+            [this] { m_cameraCapture.data()->setSource(); m_cameraCapture.data()->startCapture(); });
+    connect(ui->actionEnd_camera_capture, &QAction::triggered, this,
+            [this] { m_cameraCapture.data()->stopCapture(); });
     connect(ui->actionChange_Video, &QAction::triggered, this, [this]{
         m_cameraCapture.data()->m_index_camera = !m_cameraCapture.data()->m_index_camera;
         m_rovDataParser.data()->m_control.data()->camsel = m_cameraCapture.data()->m_index_camera;
@@ -248,11 +253,6 @@ void MainWindow::createConnections() {
     connect(ui->actionPump_off_on, SIGNAL(triggered(bool)),
             m_rovDataParser.data(), SLOT(togglePump()));
 
-    // Camera start/stop
-    connect(ui->actionBegin_camera_capture, &QAction::triggered, this,
-            [this] { m_cameraCapture.data()->startCapture(); });
-    connect(ui->actionEnd_camera_capture, &QAction::triggered, this,
-            [this] { m_cameraCapture.data()->stopCapture(); });
     // Regulators:
     // Depth
     connect(ui->depthSpinBox, SIGNAL(valueChanged(double)),

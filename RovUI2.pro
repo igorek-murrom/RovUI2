@@ -60,6 +60,8 @@ RESOURCES += \
 unix{
     CONFIG += link_pkgconfig
     PKGCONFIG += sdl2
+    PKGCONFIG += gstreamer-1.0
+    PKGCONFIG += gstreamer-video-1.0
 }
 
 # Default rules for deployment.
