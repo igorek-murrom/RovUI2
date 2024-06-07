@@ -210,7 +210,10 @@ void MainWindow::createConnections() {
     // UI ASF
     connect(m_joystickHandler.data(), &JoystickHandler::joystickUpdated, this,
             [this](Joystick joy) {
-                ui->asfLabel->setText(QString::number(joy.axis[0].runtimeASF));
+                float t_asf = ((joy.axis[6].axe / 100.0) + 1) / 2 * 100;
+                if (t_asf > 100) t_asf = 100;
+                if (t_asf < 0) t_asf = 0;
+                ui->asfLabel->setText(QString::number(t_asf) + "% , " +  QString::number(joy.axis[0].runtimeASF));
             });
 
     // Settings update requests

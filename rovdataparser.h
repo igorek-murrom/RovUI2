@@ -75,6 +75,8 @@ class RovDataParser : public QDialog {
      */
     explicit RovDataParser(QWidget *parent = nullptr);
 
+    float mainASF;
+
   signals:
     /**
      * \brief Emitted when the class is finished processing raw QByteArray

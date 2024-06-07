@@ -157,8 +157,8 @@ void RovDataParser::prepareControl(Joystick joy) {
         m_control->thrusterPower[6] = ui->thrusterSpinbox7->value();
         m_control->thrusterPower[7] = ui->thrusterSpinbox8->value();
     } else {
-        float mainASF = constrain(((joy.axis[6].axe / 100.0) + 1) / 2, 0, 1);
-        // float mainASF = 1;
+        mainASF = constrain(((joy.axis[6].axe / 100.0) + 1) / 2, 0, 1);
+        // mainASF = 1;
         float x = joy.axis[0].axe * joy.axis[0].runtimeASF * joy.axis[0].baseASF * joy.axis[0].direction * mainASF * (m_control->camsel == 1 ? -1 : 1);
         float y = joy.axis[1].axe * joy.axis[1].runtimeASF * joy.axis[1].baseASF * joy.axis[1].direction * mainASF * (m_control->camsel == 1 ? -1 : 1);
         float z = joy.axis[2].axe * joy.axis[2].runtimeASF * joy.axis[2].baseASF * joy.axis[2].direction * mainASF;
@@ -226,7 +226,6 @@ void RovDataParser::prepareControl(Joystick joy) {
         in << t;
     }
     in << m_control->manipulatorOpenClose;
-
     in << m_control->manipulatorRotate;
 
     for (qint8 c : m_control->cameraRotationDelta) {
