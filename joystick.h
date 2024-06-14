@@ -44,8 +44,8 @@ namespace JoystickHelpers {
         ASFUltraSlow,
         CameraSelect,
         AddButton,
-        Button11,
-        Button12,
+        DepthRegButtonON,
+        DepthRegButtonOFF,
         Button13,
         Button14,
         Button15,
@@ -62,7 +62,7 @@ namespace JoystickHelpers {
     static QString buttonsNames[16] = {
         "ManipOpen", "ManipClose", "ManipCW",  "ManipCCW",
         "ASF-F",     "ASF-M",      "ASF-S",    "ASF-US",
-        "CamSel",    "AddButton",   "Button11", "Button12",
+        "CamSel",    "AddButton",   "DepthRegButtonON", "DepthRegButtonOFF",
         "Button13",  "Button14",   "Button15", "Button16"};
 
     static QString hatsNames[4] = {"CamServoFront", "CamServoRear", "Hat3",
@@ -121,7 +121,9 @@ struct Joystick {
             int8_t ASFUltraSlow : 1;
             int8_t CameraSelect : 1;
             int8_t AddButton    : 1;
-            int8_t __res        : 5;
+            int8_t DepthRegButtonON : 1;
+            int8_t DepthRegButtonOFF : 1;
+            int8_t __res        : 3;
         };
     } buttons;
 

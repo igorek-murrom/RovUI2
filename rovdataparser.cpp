@@ -10,12 +10,16 @@ inline float wFunction(float value) {
     int sign = value < 0 ? 1: -1;
     return sign * 0.005 * value * value;
 }
+inline float fixYaw(int value) {
+    return value;
+    // return (value + 360) % 360 - 180;
+}
 RovDataParser::RovDataParser(QWidget *parent)
     : QDialog{parent}, ui(new Ui::DataParser), m_control(new RovControl()),
       m_controlMutex(), overrideTelemetryUpdate(new QTimer(this)),
       m_auxControl(new RovAuxControl), m_auxControlMutex(),
       depthReg(200, 0.5, 50),
-      yawReg(0, 0, 0),
+      yawReg(5, 0, 0),
       rollReg(0.5, 0, 0),
       pitchReg(0.5, 0, 0) {
     ui->setupUi(this);
@@ -55,7 +59,7 @@ void RovDataParser::setDepthStatus(int status) {
         depthReg.disable();
 }
 
-void RovDataParser::setYaw(double val) { yawReg.setTarget(val); }
+void RovDataParser::setYaw(double val) { yawReg.setTarget(fixYaw(val)); }
 
 void RovDataParser::setYawStatus(int status) {
     if (status != 0)
@@ -161,13 +165,15 @@ void RovDataParser::prepareControl(Joystick joy) {
             if (abs(z) < 6) z = 0;
         }
 
+        w += 2;
+        // qDebug() << m_tele.yaw;
         w = wFunction(w) * 0.5;
+        float yReg  = yawReg.eval(m_tele.yaw + 180, true);
         float dReg  = depthReg.eval(m_tele.depth);
-        float yReg  = yawReg.eval(m_tele.yaw);
         float rReg  = rollReg.eval(m_tele.roll);
         float pReg  = pitchReg.eval(m_tele.pitch);
-        z          -= dReg;
         w          += yReg;
+        z          -= dReg;
         r          -= rReg;
         d          += pReg;
 
@@ -278,7 +284,9 @@ void RovDataParser::processTelemetry(QByteArray datagram) {
         out >> telemetry.cameraIndex;
         out >> telemetry.temp;
 
+        telemetry.yaw *= -1;
         m_tele = telemetry;
+
         ui->depthSB->setValue(telemetry.depth);
         ui->yawSB->setValue(telemetry.yaw);
         ui->rollSB->setValue(telemetry.roll);
@@ -289,10 +297,13 @@ void RovDataParser::processTelemetry(QByteArray datagram) {
     }
 }
 
-float FPPDRegulator::eval(float data) {
+float FPPDRegulator::eval(float data, bool yawFlag) {
     if (!enabled)
         return 0;
+
     error  = target - data;
+    if (yawFlag) error = (((int)error + 180) % 360) - 180;
+
     uP = kP * error;
     uD = kD * ((error - lastError)/* / eTimer.elapsed()*/);
     uI += kI * error/* * float(eTimer.elapsed())*/;

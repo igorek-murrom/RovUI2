@@ -4,7 +4,7 @@
 RovDataSplines::RovDataSplines(QWidget *parent)
     : QDialog(parent), m_vChart(new ContinousDataSplineChart(0, 30, 16, 1)),
       m_cChart(new ContinousDataSplineChart(0, 30, 16, 1)),
-      m_yChart(new ContinousDataSplineChart(-180, 180, 16, 1)),
+      m_yChart(new ContinousDataSplineChart(-220, 120, 16, 1)),
       m_dChart(new ContinousDataSplineChart(-1, 5, 16, 1)),
       m_pChart(new ContinousDataSplineChart(-100, 100, 16, 1)),
       m_rChart(new ContinousDataSplineChart(-100, 100, 16, 1)),

@@ -39,6 +39,8 @@ MainWindow::MainWindow(QWidget *parent)
 
     updateStatusbarText("RovUI2 initialization complete ^_^");
     updateStatusbarProgress(100);
+
+    ui->yawSpinBox->setRange(0, 360);
 }
 
 MainWindow::~MainWindow() {
@@ -233,6 +235,10 @@ void MainWindow::createConnections() {
     connect(m_rovDataParser.data(), SIGNAL(telemetryProcessed(RovTelemetry)),
             this, SLOT(updateDatasplines(RovTelemetry)));
 
+    // Fix yaw
+    connect(m_rovDataParser.data(), SIGNAL(telemetryProcessed(RovTelemetry)),
+            this, SLOT(calculateYaw(RovTelemetry)));
+
     // Menu actions
     // Light on/off
     connect(ui->actionLight_on_off, SIGNAL(triggered(bool)),
@@ -255,6 +261,16 @@ void MainWindow::createConnections() {
     connect(ui->actionDepthOnWC, &QAction::triggered, this, [this](bool) {
         ui->depthSpinBox->setValue(lastTele.depth);
         ui->depthRegulatorCB->setCheckState(Qt::Checked);
+    });
+    connect(m_joystickHandler.data(), &JoystickHandler::joystickUpdated, this,
+            [this](Joystick joy) {
+        if (joy.buttons.DepthRegButtonON) {
+            ui->depthSpinBox->setValue(lastTele.depth);
+            ui->depthRegulatorCB->setCheckState(Qt::Checked);
+        }
+        if (joy.buttons.DepthRegButtonOFF) {
+            ui->depthRegulatorCB->setCheckState(Qt::Unchecked);
+        }
     });
     // Yaw
     connect(ui->yawSpinBox, SIGNAL(valueChanged(double)),
@@ -325,4 +341,9 @@ void MainWindow::updateRecordStatus() {
 
     if (record_flag) emit startRecord();
     else emit stopRecord();
+}
+
+void MainWindow::calculateYaw(RovTelemetry tele) {
+    yaweton += tele.yaw - yaweton;
+    yaweton %= 360;
 }

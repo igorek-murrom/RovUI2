@@ -45,7 +45,7 @@ class FPPDRegulator {
      * @param target Target
      * @return float Control signal
      */
-    float eval(float data);
+    float eval(float data, bool yawFlag = false);
     void  setTarget(float target);
     void  enable();
     void  disable();

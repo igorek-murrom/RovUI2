@@ -360,7 +360,7 @@
           <property name="geometry">
            <rect>
             <x>0</x>
-            <y>0</y>
+            <y>-62</y>
             <width>525</width>
             <height>690</height>
            </rect>
@@ -623,7 +623,7 @@
              <item>
               <widget class="QLabel" name="button11L">
                <property name="text">
-                <string>Button 11</string>
+                <string>Depth Reg Button OFF</string>
                </property>
               </widget>
              </item>
@@ -647,7 +647,7 @@
              <item>
               <widget class="QLabel" name="button12L">
                <property name="text">
-                <string>Button 12</string>
+                <string>Depth Reg Button OFF</string>
                </property>
               </widget>
              </item>

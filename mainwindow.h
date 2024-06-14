@@ -154,6 +154,9 @@ class MainWindow : public QMainWindow {
      * it allows user input, overriding previous value
      */
     void overrideRoll(bool ro);
+
+    void calculateYaw(RovTelemetry tele);
+
   signals:
 
     /**
@@ -246,5 +249,7 @@ class MainWindow : public QMainWindow {
     QScopedPointer<CameraSettings>         m_cameraSettings;
     QScopedPointer<InstrumentWidget>       m_compassWidget;
     QScopedPointer<InstrumentWidget>       m_gyroWidget;
+
+    uint16_t yaweton;
 };
 #endif // MAINWINDOW_H
