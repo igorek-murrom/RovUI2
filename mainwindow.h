@@ -155,7 +155,7 @@ class MainWindow : public QMainWindow {
      */
     void overrideRoll(bool ro);
 
-    void calculateYaw(RovTelemetry tele);
+    void calculateYaw();
 
   signals:
 

@@ -56,7 +56,7 @@ void MainWindow::updateStatusbar() {
 void MainWindow::updateDatasplines(RovTelemetry tele) {
     m_datasplines.data()->addVoltageSample(QPointF(m_vSamples++, tele.voltage));
     m_datasplines.data()->addCurrentSample(QPointF(m_aSamples++, tele.current));
-    m_datasplines.data()->addYawSample(QPointF(m_ySamples++, tele.yaw));
+    m_datasplines.data()->addYawSample(QPointF(m_ySamples++, yaweton));
     m_datasplines.data()->addDepthSample(QPointF(m_dSamples++, tele.depth));
     m_datasplines.data()->addPitchSample(QPointF(m_pSamples++, tele.pitch));
     m_datasplines.data()->addRollSample(QPointF(m_rSamples++, tele.roll));
@@ -127,6 +127,8 @@ void MainWindow::updateTelemetry(RovTelemetry tele) {
     lastTele = tele;
     m_compassWidget->updateView(tele.yaw, tele.roll, tele.pitch);
     m_gyroWidget->updateView(tele.yaw, tele.roll, tele.pitch);
+
+    this->calculateYaw();
 }
 
 void MainWindow::updateASF(float factor) { emit asfUpdated(factor); }
@@ -235,9 +237,9 @@ void MainWindow::createConnections() {
     connect(m_rovDataParser.data(), SIGNAL(telemetryProcessed(RovTelemetry)),
             this, SLOT(updateDatasplines(RovTelemetry)));
 
-    // Fix yaw
-    connect(m_rovDataParser.data(), SIGNAL(telemetryProcessed(RovTelemetry)),
-            this, SLOT(calculateYaw(RovTelemetry)));
+    // // Fix yaw
+    // connect(m_rovDataParser.data(), SIGNAL(telemetryProcessed(RovTelemetry)),
+    //         this, SLOT(calculateYaw(RovTelemetry)));
 
     // Menu actions
     // Light on/off
@@ -282,7 +284,7 @@ void MainWindow::createConnections() {
     connect(ui->actionYawOn, &QAction::triggered, this,
             [this](bool) { ui->yawRegulatorCB->setCheckState(Qt::Checked); });
     connect(ui->actionYawOnWC, &QAction::triggered, this, [this](bool) {
-        ui->yawSpinBox->setValue(lastTele.yaw);
+        ui->yawSpinBox->setValue(yaweton);
         ui->yawRegulatorCB->setCheckState(Qt::Checked);
     });
     // Roll
@@ -343,7 +345,7 @@ void MainWindow::updateRecordStatus() {
     else emit stopRecord();
 }
 
-void MainWindow::calculateYaw(RovTelemetry tele) {
-    yaweton += tele.yaw - yaweton;
+void MainWindow::calculateYaw() {
+    yaweton += lastTele.yaw - yaweton;
     yaweton %= 360;
 }
