@@ -10,6 +10,14 @@
 #include "qslider.h"
 #include "rovcameracommunication.h"
 #include "ui_camerasettings.h"
+#include "qabstractbutton.h"
+#include "qcheckbox.h"
+#include "qcombobox.h"
+#include "qglobal.h"
+#include "qlabel.h"
+#include "qnamespace.h"
+#include "qobjectdefs.h"
+#include "qslider.h"
 #include <QObject>
 
 namespace Ui {

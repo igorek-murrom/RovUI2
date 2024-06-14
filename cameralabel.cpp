@@ -1,5 +1,4 @@
 #include "cameralabel.h"
-#include <math.h>
 
 CameraLabel::CameraLabel(QWidget *parent) : QLabel(parent) {}
 int CameraLabel::heightForWidth(int w) const {

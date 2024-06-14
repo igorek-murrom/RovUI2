@@ -1,5 +1,4 @@
 #include "joysticksetupdialog.h"
-#include "helpers.h"
 #include "ui_joysticksetupdialog.h"
 
 JoystickSetupDialog::JoystickSetupDialog(QWidget *parent)

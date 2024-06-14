@@ -14,9 +14,21 @@
 #include "rovdataparser.h"
 #include "rovdatasplines.h"
 #include "rovdatatypes.h"
+#include "camerasettings.h"
+#include "instrumentcluster.h"
+#include "joystick.h"
+#include "joystickhandler.h"
+#include "qaction.h"
+#include "qdialog.h"
+#include "qnamespace.h"
+#include "qobjectdefs.h"
+#include "rovcameracapture.h"
+#include "rovcameracommunication.h"
+#include "rovdataparser.h"
 #include <QDebug>
 #include <QMainWindow>
 #include <QString>
+#include <cstddef>
 
 QT_BEGIN_NAMESPACE
 namespace Ui {

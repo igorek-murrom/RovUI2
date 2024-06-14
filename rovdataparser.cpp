@@ -1,15 +1,6 @@
 #include "rovdataparser.h"
-#include "helpers.h"
-#include "joystick.h"
-#include "qcheckbox.h"
-#include "qdialog.h"
-#include "qnamespace.h"
-#include "qtimer.h"
-#include "qwidget.h"
 #include "ui_dataparser.h"
-#include <cmath>
-#include <cstddef>
-#include <cstring>
+
 #define stringify_please (x) #x
 
 inline float constrain(float val, float min, float max) {
@@ -17,16 +8,16 @@ inline float constrain(float val, float min, float max) {
 }
 inline float wFunction(float value) {
     int sign = value < 0 ? 1: -1;
-    return sign * 0.01 * value * value;
+    return sign * 0.005 * value * value;
 }
 RovDataParser::RovDataParser(QWidget *parent)
     : QDialog{parent}, ui(new Ui::DataParser), m_control(new RovControl()),
       m_controlMutex(), overrideTelemetryUpdate(new QTimer(this)),
       m_auxControl(new RovAuxControl), m_auxControlMutex(),
-      depthReg(60, 0, 0),
+      depthReg(200, 0.5, 50),
       yawReg(0, 0, 0),
-      rollReg(0, 0, 0),
-      pitchReg(0, 0, 0) {
+      rollReg(0.5, 0, 0),
+      pitchReg(0.5, 0, 0) {
     ui->setupUi(this);
 
     QTimer *auxTimer = new QTimer(this);
@@ -115,7 +106,6 @@ void RovDataParser::invalidateImuCalibration() {
 void RovDataParser::prepareUpdateServo() {
     m_digitServoPos += 3 * m_control.data()->cameraRotationDelta[0];
     m_digitServoPos = constrain(m_digitServoPos, -100, 100);
-    // qDebug() << m_digitServoPos;
     emit servoDigitReady(m_digitServoPos);
 }
 
@@ -161,8 +151,8 @@ void RovDataParser::prepareControl(Joystick joy) {
         // mainASF = 1;
         float x = joy.axis[0].axe * joy.axis[0].runtimeASF * joy.axis[0].baseASF * joy.axis[0].direction * mainASF * (m_control->camsel == 1 ? -1 : 1);
         float y = joy.axis[1].axe * joy.axis[1].runtimeASF * joy.axis[1].baseASF * joy.axis[1].direction * mainASF * (m_control->camsel == 1 ? -1 : 1);
-        float z = joy.axis[2].axe * joy.axis[2].runtimeASF * joy.axis[2].baseASF * joy.axis[2].direction * mainASF;
-        float w = joy.axis[3].axe * joy.axis[3].runtimeASF * joy.axis[3].baseASF * joy.axis[3].direction * mainASF;
+        float z = joy.axis[2].axe/* * joy.axis[2].runtimeASF * joy.axis[2].baseASF*/ * joy.axis[2].direction * mainASF;
+        float w = joy.axis[3].axe * joy.axis[3].runtimeASF * joy.axis[3].baseASF * joy.axis[3].direction;
         float d = (joy.axis[4].axe - 6) * joy.axis[4].runtimeASF * joy.axis[4].baseASF * joy.axis[4].direction * mainASF;
         float r = (joy.axis[5].axe - 6) * joy.axis[5].runtimeASF * joy.axis[5].baseASF * joy.axis[5].direction * mainASF;
 
@@ -176,22 +166,30 @@ void RovDataParser::prepareControl(Joystick joy) {
         float yReg  = yawReg.eval(m_tele.yaw);
         float rReg  = rollReg.eval(m_tele.roll);
         float pReg  = pitchReg.eval(m_tele.pitch);
-        z          += dReg;
+        z          -= dReg;
         w          += yReg;
-        r          += rReg;
+        r          -= rReg;
         d          += pReg;
 
         // vertical
         m_control->thrusterPower[2] = constrain(z + r - d, -100, 100);
         m_control->thrusterPower[3] = constrain(z + r + d, -100, 100);
         m_control->thrusterPower[5] = constrain(z - r + d, -100, 100);
-        m_control->thrusterPower[6] = constrain(-z + r + d, -100, 100);
+        m_control->thrusterPower[6] = constrain(z - r - d, -100, 100); // swap
 
         // horizontal
-        m_control->thrusterPower[0] = constrain(-x + y - w, -100, 100);
-        m_control->thrusterPower[1] = constrain(-x - y +  w, -100, 100);
+        m_control->thrusterPower[0] = constrain(x - y + w, -100, 100); // swap
+        m_control->thrusterPower[1] = constrain(x + y - w, -100, 100); // swap
         m_control->thrusterPower[4] = constrain(x + y + w, -100, 100);
         m_control->thrusterPower[7] = constrain(x - y - w, -100, 100);
+
+        // fix rear direction
+        // for (int8_t thruster : m_control->thrusterPower) thruster = thruster < 0 ? constrain(thruster + 3, -100, 100) : thruster;
+
+        // fix direction
+        m_control->thrusterPower[0] *= -1;
+        m_control->thrusterPower[1] *= -1;
+        m_control->thrusterPower[6] *= -1;
 
         ui->thrusterSpinbox1->setValue(m_control->thrusterPower[0]);
         ui->thrusterSpinbox2->setValue(m_control->thrusterPower[1]);
@@ -296,15 +294,16 @@ float FPPDRegulator::eval(float data) {
         return 0;
     error  = target - data;
     uP = kP * error;
-    uD = kD * ((error - lastError) / (float(eTimer.elapsed())));
-    uI += kI * error * float(eTimer.elapsed());
-
-    lastError = isnan(error) ? 0 : error;
-    eTimer.start();
+    uD = kD * ((error - lastError)/* / eTimer.elapsed()*/);
+    uI += kI * error/* * float(eTimer.elapsed())*/;
+    if (abs(error) < 1) uI = 0;
+    // lastError = isnan(error) ? 0 : error;
+    eTimer.restart();
+    // eTimer.start();
     lastData = data;
 
     float u = uP + uD + uI;
-
+    // qDebug() << eTimer.elapsed();
     return constrain(u, -100, 100);
 }
 

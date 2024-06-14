@@ -28,7 +28,7 @@ void RovCameraCapture::setViewfinder(QVideoWidget *vf) {
 
 void RovCameraCapture::setSource() {
     if (m_index_camera) {
-        m_source = "v4l2src device=/dev/video0 ! tee name=t t. ! decodebin ! videoconvert ! videoscale ! video/x-raw,format=RGB,media=video ! queue ! videoconvert ! xvimagesink name=qtvideosink sync=false t. ! videoconvert ! x264enc tune=zerolatency key-int-max=60 ! matroskamux";
+        m_source = "v4l2src device=/dev/video2 ! tee name=t t. ! decodebin ! videoconvert ! videoscale ! video/x-raw,format=RGB,media=video ! queue ! videoconvert ! xvimagesink name=qtvideosink sync=false t. ! videoconvert ! x264enc tune=zerolatency key-int-max=60 ! matroskamux";
     } else {
         m_source = "udpsrc address=192.168.1.4 port=5000 ! tee name=t t. ! application/x-rtp,media=video,payload=26,clock-rate=90000,encoding-name=JPEG,framerate=30/1 ! queue ! rtpjpegdepay ! jpegparse ! jpegdec ! videoconvert ! xvimagesink name=qtvideosink t. ! application/x-rtp,media=video,payload=26,clock-rate=90000,encoding-name=JPEG,framerate=30/1 ! queue ! rtpjpegdepay ! jpegparse ! jpegdec ! videoconvert ! x264enc tune=zerolatency ! matroskamux";
     }

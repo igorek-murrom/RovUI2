@@ -3,6 +3,7 @@
 
 #include "joystick.h"
 #include "qmutex.h"
+#include "helpers.h"
 #include <QDebug>
 #include <QObject>
 #include <QSettings>

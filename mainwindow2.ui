@@ -8,7 +8,7 @@
     <x>0</x>
     <y>0</y>
     <width>1600</width>
-    <height>1040</height>
+    <height>1070</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -599,6 +599,9 @@
   <action name="actionRecalibrate_IMU">
    <property name="text">
     <string>&amp;Recalibrate IMU</string>
+   </property>
+   <property name="shortcut">
+    <string>I</string>
    </property>
   </action>
   <action name="actionChange_Video">

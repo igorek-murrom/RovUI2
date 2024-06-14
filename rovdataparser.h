@@ -10,6 +10,17 @@
 #include <QDebug>
 #include <QMutex>
 #include <QObject>
+#include <cmath>
+#include <cstddef>
+#include <cstring>
+#include "helpers.h"
+#include "joystick.h"
+#include "qcheckbox.h"
+#include "qdialog.h"
+#include "qnamespace.h"
+#include "qtimer.h"
+#include "qwidget.h"
+
 #define DEFAULT_kP 3
 #define DEFAULT_kI 0.01
 #define DEFAULT_kD 5
@@ -42,7 +53,7 @@ class FPPDRegulator {
   private:
     bool  enabled = false;
     float kP, kI, kD;
-    float error, lastError;
+    float error, lastError = 0;
     float uP, uD, uI;
     float target;
 

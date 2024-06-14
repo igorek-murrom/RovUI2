@@ -1,5 +1,4 @@
 #include "joystickhandler.h"
-#include "helpers.h"
 JoystickHandler::JoystickHandler(QObject *parent)
     : QObject{parent}, m_joystick(new Joystick),
       m_settings(new QSettings(QSettings::IniFormat, QSettings::UserScope,

@@ -19,6 +19,8 @@
 #include <QRect>
 #include <QWidget>
 #include <QWidgetItem>
+#include <math.h>
+#include <QTimer>
 
 class AttitudeIndicator;
 class Compass;

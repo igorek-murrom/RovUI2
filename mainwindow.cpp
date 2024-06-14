@@ -1,17 +1,5 @@
 #include "mainwindow.h"
-#include "camerasettings.h"
-#include "instrumentcluster.h"
-#include "joystick.h"
-#include "joystickhandler.h"
-#include "qaction.h"
-#include "qdialog.h"
-#include "qnamespace.h"
-#include "qobjectdefs.h"
-#include "rovcameracapture.h"
-#include "rovcameracommunication.h"
-#include "rovdataparser.h"
 #include "ui_mainwindow2.h"
-#include <cstddef>
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent), ui(new Ui::MainWindow),
@@ -215,7 +203,7 @@ void MainWindow::createConnections() {
     // UI ASF
     connect(m_joystickHandler.data(), &JoystickHandler::joystickUpdated, this,
             [this](Joystick joy) {
-                float t_asf = ((joy.axis[6].axe / 100.0) + 1) / 2 * 100;
+                int8_t t_asf = ((joy.axis[6].axe / 100.0) + 1) / 2 * 100;
                 if (t_asf > 100) t_asf = 100;
                 if (t_asf < 0) t_asf = 0;
                 ui->asfLabel->setText(QString::number(t_asf) + "% , " +  QString::number(joy.axis[0].runtimeASF));

@@ -2,15 +2,7 @@
 #define ROVCAMERACAPTURE_H
 
 #include <QApplication>
-#include <QCamera>
-#include <QCameraImageCapture>
-#include <QCameraInfo>
-#include <QCameraViewfinder>
-#include <QCameraViewfinderSettings>
 #include <QDebug>
-#include <QFileInfo>
-#include <QMediaPlayer>
-#include <QMediaRecorder>
 #include <QMultimedia>
 #include <QScopedPointer>
 #include <QUrl>

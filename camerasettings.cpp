@@ -1,12 +1,4 @@
 #include "camerasettings.h"
-#include "qabstractbutton.h"
-#include "qcheckbox.h"
-#include "qcombobox.h"
-#include "qglobal.h"
-#include "qlabel.h"
-#include "qnamespace.h"
-#include "qobjectdefs.h"
-#include "qslider.h"
 #include "ui_camerasettings.h"
 
 CameraSettings::CameraSettings(QDialog *parent)

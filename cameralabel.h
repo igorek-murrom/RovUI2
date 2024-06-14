@@ -1,6 +1,7 @@
 #ifndef CAMERALABEL_H
 #define CAMERALABEL_H
 
+#include <math.h>
 #include <QLabel>
 #include <QObject>
 #include <QWidget>

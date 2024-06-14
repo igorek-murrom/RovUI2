@@ -1,5 +1,4 @@
 #include "client.h"
-#include <QtCore/QDebug>
 
 QT_USE_NAMESPACE
 

@@ -10,6 +10,7 @@
 #include <QJsonObject>
 #include <QAbstractSocket>
 #include <QTimer>
+#include <QtCore/QDebug>
 
 class Client : public QObject
 {

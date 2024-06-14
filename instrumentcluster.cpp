@@ -9,9 +9,6 @@
  */
 
 #include "instrumentcluster.h"
-#include <math.h>
-
-#include <QTimer>
 
 /**
  * @brief CHInstrumentWidget::CHInstrumentWidget - Constructs a flight
