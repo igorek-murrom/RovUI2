@@ -8,18 +8,15 @@ inline float constrain(float val, float min, float max) {
 }
 inline float wFunction(float value) {
     int sign = value < 0 ? 1: -1;
-    return sign * 0.005 * value * value;
-}
-inline float fixYaw(int value) {
     return value;
-    // return (value + 360) % 360 - 180;
+    // return sign * 0.005 * value * value;
 }
 RovDataParser::RovDataParser(QWidget *parent)
     : QDialog{parent}, ui(new Ui::DataParser), m_control(new RovControl()),
       m_controlMutex(), overrideTelemetryUpdate(new QTimer(this)),
       m_auxControl(new RovAuxControl), m_auxControlMutex(),
       depthReg(200, 0.5, 50),
-      yawReg(5, 0, 0),
+      yawReg(3, 0, 1),
       rollReg(0.5, 0, 0),
       pitchReg(0.5, 0, 0) {
     ui->setupUi(this);
@@ -59,7 +56,7 @@ void RovDataParser::setDepthStatus(int status) {
         depthReg.disable();
 }
 
-void RovDataParser::setYaw(double val) { yawReg.setTarget(fixYaw(val)); }
+void RovDataParser::setYaw(double val) { yawReg.setTarget(val); }
 
 void RovDataParser::setYawStatus(int status) {
     if (status != 0)
@@ -151,8 +148,8 @@ void RovDataParser::prepareControl(Joystick joy) {
         m_control->thrusterPower[6] = ui->thrusterSpinbox7->value();
         m_control->thrusterPower[7] = ui->thrusterSpinbox8->value();
     } else {
-        mainASF = constrain(((joy.axis[6].axe / 100.0) + 1) / 2, 0, 1);
-        // mainASF = 1;
+        //mainASF = constrain(((joy.axis[6].axe / 100.0) + 1) / 2, 0, 1);
+        mainASF = 1;
         float x = joy.axis[0].axe * joy.axis[0].runtimeASF * joy.axis[0].baseASF * joy.axis[0].direction * mainASF * (m_control->camsel == 1 ? -1 : 1);
         float y = joy.axis[1].axe * joy.axis[1].runtimeASF * joy.axis[1].baseASF * joy.axis[1].direction * mainASF * (m_control->camsel == 1 ? -1 : 1);
         float z = joy.axis[2].axe/* * joy.axis[2].runtimeASF * joy.axis[2].baseASF*/ * joy.axis[2].direction * mainASF;
@@ -165,10 +162,13 @@ void RovDataParser::prepareControl(Joystick joy) {
             if (abs(z) < 6) z = 0;
         }
 
-        w += 2;
-        // qDebug() << m_tele.yaw;
-        w = wFunction(w) * 0.5;
-        float yReg  = yawReg.eval(m_tele.yaw + 180, true);
+        if (abs(x) < 6) x = 0;
+        if (abs(y) < 6) y = 0;
+
+        w = wFunction(w) * -0.25;
+        w += joy.axis[6].axe / 25.0;
+
+        float yReg  = yawReg.eval(m_tele.yaw > 0 ? m_tele.yaw : m_tele.yaw + 360, true);
         float dReg  = depthReg.eval(m_tele.depth);
         float rReg  = rollReg.eval(m_tele.roll);
         float pReg  = pitchReg.eval(m_tele.pitch);
@@ -302,7 +302,11 @@ float FPPDRegulator::eval(float data, bool yawFlag) {
         return 0;
 
     error  = target - data;
-    if (yawFlag) error = (((int)error + 180) % 360) - 180;
+    if (yawFlag) {
+        error = ((int)error + 180) % 360;
+        if (error < 0) error += 180;
+        else error -= 180;
+    }
 
     uP = kP * error;
     uD = kD * ((error - lastError)/* / eTimer.elapsed()*/);

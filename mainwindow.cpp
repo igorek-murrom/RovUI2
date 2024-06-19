@@ -56,7 +56,7 @@ void MainWindow::updateStatusbar() {
 void MainWindow::updateDatasplines(RovTelemetry tele) {
     m_datasplines.data()->addVoltageSample(QPointF(m_vSamples++, tele.voltage));
     m_datasplines.data()->addCurrentSample(QPointF(m_aSamples++, tele.current));
-    m_datasplines.data()->addYawSample(QPointF(m_ySamples++, yaweton));
+    m_datasplines.data()->addYawSample(QPointF(m_ySamples++, tele.yaw > 0 ? tele.yaw : tele.yaw + 360));
     m_datasplines.data()->addDepthSample(QPointF(m_dSamples++, tele.depth));
     m_datasplines.data()->addPitchSample(QPointF(m_pSamples++, tele.pitch));
     m_datasplines.data()->addRollSample(QPointF(m_rSamples++, tele.roll));
@@ -118,7 +118,7 @@ void MainWindow::updateTelemetry(RovTelemetry tele) {
     ui->teleTempLabel->setText(
         tele.depth < 3.4E+38 ? QString::number(tele.temp / 100, 'f', 2) + " °C"
                              : "[DIS]");
-    ui->teleVoltageLabel->setText(QString::number(tele.voltage, 'f', 2) + " V");
+    ui->teleVoltageLabel->setText(QString::number(tele.voltage, 'f', 2) + " V" + "   " + QString::number(tele.yaw > 0 ? tele.yaw : tele.yaw + 360, 'f', 1));
     ui->teleCurrentLabel->setText(
         QString::number(std::min(tele.current * 1000, 25000.0f), 'f', 2) +
         " mA");
@@ -207,10 +207,11 @@ void MainWindow::createConnections() {
     // UI ASF
     connect(m_joystickHandler.data(), &JoystickHandler::joystickUpdated, this,
             [this](Joystick joy) {
-                int8_t t_asf = ((joy.axis[6].axe / 100.0) + 1) / 2 * 100;
-                if (t_asf > 100) t_asf = 100;
-                if (t_asf < 0) t_asf = 0;
-                ui->asfLabel->setText(QString::number(t_asf) + "% , " +  QString::number(joy.axis[0].runtimeASF));
+                int8_t t_asf = joy.axis[6].axe / 25.0;
+                // int8_t t_asf = ((joy.axis[6].axe / 100.0) + 1) / 2 * 100;
+                // if (t_asf > 100) t_asf = 100;
+                // if (t_asf < 0) t_asf = 0;
+                ui->asfLabel->setText(QString::number(joy.axis[0].runtimeASF) + ",     " + QString::number(t_asf) + "%");
             });
 
     // Settings update requests
@@ -284,7 +285,7 @@ void MainWindow::createConnections() {
     connect(ui->actionYawOn, &QAction::triggered, this,
             [this](bool) { ui->yawRegulatorCB->setCheckState(Qt::Checked); });
     connect(ui->actionYawOnWC, &QAction::triggered, this, [this](bool) {
-        ui->yawSpinBox->setValue(yaweton);
+        ui->yawSpinBox->setValue(lastTele.yaw);
         ui->yawRegulatorCB->setCheckState(Qt::Checked);
     });
     // Roll
@@ -348,4 +349,5 @@ void MainWindow::updateRecordStatus() {
 void MainWindow::calculateYaw() {
     yaweton += lastTele.yaw - yaweton;
     yaweton %= 360;
+    m_rovDataParser.data()->yaweton = yaweton;
 }

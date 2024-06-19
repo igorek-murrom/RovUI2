@@ -87,6 +87,7 @@ class RovDataParser : public QDialog {
     explicit RovDataParser(QWidget *parent = nullptr);
 
     float mainASF;
+    uint16_t yaweton;
 
   signals:
     /**
