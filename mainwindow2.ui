@@ -65,12 +65,13 @@
    </widget>
    <widget class="QMenu" name="menuAdditional_functions">
     <property name="title">
-     <string>Additional functions</string>
+     <string>Additio&amp;nal functions</string>
     </property>
     <addaction name="actionPump_off_on"/>
     <addaction name="actionLight_on_off"/>
     <addaction name="actionRecalibrate_IMU"/>
     <addaction name="actionChange_Video"/>
+    <addaction name="actionCorall_Auto"/>
    </widget>
    <widget class="QMenu" name="menuRegulators">
     <property name="title">
@@ -148,48 +149,8 @@
    </attribute>
    <widget class="QWidget" name="telemetryDockWidgetContents">
     <layout class="QGridLayout" name="gridLayout_2">
-     <item row="12" column="1">
-      <widget class="QLabel" name="teleCurrentLabel">
-       <property name="text">
-        <string>TextLabel</string>
-       </property>
-      </widget>
-     </item>
-     <item row="2" column="0">
-      <widget class="QLabel" name="teleDepthLabelD">
-       <property name="maximumSize">
-        <size>
-         <width>100</width>
-         <height>16777215</height>
-        </size>
-       </property>
-       <property name="text">
-        <string>Depth:</string>
-       </property>
-      </widget>
-     </item>
-     <item row="13" column="0">
-      <widget class="QLabel" name="asfLabelD">
-       <property name="text">
-        <string>ASF:</string>
-       </property>
-      </widget>
-     </item>
-     <item row="8" column="0">
-      <widget class="QLabel" name="teleVoltageLabelD">
-       <property name="maximumSize">
-        <size>
-         <width>100</width>
-         <height>16777215</height>
-        </size>
-       </property>
-       <property name="text">
-        <string>Voltage:</string>
-       </property>
-      </widget>
-     </item>
-     <item row="13" column="1">
-      <widget class="QLabel" name="asfLabel">
+     <item row="2" column="1">
+      <widget class="QLabel" name="teleDepthLabel">
        <property name="text">
         <string>TextLabel</string>
        </property>
@@ -199,6 +160,27 @@
       <widget class="QLabel" name="teleVersionLabel">
        <property name="text">
         <string>TextLabel</string>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="1">
+      <widget class="QLabel" name="teleTempLabel">
+       <property name="text">
+        <string>TextLabel</string>
+       </property>
+      </widget>
+     </item>
+     <item row="9" column="1">
+      <widget class="QLabel" name="teleVoltageLabel">
+       <property name="text">
+        <string>TextLabel</string>
+       </property>
+      </widget>
+     </item>
+     <item row="14" column="0">
+      <widget class="QLabel" name="asfLabelD">
+       <property name="text">
+        <string>ASF:</string>
        </property>
       </widget>
      </item>
@@ -215,8 +197,8 @@
        </property>
       </widget>
      </item>
-     <item row="1" column="0">
-      <widget class="QLabel" name="teleTempLabelD">
+     <item row="13" column="0">
+      <widget class="QLabel" name="teleCurrentLabelD">
        <property name="maximumSize">
         <size>
          <width>100</width>
@@ -224,18 +206,11 @@
         </size>
        </property>
        <property name="text">
-        <string>Twater:</string>
+        <string>Current:</string>
        </property>
       </widget>
      </item>
-     <item row="2" column="1">
-      <widget class="QLabel" name="teleDepthLabel">
-       <property name="text">
-        <string>TextLabel</string>
-       </property>
-      </widget>
-     </item>
-     <item row="7" column="0">
+     <item row="8" column="0">
       <widget class="QLabel" name="teleCamSelLabelD">
        <property name="sizePolicy">
         <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
@@ -260,29 +235,8 @@
        </property>
       </widget>
      </item>
-     <item row="8" column="1">
-      <widget class="QLabel" name="teleVoltageLabel">
-       <property name="text">
-        <string>TextLabel</string>
-       </property>
-      </widget>
-     </item>
-     <item row="1" column="1">
-      <widget class="QLabel" name="teleTempLabel">
-       <property name="text">
-        <string>TextLabel</string>
-       </property>
-      </widget>
-     </item>
-     <item row="7" column="1">
-      <widget class="QLabel" name="teleCamSelLabel">
-       <property name="text">
-        <string>TextLabel</string>
-       </property>
-      </widget>
-     </item>
-     <item row="12" column="0">
-      <widget class="QLabel" name="teleCurrentLabelD">
+     <item row="1" column="0">
+      <widget class="QLabel" name="teleTempLabelD">
        <property name="maximumSize">
         <size>
          <width>100</width>
@@ -290,7 +244,68 @@
         </size>
        </property>
        <property name="text">
-        <string>Current:</string>
+        <string>Twater:</string>
+       </property>
+      </widget>
+     </item>
+     <item row="8" column="1">
+      <widget class="QLabel" name="teleCamSelLabel">
+       <property name="text">
+        <string>TextLabel</string>
+       </property>
+      </widget>
+     </item>
+     <item row="14" column="1">
+      <widget class="QLabel" name="asfLabel">
+       <property name="text">
+        <string>TextLabel</string>
+       </property>
+      </widget>
+     </item>
+     <item row="2" column="0">
+      <widget class="QLabel" name="teleDepthLabelD">
+       <property name="maximumSize">
+        <size>
+         <width>100</width>
+         <height>16777215</height>
+        </size>
+       </property>
+       <property name="text">
+        <string>Depth:</string>
+       </property>
+      </widget>
+     </item>
+     <item row="9" column="0">
+      <widget class="QLabel" name="teleVoltageLabelD">
+       <property name="maximumSize">
+        <size>
+         <width>100</width>
+         <height>16777215</height>
+        </size>
+       </property>
+       <property name="text">
+        <string>Voltage:</string>
+       </property>
+      </widget>
+     </item>
+     <item row="13" column="1">
+      <widget class="QLabel" name="teleCurrentLabel">
+       <property name="text">
+        <string>TextLabel</string>
+       </property>
+      </widget>
+     </item>
+     <item row="3" column="0">
+      <widget class="QLabel" name="teleYawLabelD">
+       <property name="text">
+        <string>Yaw</string>
+       </property>
+      </widget>
+     </item>
+     <item row="3" column="1">
+      <widget class="QLabel" name="teleYawLabel">
+       <property name="text">
+        <string>TextLabel</string>
        </property>
       </widget>
      </item>
@@ -610,6 +625,14 @@
    </property>
    <property name="shortcut">
     <string>Q</string>
+   </property>
+  </action>
+  <action name="actionCorall_Auto">
+   <property name="text">
+    <string>Corall Auto</string>
+   </property>
+   <property name="shortcut">
+    <string>Space</string>
    </property>
   </action>
  </widget>

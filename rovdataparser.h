@@ -13,6 +13,7 @@
 #include <cmath>
 #include <cstddef>
 #include <cstring>
+#include <cmath>
 #include "helpers.h"
 #include "joystick.h"
 #include "qcheckbox.h"
@@ -87,7 +88,6 @@ class RovDataParser : public QDialog {
     explicit RovDataParser(QWidget *parent = nullptr);
 
     float mainASF;
-    uint16_t yaweton;
 
   signals:
     /**
@@ -187,6 +187,8 @@ class RovDataParser : public QDialog {
 
     void prepareUpdateServo();
 
+    void corallAuto();
+
   private:
     /**
      * \brief UI
@@ -224,6 +226,10 @@ class RovDataParser : public QDialog {
     FPPDRegulator pitchReg;
 
     int m_digitServoPos = 0;
+
+    bool isCorall = false;
+
+    float x, y, z, w, d, r;
 };
 
 #endif // ROVDATAPARSER_H

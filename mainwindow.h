@@ -155,8 +155,6 @@ class MainWindow : public QMainWindow {
      */
     void overrideRoll(bool ro);
 
-    void calculateYaw();
-
   signals:
 
     /**
@@ -250,6 +248,5 @@ class MainWindow : public QMainWindow {
     QScopedPointer<InstrumentWidget>       m_compassWidget;
     QScopedPointer<InstrumentWidget>       m_gyroWidget;
 
-    uint16_t yaweton = 0;
 };
 #endif // MAINWINDOW_H

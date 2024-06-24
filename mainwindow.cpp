@@ -107,6 +107,7 @@ void MainWindow::overridePitch(bool readonly) {
 
 void MainWindow::updateTelemetry(RovTelemetry tele) {
     ui->teleVersionLabel->setText(QString::number(tele.version));
+
     if (tele.depth < 3.4E+38)
         ui->teleDepthLabel->setText(QString::number(tele.depth, 'g', 2) +
                                     QString(lastDepth < tele.depth   ? " m ↑"
@@ -115,20 +116,16 @@ void MainWindow::updateTelemetry(RovTelemetry tele) {
     else
         ui->teleDepthLabel->setText(QString("[DIS]"));
     lastDepth = tele.depth;
-    ui->teleTempLabel->setText(
-        tele.depth < 3.4E+38 ? QString::number(tele.temp / 100, 'f', 2) + " °C"
-                             : "[DIS]");
-    ui->teleVoltageLabel->setText(QString::number(tele.voltage, 'f', 2) + " V" + "   " + QString::number(tele.yaw > 0 ? tele.yaw : tele.yaw + 360, 'f', 1));
-    ui->teleCurrentLabel->setText(
-        QString::number(std::min(tele.current * 1000, 25000.0f), 'f', 2) +
-        " mA");
-    ui->teleCamSelLabel->setText(
-        QString((tele.cameraIndex == 0 ? "Front" : "Rear")));
+
+    ui->teleTempLabel->setText(tele.depth < 3.4E+38 ? QString::number(tele.temp / 100, 'f', 2) + " °C" : "[DIS]");
+    ui->teleVoltageLabel->setText(QString::number(tele.voltage, 'f', 2) + " V");
+    ui->teleCurrentLabel->setText(QString::number(std::min(tele.current * 1000, 25000.0f), 'f', 2) + " mA");
+    ui->teleCamSelLabel->setText(QString((tele.cameraIndex == 0 ? "Front" : "Rear")));
+    ui->teleYawLabel->setText(QString::number(tele.yaw > 0 ? tele.yaw : tele.yaw + 360, 'f', 1));
+
     lastTele = tele;
     m_compassWidget->updateView(tele.yaw, tele.roll, tele.pitch);
     m_gyroWidget->updateView(tele.yaw, tele.roll, tele.pitch);
-
-    this->calculateYaw();
 }
 
 void MainWindow::updateASF(float factor) { emit asfUpdated(factor); }
@@ -211,7 +208,7 @@ void MainWindow::createConnections() {
                 // int8_t t_asf = ((joy.axis[6].axe / 100.0) + 1) / 2 * 100;
                 // if (t_asf > 100) t_asf = 100;
                 // if (t_asf < 0) t_asf = 0;
-                ui->asfLabel->setText(QString::number(joy.axis[0].runtimeASF) + ",     " + QString::number(t_asf) + "%");
+                ui->asfLabel->setText(QString::number(joy.axis[0].runtimeASF) + ",     " + QString::number(t_asf) + "");
             });
 
     // Settings update requests
@@ -249,6 +246,9 @@ void MainWindow::createConnections() {
     // Pump on/off
     connect(ui->actionPump_off_on, SIGNAL(triggered(bool)),
             m_rovDataParser.data(), SLOT(togglePump()));
+
+    // corall auto
+    connect(ui->actionCorall_Auto, SIGNAL(triggered(bool)), m_rovDataParser.data(), SLOT(corallAuto()));
 
     // Regulators:
     // Depth
@@ -344,10 +344,4 @@ void MainWindow::updateRecordStatus() {
 
     if (record_flag) emit startRecord();
     else emit stopRecord();
-}
-
-void MainWindow::calculateYaw() {
-    yaweton += lastTele.yaw - yaweton;
-    yaweton %= 360;
-    m_rovDataParser.data()->yaweton = yaweton;
 }

@@ -16,7 +16,7 @@ RovDataParser::RovDataParser(QWidget *parent)
       m_controlMutex(), overrideTelemetryUpdate(new QTimer(this)),
       m_auxControl(new RovAuxControl), m_auxControlMutex(),
       depthReg(200, 0.5, 50),
-      yawReg(3, 0, 1),
+      yawReg(1, 0, 1),
       rollReg(0.5, 0, 0),
       pitchReg(0.5, 0, 0) {
     ui->setupUi(this);
@@ -39,6 +39,10 @@ RovDataParser::RovDataParser(QWidget *parent)
             });
 
     connect(this, SIGNAL(controlReady(QByteArray)), this, SLOT(prepareUpdateServo()));
+}
+
+void RovDataParser::corallAuto() {
+    isCorall = !isCorall;
 }
 
 void RovDataParser::setAuxFlags(qint8 val) {
@@ -147,27 +151,98 @@ void RovDataParser::prepareControl(Joystick joy) {
         m_control->thrusterPower[5] = ui->thrusterSpinbox6->value();
         m_control->thrusterPower[6] = ui->thrusterSpinbox7->value();
         m_control->thrusterPower[7] = ui->thrusterSpinbox8->value();
-    } else {
+    }
+    // else if (isCorall) {
+    //     depthReg.enable();
+    //     m_digitServoPos = 0;
+    //     x = 0;
+    //     y = 0;
+    //     z = 0;
+    //     w = 0;
+    //     d = 0;
+    //     r = 0;
+
+    //     depthReg.setTarget(3);
+    //     float dReg  = depthReg.eval(m_tele.depth);
+    //     z          -= dReg;
+
+    //            // vertical
+    //     m_control->thrusterPower[2] = constrain(z + r - d, -100, 100);
+    //     m_control->thrusterPower[3] = constrain(z + r + d, -100, 100);
+    //     m_control->thrusterPower[5] = constrain(z - r + d, -100, 100);
+    //     m_control->thrusterPower[6] = constrain(z - r - d, -100, 100); // swap
+
+    //            // horizontal
+    //     m_control->thrusterPower[0] = constrain(x - y + w, -100, 100); // swap
+    //     m_control->thrusterPower[1] = constrain(x + y - w, -100, 100); // swap
+    //     m_control->thrusterPower[4] = constrain(x + y + w, -100, 100);
+    //     m_control->thrusterPower[7] = constrain(x - y - w, -100, 100);
+
+    //     m_control->thrusterPower[0] *= -1;
+    //     m_control->thrusterPower[1] *= -1;
+    //     m_control->thrusterPower[6] *= -1;
+
+    //     if (m_control->thrusterPower[1] < 0) m_control->thrusterPower[1] = constrain(m_control->thrusterPower[1] - 4, -100, 100);
+    //     if (m_control->thrusterPower[7] > 0) m_control->thrusterPower[7] = constrain(m_control->thrusterPower[7] + 4, -100, 100);
+
+
+    //     ui->thrusterSpinbox1->setValue(m_control->thrusterPower[0]);
+    //     ui->thrusterSpinbox2->setValue(m_control->thrusterPower[1]);
+    //     ui->thrusterSpinbox3->setValue(m_control->thrusterPower[2]);
+    //     ui->thrusterSpinbox4->setValue(m_control->thrusterPower[3]);
+    //     ui->thrusterSpinbox5->setValue(m_control->thrusterPower[4]);
+    //     ui->thrusterSpinbox6->setValue(m_control->thrusterPower[5]);
+    //     ui->thrusterSpinbox7->setValue(m_control->thrusterPower[6]);
+    //     ui->thrusterSpinbox8->setValue(m_control->thrusterPower[7]);
+    //     ui->progressBarX->setValue(x);
+    //     ui->progressBarY->setValue(y);
+    //     ui->progressBarZ->setValue(z);
+    //     ui->progressBarW->setValue(w);
+    //     ui->progressBarD->setValue(d);
+    //     ui->progressBarR->setValue(r);
+
+    //     depthReg.disable();
+    // }
+    else {
         //mainASF = constrain(((joy.axis[6].axe / 100.0) + 1) / 2, 0, 1);
         mainASF = 1;
-        float x = joy.axis[0].axe * joy.axis[0].runtimeASF * joy.axis[0].baseASF * joy.axis[0].direction * mainASF * (m_control->camsel == 1 ? -1 : 1);
-        float y = joy.axis[1].axe * joy.axis[1].runtimeASF * joy.axis[1].baseASF * joy.axis[1].direction * mainASF * (m_control->camsel == 1 ? -1 : 1);
-        float z = joy.axis[2].axe/* * joy.axis[2].runtimeASF * joy.axis[2].baseASF*/ * joy.axis[2].direction * mainASF;
-        float w = joy.axis[3].axe * joy.axis[3].runtimeASF * joy.axis[3].baseASF * joy.axis[3].direction;
-        float d = (joy.axis[4].axe - 6) * joy.axis[4].runtimeASF * joy.axis[4].baseASF * joy.axis[4].direction * mainASF;
-        float r = (joy.axis[5].axe - 6) * joy.axis[5].runtimeASF * joy.axis[5].baseASF * joy.axis[5].direction * mainASF;
+        x = joy.axis[0].axe * joy.axis[0].runtimeASF * joy.axis[0].baseASF * joy.axis[0].direction * mainASF * (m_control->camsel == 1 ? -1 : 1);
+        y = joy.axis[1].axe * joy.axis[1].runtimeASF * joy.axis[1].baseASF * joy.axis[1].direction * mainASF * (m_control->camsel == 1 ? -1 : 1);
+        z = joy.axis[2].axe/* * joy.axis[2].runtimeASF*/ * joy.axis[2].baseASF * joy.axis[2].direction * mainASF;
+        w = joy.axis[3].axe * joy.axis[3].runtimeASF * joy.axis[3].baseASF * joy.axis[3].direction;
+        d = joy.axis[4].axe * joy.axis[4].runtimeASF * joy.axis[4].baseASF * joy.axis[4].direction * mainASF;
+        r = joy.axis[5].axe * joy.axis[5].runtimeASF * joy.axis[5].baseASF * joy.axis[5].direction * mainASF;
 
-        if (!-joy.buttons.AddButton) {
-            z *= 0.25;
-            if (abs(z) < 6) z = 0;
+        // fuck the z axe
+        if (!-joy.buttons.AddButton) z *= 0.25;
+
+
+        // dead zones
+        if (abs(x) < 5) x = 0;
+        // else x = (x < 0 ? -1 : 1) * (abs(x) - 1);
+
+        if (abs(y) < 6) y = 0;
+        // else y = (y < 0 ? -1 : 1) * (abs(y) - 2);
+
+        if (abs(z) < 6) z = 0;
+        // else z = (z < 0 ? -1 : 1) * (abs(z) - 2);
+
+        if (abs(r) < 7) r = 0;
+        if (abs(d) < 7) d = 0;
+
+
+        // fix w axe
+        w = wFunction(w) * -0.25;
+        // w += 1;
+        // w += (int)joy.axis[6].axe / 25;
+
+        if (isCorall) {
+            m_digitServoPos = 0;
+            depthReg.enable();
+            depthReg.setTarget(3);
         }
 
-        if (abs(x) < 6) x = 0;
-        if (abs(y) < 6) y = 0;
-
-        w = wFunction(w) * -0.25;
-        w += joy.axis[6].axe / 25.0;
-
+        // regulator compensate
         float yReg  = yawReg.eval(m_tele.yaw > 0 ? m_tele.yaw : m_tele.yaw + 360, true);
         float dReg  = depthReg.eval(m_tele.depth);
         float rReg  = rollReg.eval(m_tele.roll);
@@ -197,6 +272,10 @@ void RovDataParser::prepareControl(Joystick joy) {
         m_control->thrusterPower[1] *= -1;
         m_control->thrusterPower[6] *= -1;
 
+        // if (m_control->thrusterPower[1] < 0) m_control->thrusterPower[1] = constrain(m_control->thrusterPower[1] - 4, -100, 100);
+        // if (m_control->thrusterPower[7] > 0) m_control->thrusterPower[7] = constrain(m_control->thrusterPower[7] + 4, -100, 100);
+
+
         ui->thrusterSpinbox1->setValue(m_control->thrusterPower[0]);
         ui->thrusterSpinbox2->setValue(m_control->thrusterPower[1]);
         ui->thrusterSpinbox3->setValue(m_control->thrusterPower[2]);
@@ -211,6 +290,10 @@ void RovDataParser::prepareControl(Joystick joy) {
         ui->progressBarW->setValue(w);
         ui->progressBarD->setValue(d);
         ui->progressBarR->setValue(r);
+
+        if (isCorall) {
+            depthReg.disable();
+        }
     }
     // Hats processing
     m_control->cameraRotationDelta[0] = joy.hats[1];

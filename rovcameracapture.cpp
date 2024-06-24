@@ -8,7 +8,7 @@ RovCameraCapture::RovCameraCapture(QWidget *parent)
 {
     gst_init(nullptr, nullptr);
 
-    video_path = new QDir("/home/igor/Videos/RovUI2");
+    video_path = new QDir(QDir::homePath() + "/Videos/RovUI2");
     if (!video_path->exists()) video_path->mkpath(".");
     video_folder = QDateTime::currentDateTime().toString("HH-mm-ss_dd-MM-yyyy");
     video_path->mkdir(video_folder);
